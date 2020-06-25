@@ -1,5 +1,6 @@
-from import_export import resources
+from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ManyToManyWidget
 from django.contrib import admin
 from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
 
@@ -21,12 +22,19 @@ class RequirementResource(resources.ModelResource):
 class CourseResource(resources.ModelResource):
     class Meta:
         model = Course
+        skip_unchanged = True
+        report_skipped = True
+        exclude = ('requirements')
+
 class PrereqResource(resources.ModelResource):
     class Meta:
         model = Prereq
 class ApCreditResource(resources.ModelResource):
     class Meta:
         model = ApCredit
+        skip_unchanged = True
+        report_skipped = True
+        exclude = ('courses')
 
 # related name relations
 class ApCreditsInline(admin.StackedInline):
