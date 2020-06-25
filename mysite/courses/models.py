@@ -58,6 +58,6 @@ class ApCredit(models.Model):
     scoremax = models.IntegerField(default=3)
     courses = models.ManyToManyField(Course, blank=True, related_name="apcredits")
     def __str__(self):
-        return f"{self.test}:{self.scores}"
+        return f"{self.test}:{self.scoremin}-{self.scoremax}"
     class Meta:
         verbose_name_plural = "7. ApCredit"
