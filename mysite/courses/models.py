@@ -6,30 +6,48 @@ class Major(models.Model):
     major = models.CharField(max_length=64)
     def __str__(self):
         return f"{self.major}"
+    class Meta:
+        verbose_name_plural = "1. Majors"
 
-class Categories(models.Model):
+class Category(models.Model):
     category = models.CharField(max_length=64)
-    major = models.ForeignKey(Major, on_delete=models.CASCADE, related_name="category")
+    major = models.ForeignKey(Major, on_delete=models.CASCADE, related_name="categories")
     def __str__(self):
-        return f"Major:{self.major}, Category:{self.category}"
+        return f"{self.category}"
+    class Meta:
+        verbose_name_plural = "2. Categories"
 
-class Requirements(models.Model):
+class SubCategory(models.Model):
+    subcategory = models.CharField(max_length=64)
+    note = models.CharField(max_length=200)
+    categories = models.ManyToManyField(Category, blank=False, related_name="subcategories")
+    def __str__(self):
+        return f"{self.subcategory}"
+    class Meta:
+        verbose_name_plural = "3. Sub Categories"
+
+class Requirement(models.Model):
     requirement = models.CharField(max_length=64)
-    creditrange = models.IntegerField(default=1)
-    numcoursesneeded = models.IntegerField(default=1)
-    category = models.ManyToManyField(Categories, blank=False, related_name="requirement")
+    credit = models.IntegerField(default=1)
+    subcategories = models.ManyToManyField(SubCategory, blank=False, related_name="requirements")
     def __str__(self):
-        return f"Category:{self.category}, Req:{self.requirement}"
+        return f"{self.requirement}"
+    class Meta:
+        verbose_name_plural = "4. Requirements"
 
-class CourseOptions(models.Model):
+class Course(models.Model):
     course = models.CharField(max_length=64)
-    credithour = models.IntegerField(default=1)
-    requirement = models.ManyToManyField(Requirements, blank=False, related_name="course")
+    credit = models.IntegerField(default=1)
+    requirements = models.ManyToManyField(Requirement, blank=False, related_name="courses")
     def __str__(self):
-        return f"Req:{self.requirement}, Course:{self.course}"
+        return f"{self.course}"
+    class Meta:
+        verbose_name_plural = "5. Courses"
 
-class Prerequisites(models.Model):
+class Prereq(models.Model):
     prereq = models.CharField(max_length=64)
-    course = models.ManyToManyField(CourseOptions, blank=True, related_name="prereq")
+    courses = models.ManyToManyField(Course, blank=True, related_name="prereqs")
     def __str__(self):
-        return f"Course:{self.course}, PreReq:{self.prereq}"
+        return f"{self.prereq}"
+    class Meta:
+        verbose_name_plural = "6. Prereqs"
