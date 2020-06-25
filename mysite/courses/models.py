@@ -54,9 +54,10 @@ class Prereq(models.Model):
 
 class ApCredit(models.Model):
     test = models.CharField(max_length=64)
-    scores = models.IntegerField(default=3)
+    scoremin = models.IntegerField(default=3)
+    scoremax = models.IntegerField(default=3)
     courses = models.ManyToManyField(Course, blank=True, related_name="apcredits")
     def __str__(self):
         return f"{self.test}:{self.scores}"
     class Meta:
-        verbose_name_plural = "6. ApCredit"
+        verbose_name_plural = "7. ApCredit"

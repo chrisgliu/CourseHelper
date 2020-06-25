@@ -1,7 +1,7 @@
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
-from .models import Major, Category, SubCategory, Requirement, Course, Prereq
+from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
 
 # Register your models here.
 
@@ -24,8 +24,13 @@ class CourseResource(resources.ModelResource):
 class PrereqResource(resources.ModelResource):
     class Meta:
         model = Prereq
+class ApCreditResource(resources.ModelResource):
+    class Meta:
+        model = ApCredit
 
 # related name relations
+class ApCreditsInline(admin.StackedInline):
+    model = ApCredit.courses.through
 class PrereqsInline(admin.StackedInline):
     model = Prereq.courses.through
 class CourseInline(admin.StackedInline):
@@ -36,6 +41,12 @@ class SubCategoryInLine(admin.StackedInline):
     model = SubCategory.categories.through
 
 # admin
+
+@admin.register(ApCredit)
+class ApCreditAdmin(ImportExportModelAdmin):
+    resource_class = ApCreditResource
+    filter_horizontal = ("courses",)
+
 @admin.register(Prereq)
 class PrereqAdmin(ImportExportModelAdmin):
     resource_class = PrereqResource
@@ -44,7 +55,7 @@ class PrereqAdmin(ImportExportModelAdmin):
 @admin.register(Course)
 class CourseAdmin(ImportExportModelAdmin):
     resource_class = CourseResource
-    inlines = [PrereqsInline]
+    inlines = [PrereqsInline, ApCreditsInline]
     filter_horizontal = ("requirements",)
 
 @admin.register(Requirement)
