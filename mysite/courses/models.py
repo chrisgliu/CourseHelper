@@ -19,7 +19,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     subcategory = models.CharField(max_length=64)
-    note = models.CharField(max_length=200)
+    note = models.TextField()
     categories = models.ManyToManyField(Category, blank=False, related_name="subcategories")
     def __str__(self):
         return f"{self.subcategory}"

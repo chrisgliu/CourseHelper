@@ -1,0 +1,20 @@
+#homebar {
+    list-style-type: none;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.homeitem {
+    float: right;
+}
+  
+.homeselection {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+}
+  
+.homeselection:hover:not(.active) {
+    background-color: #111;
+}
