@@ -2,17 +2,20 @@ from django.db import models
 
 # Create your models here.
 
-# the table Student holds the first and last names of users
+# --- STUDENT --- 
+# used to link data to USER
 class Student(models.Model):
     firstname = models.CharField(max_length=64)
     lastname = models.CharField(max_length=64)
+    username = models.CharField(max_length=64)
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
     class Meta:
         verbose_name_plural = "1. Students"
 
-# the Table Enrolled holds a boolean representing if the user is enrolled
-# the Table uses a foreign key to link the enrollment status to a student
+# --- ENROLLED --- 
+# links student to the rest of the data
+# holds enrollment status
 # if an enrolled student is deleted, all corresponding data is deleted
 class Enrolled(models.Model):
     enrolled = models.BooleanField(default=True)
@@ -20,9 +23,9 @@ class Enrolled(models.Model):
     class Meta:
         verbose_name_plural = "2. Enrolled"
 
-# the Table Major holds the name of a major
-# the Table has a many to many relationship with Enrolled
-# this enables accessing the students of a major and accessing the major of a student
+# --- MAJOR --- 
+# holds the name of a major
+# enables accessing the students of a major and accessing the major of a student
 class Major(models.Model):
     major = models.CharField(max_length=64)
     enrolled = models.ManyToManyField(Enrolled, blank=False, related_name="majors")
@@ -31,27 +34,27 @@ class Major(models.Model):
     class Meta:
         verbose_name_plural = "3. Majors"
 
-# the Table Year holds the year ex: 2020
-# the Table has a many to many relationship with Major
-# this enables accessing the students of a Year and accessing the Year of a student
+# --- YEAR --- 
+# holds the year ex: 2020
+# enables accessing the students of a Year and accessing the Year of a student
 class Year(models.Model):
     year = models.CharField(max_length=5)
     enrolled = models.ManyToManyField(Enrolled, blank=False, related_name="years")
     class Meta:
         verbose_name_plural = "4. Years"
 
-# the Table Year holds the year ex: autumn
-# the Table has a many to many relationship with Major
-# this enables accessing the year of a semester and accessing the semester of a year
+# --- SEMESTER --- 
+# holds the semester ex: autumn
+# enables accessing the year of a semester and accessing the semester of a year
 class Semester(models.Model):
     semester = models.CharField(max_length=64)
     years = models.ManyToManyField(Year, blank=False, related_name="semesters")
     class Meta:
         verbose_name_plural = "5. Semesters"
 
-# the Table Year holds the name of the course
-# the Table has a many to many relationship with Semester
-# this enables accessing the semester of a course and accessing the course of a semester
+# --- COURSE --- 
+# holds the name of the course
+# enables accessing the semester of a course and accessing the course of a semester
 class Course(models.Model):
     course = models.CharField(max_length=64)
     semesters = models.ManyToManyField(Semester, blank=False, related_name="courses")

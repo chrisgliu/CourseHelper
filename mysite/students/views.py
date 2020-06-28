@@ -2,49 +2,102 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout, authenticate, login
 from django.urls import reverse
-from .forms import SignUpForm
 from django.contrib.auth.models import User  
 from django.utils.encoding import force_bytes, force_text 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
 from .tokens import account_activation_token  
 from .models import Student, Enrolled, Major, Year, Semester, Course
+from .forms import SignUpForm, AddMajor
 
 # Create your views here.
+
+# --- TESTING --- 
+def test(request):
+    return render(request = request, template_name = "students/home.html")
+
+# --- NOTES --- 
+# -- pages --
+# home menu reflects if the user is logged in or not
+# home bar reflects if the user is on the credit, sched, or budget page
+# -- forms --
+# process html forms that manipulate the models
+# -- models --
+# access data from models
+
+# -- HOME MENU LINKS --
 def getloggedinlinks(request):
     return { "links": [["Sign out", reverse("signout")]], "name": request.user.first_name }
 def getloggedoutinks():
     return  { "links": [["Sign up", reverse("signup")],["Sign in", reverse("signin")]] }
+# -- MODELS --
 
-# main page
-# the home menu reflects if the user is logged in or not
-# the hombar reflect if the user is on thhe credit, sched, or budget page
-def credit(request):
-    if not request.user.is_authenticated:
-        return render(request = request, template_name = "students/credit.html", context=getloggedoutinks())	
-    if request.user.is_authenticated:
-        return render(request = request, template_name = "students/credit.html", context=getloggedinlinks(request))	
-def sched(request):
-    if not request.user.is_authenticated:
-        return render(request = request, template_name = "students/sched.html", context=getloggedoutinks())	
-    if request.user.is_authenticated:
-        return render(request = request, template_name = "students/sched.html", context=getloggedinlinks(request))
-def budget(request):
-    if not request.user.is_authenticated:
-        return render(request = request, template_name = "students/budget.html", context=getloggedoutinks())	
-    if request.user.is_authenticated:
-        return render(request = request, template_name = "students/budget.html", context=getloggedinlinks(request))
 
-# testing
-def test(request):
-    return render(request = request, template_name = "students/home.html")
 
-# when accessed with get, this renders the sign up page with no message
-# when accessed with post, registering data is retrieved from the form
-# SignUpForm inherits restrictions from UserCreationForm such as password length
-# When errors are caught with UserCreationForm, a list of errors is rendered
-def signup(request):
+# --- ABOUT --- 
+def aboutpage(request):
+    if request.method == 'GET': 
+        if not request.user.is_authenticated:
+            return render(request = request, template_name = "students/about.html", context=getloggedoutinks())	
+        if request.user.is_authenticated:
+            return render(request = request, template_name = "students/about.html", context=getloggedinlinks(request))
+
+# --- CREDIT PLANNER --- 
+def creditpage(request):
+    if request.method == 'GET': 
+        if not request.user.is_authenticated:
+            return render(request = request, template_name = "students/credit.html", context=getloggedoutinks())	
+        if request.user.is_authenticated:
+            return render(request = request, template_name = "students/credit.html", context=getloggedinlinks(request))
+
+def creditform(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = AddMajor(request.POST)  
+            if form.is_valid():  
+                form.process(request.user)
+                return HttpResponseRedirect(reverse("credit"))
+    return render(request, "students/signin.html", {"message": "Sign in first"})
+    
+# --- CLASS SCHEDULE --- 
+def schedpage(request):
+    if request.method == 'GET': 
+        if not request.user.is_authenticated:
+            return render(request = request, template_name = "students/sched.html", context=getloggedoutinks())	
+        if request.user.is_authenticated:
+            return render(request = request, template_name = "students/sched.html", context=getloggedinlinks(request))
+
+def schedform(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = AddMajor(request.POST)  
+            if form.is_valid():  
+                form.process(request.user)
+                return HttpResponseRedirect(reverse("sched"))
+    return render(request, "students/signin.html", {"message": "Sign in first"})
+
+# --- BUDGET TRACKER ---  
+def budgetpage(request):
+    if request.method == 'GET': 
+        if not request.user.is_authenticated:
+            return render(request = request, template_name = "students/budget.html", context=getloggedoutinks())	
+        if request.user.is_authenticated:
+            return render(request = request, template_name = "students/budget.html", context=getloggedinlinks(request))
+
+def budgetform(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = AddMajor(request.POST)  
+            if form.is_valid():  
+                form.process(request.user)
+                return HttpResponseRedirect(reverse("sched"))
+    return render(request, "students/signin.html", {"message": "Sign in first"})
+
+# --- SIGN UP --- 
+def signuppage(request):
     if request.method == 'GET':  
         return render(request, 'students/signup.html', {"message": None, "form.errors": None})  
+
+def signupform(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)  
         if form.is_valid():  
@@ -55,11 +108,7 @@ def signup(request):
         else:  
             message = "The operation could not be performed because one or more error(s) occurred."
             return render(request, 'students/signup.html', {"message": message, "form": form})  
-    
-# this is accessed with activation link sent from a confirmation email
-# this takes the data from the link and checks if there is a matching user
-# if a user is found, the user is then activated and the sign in page is rendered
-# else the sign up page is rendered
+
 def activate(request, uidb64, token):  
     try:  
         uid = force_text(urlsafe_base64_decode(uidb64))  
@@ -75,13 +124,12 @@ def activate(request, uidb64, token):
         message = 'Activation link is invalid!'
         return render(request, 'students/signup.html', {"message": message, "form": None}) 
 
-# when accessed with get, this renders the sign in page with no message
-# when accessed with post, login data is retrieved from the form
-# if the login data is linked to a valid user, the user is redirected to the main page
-# else the user is sent back to the sign in page with the message "Invalid credentials."
-def signin(request):
+# --- SIGN IN --- 
+def signinpage(request):
     if request.method == "GET":
         return render(request, "students/signin.html", {"message": None})
+
+def signinform(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
@@ -92,15 +140,6 @@ def signin(request):
         else:
             return render(request, "students/signin.html", {"message": "Invalid credentials."})
 
-# this makes a logout request and renders the sign in page with the message "Logged out."
 def signout(request):
     logout(request)
     return render(request, "students/signin.html", {"message": "Logged out."})
-
-# the homebar reflects if the user is logged in or not
-# about page
-def about(request):
-    if not request.user.is_authenticated:
-        return render(request = request, template_name = "students/about.html", context=getloggedoutinks())	
-    if request.user.is_authenticated:
-        return render(request = request, template_name = "students/about.html", context=getloggedinlinks(request))

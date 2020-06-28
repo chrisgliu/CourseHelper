@@ -3,8 +3,10 @@
     student homepage
 {% endblock %}
 {% block external %}
-{% load static %}
-<link rel="stylesheet" href="{%static '/css/homebar.css' %}"> 
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/homebar.css' %}">
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/form.css' %}">  
 {% endblock %}
 {% block body%}
 <nav class="home">
@@ -12,4 +14,16 @@
     <a class="homebar" href="{% url 'sched' %}">CLASS SCHEDULE</a>
     <a class="homebar" href="{% url 'budget' %}">BUDGET TRACKER</a>
 </nav>
+
+<form method="post" action="{% url 'creditform' %}">  
+    {% csrf_token %}  
+    <div class="formgroup">
+        <label>Major/Minor:</label>  
+        <input type="text" placeholder="Enter requirement" name="major"> 
+    </div> 
+    <br>
+    <button type="submit" class="btn btn-submit"></button>  
+</form>  
+
+
 {% endblock %}

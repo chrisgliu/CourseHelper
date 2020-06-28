@@ -6,12 +6,23 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string  
 from .tokens import account_activation_token  
 from django.core.mail import EmailMessage  
+from .models import Student, Enrolled, Major, Year, Semester, Course
+from django.forms import ModelForm
 
+# --- SIGN UP --- 
 class SignUpForm(UserCreationForm):  
 
     def saveButDontActivate(self):
         user = self.save(commit=False)  
         user.is_active = False  
+        username = self.cleaned_data.get('username')  
+        firstname = self.cleaned_data.get('first_name')  
+        lastname = self.cleaned_data.get('last_name')  
+        newstudent = Student(firstname=firstname, lastname=lastname, username=username)
+        newstudent.save()
+        enroll = Enrolled(enrolled = True)
+        enroll.students = newstudent
+        enroll.save()
         user.save() 
         return user
 
@@ -31,3 +42,27 @@ class SignUpForm(UserCreationForm):
     class Meta:  
         model = User  
         fields = ('email', 'first_name', 'last_name', 'username')
+
+# --- CREDIT PLANNER --- 
+class AddMajor(ModelForm):
+    def process(self, user):
+        major = self.cleaned_data.get('major')  
+        selection = Major(major=major)
+        firstname = user.first_name
+        lastname = user.last_name
+        username = user.username
+        student = Student.objects.filter(firstname=firstname, lastname=lastname, username=username).first()
+        enrollment = Enrolled.objects.filter(students=student).first()
+        selection.save()
+        selection.enrolled.add(enrollment)
+        selection.save()
+    class Meta:
+        model = Major
+        fields = ['major']
+# --- CLASS SCHEDULE --- 
+
+
+
+
+# --- BUDGET TRACKER ---
+
