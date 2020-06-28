@@ -1,0 +1,15 @@
+{% extends "students/base.html" %}
+{% block title %}
+    student homepage
+{% endblock %}
+{% block external %}
+{% load static %}
+<link rel="stylesheet" href="{%static '/css/homebar.css' %}"> 
+{% endblock %}
+{% block body%}
+<nav class="home">
+    <a class="homebar" href="{% url 'credit' %}">CREDIT PLANNER</a>
+    <a class="homebar" href="{% url 'sched' %}">CLASS SCHEDULE</a>
+    <a class="homebar active" href="{% url 'budget' %}">BUDGET TRACKER</a>
+</nav>
+{% endblock %}

@@ -2,8 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # the main page
-    path("", views.index, name="index"),
+    # the main pages
+    path("", views.credit, name="credit"),
+    path("sched", views.sched, name="sched"),
+    path("budget", views.budget, name="budget"),
     # routes to user functions
     path("signup", views.signup, name="signup"),
     path('activate/<uidb64>/<token>/',views.activate, name='activate'),

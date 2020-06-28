@@ -7,21 +7,32 @@ from django.contrib.auth.models import User
 from django.utils.encoding import force_bytes, force_text 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
 from .tokens import account_activation_token  
+from .models import Student, Enrolled, Major, Year, Semester, Course
 
 # Create your views here.
-
 def getloggedinlinks(request):
     return { "links": [["Sign out", reverse("signout")]], "name": request.user.first_name }
 def getloggedoutinks():
     return  { "links": [["Sign up", reverse("signup")],["Sign in", reverse("signin")]] }
 
 # main page
-# the homebar reflects if the user is logged in or not
-def index(request):
+# the home menu reflects if the user is logged in or not
+# the hombar reflect if the user is on thhe credit, sched, or budget page
+def credit(request):
     if not request.user.is_authenticated:
-        return render(request = request, template_name = "students/home.html", context=getloggedoutinks())	
+        return render(request = request, template_name = "students/credit.html", context=getloggedoutinks())	
     if request.user.is_authenticated:
-        return render(request = request, template_name = "students/home.html", context=getloggedinlinks(request))	
+        return render(request = request, template_name = "students/credit.html", context=getloggedinlinks(request))	
+def sched(request):
+    if not request.user.is_authenticated:
+        return render(request = request, template_name = "students/sched.html", context=getloggedoutinks())	
+    if request.user.is_authenticated:
+        return render(request = request, template_name = "students/sched.html", context=getloggedinlinks(request))
+def budget(request):
+    if not request.user.is_authenticated:
+        return render(request = request, template_name = "students/budget.html", context=getloggedoutinks())	
+    if request.user.is_authenticated:
+        return render(request = request, template_name = "students/budget.html", context=getloggedinlinks(request))
 
 # testing
 def test(request):
@@ -66,7 +77,7 @@ def activate(request, uidb64, token):
 
 # when accessed with get, this renders the sign in page with no message
 # when accessed with post, login data is retrieved from the form
-# if the login data is linked to a valid user, the user is redirected to the main/index page
+# if the login data is linked to a valid user, the user is redirected to the main page
 # else the user is sent back to the sign in page with the message "Invalid credentials."
 def signin(request):
     if request.method == "GET":
@@ -77,7 +88,7 @@ def signin(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("credit"))
         else:
             return render(request, "students/signin.html", {"message": "Invalid credentials."})
 
