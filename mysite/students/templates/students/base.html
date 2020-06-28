@@ -4,10 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %}</title>
+    {% load static %}
+    <script src="{%static '/js/toggle.js' %}"></script>
+    <link rel="stylesheet" href="{%static '/css/home.css' %}"> 
     {% block external %}
     {% endblock %}
 </head>
 <body>
+    <! Main Menu>
+    <div class="topnav">
+        <! Hamburger Button>
+        <button type="submit" class="homebtn" onclick= "toggleShow('myLinks')">
+            <div class="hamburger"></div>
+            <div class="hamburger"></div>
+            <div class="hamburger"></div>
+        </button> 
+        <! Title >
+        <a href="{% url 'index' %}" class="navbar head">
+            Chris Course Helper
+            {% if name %}
+                | Hello, {{ name }}
+            {% endif %}
+        </a> 
+        <hr>
+        <! Selections >
+        <div id="myLinks">
+            <a href="{% url 'index' %}" class="navbar selection">Home</a>
+            {% for link in links%}
+            <a href={{link.1}} class="navbar selection">{{link.0}}</a>
+            {% endfor %}
+            <a href="{% url 'about' %}" class="navbar selection">About</a>
+        </div>
+    </div>
+    <br>
     {% block body %}
     {% endblock %}
 </body>

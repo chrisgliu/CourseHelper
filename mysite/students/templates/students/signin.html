@@ -13,16 +13,16 @@
                 {% if message %}
                     <p> {{ message }} </p>
                 {% endif %}
-                <h1>Sign in to ChrisCourseHelper</h1>  
+                <h1>Sign in to Chris Course Helper</h1>  
                 <form method="post" action="{% url 'signin' %}">  
                     {% csrf_token %}  
                     <div class="formgroup">
-                        <label class="smallgroup">Username:</label>  
-                        <input class="biggroup" type="text" placeholder="Enter username" name="username"> 
+                        <label>Username:</label>  
+                        <input type="text" placeholder="Enter username" name="username"> 
                     </div>
                     <div class="formgroup">
-                        <label class="smallgroup">Password:</label>  
-                        <input class="biggroup" type="password" class="form-control" placeholder="Enter password" name="password">  
+                        <label>Password:</label>  
+                        <input type="password" class="form-control" placeholder="Enter password" name="password">  
                     </div>   
                     <br>
                     <button type="submit" class="btn btn-submit">Sign in</button>  

@@ -11,4 +11,6 @@ urlpatterns = [
     path("signout", views.signout, name="signout"),
     # for testing
     path("test", views.test, name="test"),
+    # about
+    path("about", views.about, name="about"),
 ]

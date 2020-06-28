@@ -28,28 +28,28 @@
                 <form method="post" action="{% url 'signup' %}">  
                     {% csrf_token %}
                     <div class="formgroup">
-                        <label class="smallgroup">First Name:</label>  
-                        <input class="biggroup" type="text" placeholder="Enter first name" name="first_name">  
+                        <label>First Name:</label>  
+                        <input type="text" placeholder="Enter first name" name="first_name">  
                     </div>
                     <div class="formgroup">
-                        <label class="smallgroup">Last Name:</label>  
-                        <input class="biggroup" type="text" placeholder="Enter last name" name="last_name"> 
+                        <label>Last Name:</label>  
+                        <input type="text" placeholder="Enter last name" name="last_name"> 
                     </div>
                     <div class="formgroup">
-                        <label class="smallgroup">Username:</label>  
-                        <input class="biggroup" type="text" placeholder="Enter username" name="username"> 
+                        <label>Username:</label>  
+                        <input type="text" placeholder="Enter username" name="username"> 
                     </div>
                     <div class="formgroup">
-                        <label class="smallgroup">Email:</label>  
-                        <input class="biggroup" type="email" placeholder="Enter email" name="email"> 
+                        <label>Email:</label>  
+                        <input type="email" placeholder="Enter email" name="email"> 
                     </div>
                     <div class="formgroup">
-                        <label class="smallgroup">Password:</label>  
-                        <input class="biggroup" type="password" class="form-control" placeholder="Enter password" name="password1">  
+                        <label>Password:</label>  
+                        <input type="password" class="form-control" placeholder="Enter password" name="password1">  
                     </div>
                     <div class="formgroup">
-                        <label class="smallgroup">Confirm Password:</label>  
-                        <input class="biggroup" type="password" class="form-control" placeholder="Reenter password" name="password2">
+                        <label>Confirm Password:</label>  
+                        <input type="password" class="form-control" placeholder="Reenter password" name="password2">
                     </div>   
                     <button type="submit" class="btn btn-submit">Create account</button>  
                 </form>  

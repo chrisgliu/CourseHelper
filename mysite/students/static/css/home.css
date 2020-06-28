@@ -1,20 +1,55 @@
-#homebar {
-    list-style-type: none;
-    overflow: hidden;
-    background-color: #333;
-}
+/* --- menu bars --- */
+    /* this is all contained in a div with a default background of black*/
+    .topnav {
+        overflow: hidden;
+        background-color: black;
+    }
+    /* multiple links are contained in a internal div called myLinks*/
+    /* they are set to not show as default*/
+    .topnav #myLinks {
+        display: none;
+    }
+    /* this makes the links into rectangles that stack*/
+    .navbar {
+        color: white;
+        text-decoration: none;
+        font-size: 35px;
+        padding: 10px 20px;
+        display: block;
+    }
+    /* this differentiates the title row with a white background*/
+    .head {
+        background-color: white;
+        color: black;
+    }
+    /* when hovering, this emphasizes the options rows*/
+    .selection:hover {
+        background-color: gray;
+        color: black;
+    }
+/* --- menu bars --- */
 
-.homeitem {
-    float: right;
-}
-  
-.homeselection {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 10px 20px;
-}
-  
-.homeselection:hover:not(.active) {
-    background-color: #111;
-}
+/* --- menu hamburger button --- */
+    /* this makes a div into a single black rectangle*/
+    .hamburger { 
+        background-color: black;
+        width: 35px;
+        height: 5px;
+        margin: 6px;
+    }
+    /* this positions the button to the right and defaults as white */
+    .homebtn { 
+        background-color: white;
+        border: white;
+        padding: 9px 16px;
+        transition-duration: 0.4s; 
+        float: right;
+    }
+    /* when hovering, the hamburger rectangles turn white and the button black*/
+    .homebtn:hover { 
+        background-color: black;
+    }
+    .homebtn:hover .hamburger{
+        background-color:  white;
+    }
+/* --- menu hamburger button --- */

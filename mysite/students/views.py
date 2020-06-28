@@ -10,45 +10,45 @@ from .tokens import account_activation_token
 
 # Create your views here.
 
+def getloggedinlinks(request):
+    return { "links": [["Sign out", reverse("signout")]], "name": request.user.first_name }
+def getloggedoutinks():
+    return  { "links": [["Sign up", reverse("signup")],["Sign in", reverse("signin")]] }
+
+# main page
+# the homebar reflects if the user is logged in or not
 def index(request):
     if not request.user.is_authenticated:
-        context = {
-            "user": None,
-            "links": [["signup", reverse("signup")],["signin", reverse("signin")]]
-        }
-        return render(request = request, template_name = "students/home.html", context=context)	
+        return render(request = request, template_name = "students/home.html", context=getloggedoutinks())	
     if request.user.is_authenticated:
-        context = {
-            "user": request.user,
-            "links": [["signout", reverse("signout")],]
-        }
-        return render(request = request, template_name = "students/home.html", context=context)	
+        return render(request = request, template_name = "students/home.html", context=getloggedinlinks(request))	
 
+# testing
 def test(request):
-    return render(request = request, template_name = "students/newsignup.html")
+    return render(request = request, template_name = "students/home.html")
 
 # when accessed with get, this renders the sign up page with no message
 # when accessed with post, registering data is retrieved from the form
 # SignUpForm inherits restrictions from UserCreationForm such as password length
-
-
+# When errors are caught with UserCreationForm, a list of errors is rendered
 def signup(request):
     if request.method == 'GET':  
-        return render(request, 'students/newsignup.html', {"message": None, "form.errors": None})  
+        return render(request, 'students/signup.html', {"message": None, "form.errors": None})  
     if request.method == 'POST':
         form = SignUpForm(request.POST)  
         if form.is_valid():  
             user = form.saveButDontActivate()
             form.sendActivationEmail(request, user)
             message = 'Please confirm your email address to complete the registration'
-            return render(request, 'students/newsignup.html', {"message": message, "form.errors": None})    
+            return render(request, 'students/signup.html', {"message": message, "form": None})    
         else:  
             message = "The operation could not be performed because one or more error(s) occurred."
-            return render(request, 'students/newsignup.html', {"message": message, "form": form})  
+            return render(request, 'students/signup.html', {"message": message, "form": form})  
     
 # this is accessed with activation link sent from a confirmation email
-# this takes the data from the link and checks if there is a matching use
-# if a user is found, the user is then activated
+# this takes the data from the link and checks if there is a matching user
+# if a user is found, the user is then activated and the sign in page is rendered
+# else the sign up page is rendered
 def activate(request, uidb64, token):  
     try:  
         uid = force_text(urlsafe_base64_decode(uidb64))  
@@ -58,9 +58,11 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):  
         user.is_active = True  
         user.save()  
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')  
+        message = 'Thank you for your email confirmation. Now you can login your account.'
+        return render(request, "students/signin.html", {"message": message})  
     else:  
-        return HttpResponse('Activation link is invalid!')
+        message = 'Activation link is invalid!'
+        return render(request, 'students/signup.html', {"message": message, "form": None}) 
 
 # when accessed with get, this renders the sign in page with no message
 # when accessed with post, login data is retrieved from the form
@@ -68,7 +70,7 @@ def activate(request, uidb64, token):
 # else the user is sent back to the sign in page with the message "Invalid credentials."
 def signin(request):
     if request.method == "GET":
-        return render(request, "students/newsignin.html", {"message": None})
+        return render(request, "students/signin.html", {"message": None})
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
@@ -77,9 +79,17 @@ def signin(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "students/newsignin.html", {"message": "Invalid credentials."})
+            return render(request, "students/signin.html", {"message": "Invalid credentials."})
 
 # this makes a logout request and renders the sign in page with the message "Logged out."
 def signout(request):
     logout(request)
-    return render(request, "students/newsignin.html", {"message": "Logged out."})
+    return render(request, "students/signin.html", {"message": "Logged out."})
+
+# the homebar reflects if the user is logged in or not
+# about page
+def about(request):
+    if not request.user.is_authenticated:
+        return render(request = request, template_name = "students/about.html", context=getloggedoutinks())	
+    if request.user.is_authenticated:
+        return render(request = request, template_name = "students/about.html", context=getloggedinlinks(request))
