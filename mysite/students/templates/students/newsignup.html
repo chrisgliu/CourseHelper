@@ -11,6 +11,20 @@
         <div class="centerspace">  
             <div class="formframe">  
                 <h1>Create a new account</h1>  
+                {% if message %}
+                    <p> {{ message }} </p>
+                {% endif %}
+                {% if form.errors %}
+	                <ul>
+	                    {% for field in form %}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                 <li> {{ error }}</li>
+                                 {% endfor %}
+                            {% endif %}
+	                    {% endfor %}
+	                </ul>
+                {% endif %}
                 <form method="post" action="{% url 'signup' %}">  
                     {% csrf_token %}
                     <div class="formgroup">

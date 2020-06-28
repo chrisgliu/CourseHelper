@@ -2,16 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout, authenticate, login
 from django.urls import reverse
-
-from django.contrib.sites.shortcuts import get_current_site  
-from django.utils.encoding import force_bytes, force_text  
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
-from django.template.loader import render_to_string  
-
 from .forms import SignUpForm
-from .tokens import account_activation_token  
 from django.contrib.auth.models import User  
-from django.core.mail import EmailMessage  
+from django.utils.encoding import force_bytes, force_text 
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
+from .tokens import account_activation_token  
 
 # Create your views here.
 
@@ -32,33 +27,28 @@ def index(request):
 def test(request):
     return render(request = request, template_name = "students/newsignup.html")
 
+# when accessed with get, this renders the sign up page with no message
+# when accessed with post, registering data is retrieved from the form
+# SignUpForm inherits restrictions from UserCreationForm such as password length
+
+
 def signup(request):
     if request.method == 'GET':  
-        return render(request, 'students/newsignup.html')  
+        return render(request, 'students/newsignup.html', {"message": None, "form.errors": None})  
     if request.method == 'POST':
         form = SignUpForm(request.POST)  
         if form.is_valid():  
-            user = form.save(commit=False)  
-            user.is_active = False  
-            user.save() 
-            current_site = get_current_site(request) 
-            mail_subject = 'Activate your account.'  
-            message = render_to_string('students/acc_active_email.html', {  
-                    'user': user,  
-                    'domain': current_site.domain,  
-                    'uid':  urlsafe_base64_encode(force_bytes(user.pk)),  
-                    'token': account_activation_token.make_token(user),  
-            })  
-            to_email = form.cleaned_data.get('email')  
-            email = EmailMessage(  
-                mail_subject, message, to=[to_email]  
-            )  
-            email.send()  
-            return HttpResponse('Please confirm your email address to complete the registration')  
+            user = form.saveButDontActivate()
+            form.sendActivationEmail(request, user)
+            message = 'Please confirm your email address to complete the registration'
+            return render(request, 'students/newsignup.html', {"message": message, "form.errors": None})    
         else:  
-            print(form.errors.as_data())
-            return HttpResponse("Error") 
+            message = "The operation could not be performed because one or more error(s) occurred."
+            return render(request, 'students/newsignup.html', {"message": message, "form": form})  
     
+# this is accessed with activation link sent from a confirmation email
+# this takes the data from the link and checks if there is a matching use
+# if a user is found, the user is then activated
 def activate(request, uidb64, token):  
     try:  
         uid = force_text(urlsafe_base64_decode(uidb64))  
