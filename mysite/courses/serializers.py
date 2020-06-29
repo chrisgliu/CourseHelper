@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
 
+
+# --- api serialization/formatting ---
 class MajorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Major

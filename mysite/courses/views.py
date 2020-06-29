@@ -4,11 +4,9 @@ from rest_framework import viewsets
 from .serializers import MajorSerializer, CategorySerializer, SubCategorySerializer, RequirementSerializer, CourseSerializer, PrereqSerializer, ApCreditSerializer
 from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
 
-# Create your views here.
+# Create your views here.	
 
-def index(request):
-	return HttpResponse("Hello, world!")	
-
+# --- view sets ---
 class MajorViewSet(viewsets.ModelViewSet):
     queryset = Major.objects.all().order_by('pk')
     serializer_class = MajorSerializer

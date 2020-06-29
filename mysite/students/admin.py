@@ -3,7 +3,7 @@ from .models import Student, Enrolled, Major, Year, Semester, Course
 
 # Register your models here.
 
-# related name relations
+# --- related name relations ---
 
 class CourseInline(admin.StackedInline):
     model = Course.semesters.through
@@ -17,7 +17,7 @@ class YearInline(admin.StackedInline):
 class MajorInline(admin.StackedInline):
     model = Major.enrolled.through
 
-# admin
+# --- admin register ---
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     filter_horizontal = ("semesters",)

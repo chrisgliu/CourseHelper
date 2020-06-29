@@ -6,7 +6,7 @@ from .models import Major, Category, SubCategory, Requirement, Course, Prereq, A
 
 # Register your models here.
 
-# importing and exporting data
+# --- importing and exporting ---
 class MajorResource(resources.ModelResource):
     class Meta:
         model = Major
@@ -36,7 +36,7 @@ class ApCreditResource(resources.ModelResource):
         report_skipped = True
         exclude = ('courses')
 
-# related name relations
+# --- related name relations --- 
 class ApCreditsInline(admin.StackedInline):
     model = ApCredit.courses.through
 class PrereqsInline(admin.StackedInline):
@@ -48,7 +48,7 @@ class ReqInLine(admin.StackedInline):
 class SubCategoryInLine(admin.StackedInline):
     model = SubCategory.categories.through
 
-# admin
+# --- admin register ---
 
 @admin.register(ApCredit)
 class ApCreditAdmin(ImportExportModelAdmin):
