@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
 
 class MajorSerializer(serializers.HyperlinkedModelSerializer):
