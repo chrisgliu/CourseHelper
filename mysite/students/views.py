@@ -29,7 +29,7 @@ def getloggedinlinks(request):
     return { "links": [["Sign out", reverse("signout")]], "name": request.user.first_name }
 def getloggedoutinks():
     return  { "links": [["Sign up", reverse("signup")],["Sign in", reverse("signin")]] }
-# -- MODELS --
+# -- DISPLAY MODELS --
 
 
 

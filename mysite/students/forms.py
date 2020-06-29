@@ -60,7 +60,56 @@ class AddMajor(ModelForm):
         model = Major
         fields = ['major']
 # --- CLASS SCHEDULE --- 
+class AddYear(ModelForm):
+    def process(self, user):
+        year = self.cleaned_data.get('year')  
+        selection = Year(year=year)
+        firstname = user.first_name
+        lastname = user.last_name
+        username = user.username
+        student = Student.objects.filter(firstname=firstname, lastname=lastname, username=username).first()
+        enrollment = Enrolled.objects.filter(students=student).first()
+        selection.save()
+        selection.enrolled.add(enrollment)
+        selection.save()
+    class Meta:
+        model =Year
+        fields = ['year']
 
+class AddSemester(ModelForm):
+    def process(self, user, theyear):
+        semester = self.cleaned_data.get('semester')  
+        selection = Semester(semester=semester)
+        firstname = user.first_name
+        lastname = user.last_name
+        username = user.username
+        student = Student.objects.filter(firstname=firstname, lastname=lastname, username=username).first()
+        enrollment = Enrolled.objects.filter(students=student).first()
+        year = Year.objects.filter(enrolled=enrollment, year=theyear)
+        selection.save()
+        selection.years.add(year)
+        selection.save()
+    class Meta:
+        model = Semester
+        fields = ['semester']
+
+class AddCourse(ModelForm):
+    def process(self, user, theyear, thesemester):
+        course = self.cleaned_data.get('course')  
+        selection = Course(course=course)
+        firstname = user.first_name
+        lastname = user.last_name
+        username = user.username
+        student = Student.objects.filter(firstname=firstname, lastname=lastname, username=username).first()
+        enrollment = Enrolled.objects.filter(students=student).first()
+        year = Year.objects.filter(enrolled=enrollment, year=theyear)
+        semester = Semester.objects.filter(years=year, semester=thesemester)
+        selection.save()
+        selection.semesters.add(semester)
+        selection.save()
+    class Meta:
+        model = Course
+        fields = ['course']
 
 
 
