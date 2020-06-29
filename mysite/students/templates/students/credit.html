@@ -11,11 +11,11 @@
 {% block body%}
 <nav class="home">
     <a class="homebar active" href="{% url 'credit' %}">CREDIT PLANNER</a>
-    <a class="homebar" href="{% url 'sched' %}">CLASS SCHEDULE</a>
+    <a class="homebar" href="{% url 'schedule' %}">CLASS SCHEDULE</a>
     <a class="homebar" href="{% url 'budget' %}">BUDGET TRACKER</a>
 </nav>
 
-<form method="post" action="{% url 'creditform' %}">  
+<form method="post" action="{% url 'creditForm' %}">
     {% csrf_token %}  
     <div class="formgroup">
         <label>Major/Minor:</label>  

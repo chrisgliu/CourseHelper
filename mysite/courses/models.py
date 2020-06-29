@@ -11,6 +11,9 @@ class Major(models.Model):
     def __str__(self):
         return f"{self.major}"
 
+    def __unicode__(self):
+        return self.major
+
     class Meta:
         verbose_name_plural = "1. Majors"
 
@@ -24,6 +27,9 @@ class Category(models.Model):
 
     def __str__(self):
         return f"{self.category}"
+
+    def __unicode__(self):
+        return self.category
 
     class Meta:
         verbose_name_plural = "2. Categories"
@@ -40,6 +46,9 @@ class SubCategory(models.Model):
     def __str__(self):
         return f"{self.subcategory}"
 
+    def __unicode__(self):
+        return self.subcategory
+
     class Meta:
         verbose_name_plural = "3. Sub Categories"
 
@@ -54,6 +63,9 @@ class Requirement(models.Model):
 
     def __str__(self):
         return f"{self.requirement}"
+
+    def __unicode__(self):
+        return self.requirement
 
     class Meta:
         verbose_name_plural = "4. Requirements"
@@ -70,6 +82,9 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.course}"
 
+    def __unicode__(self):
+        return self.course
+
     class Meta:
         verbose_name_plural = "5. Courses"
 
@@ -84,11 +99,14 @@ class Prereq(models.Model):
     def __str__(self):
         return f"{self.prereq}"
 
+    def __unicode__(self):
+        return self.prereq
+
     class Meta:
         verbose_name_plural = "6. Prereqs"
 
 
-# --- APCREDIT ---
+# --- AP CREDIT ---
 # holds the name of an ap test and a score range
 # enables accessing the courses that are fulfilled with this ap score and accessing the ap scores required for a course
 class ApCredit(models.Model):
@@ -99,6 +117,9 @@ class ApCredit(models.Model):
 
     def __str__(self):
         return f"{self.test}:{self.scoremin}-{self.scoremax}"
+
+    def __unicode__(self):
+        return self.test
 
     class Meta:
         verbose_name_plural = "7. ApCredit"

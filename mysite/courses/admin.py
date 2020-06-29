@@ -33,7 +33,7 @@ class CourseResource(resources.ModelResource):
         model = Course
         skip_unchanged = True
         report_skipped = True
-        exclude = ('requirements')
+        exclude = ('requirements',)
 
 
 class PrereqResource(resources.ModelResource):
@@ -46,7 +46,7 @@ class ApCreditResource(resources.ModelResource):
         model = ApCredit
         skip_unchanged = True
         report_skipped = True
-        exclude = ('courses')
+        exclude = ('courses',)
 
 
 # --- related name relations ---

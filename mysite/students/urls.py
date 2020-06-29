@@ -3,23 +3,23 @@ from . import views
 
 urlpatterns = [
     # about
-    path("about", views.aboutpage, name="about"),
-    # main pages
-    path("", views.creditpage, name="credit"),
-    path("sched", views.schedpage, name="sched"),
-    path("budget", views.budgetpage, name="budget"),
-    # main forms
-    path("creditform", views.creditform, name="creditform"),
-    path("schedform", views.schedform, name="schedform"),
-    path("budgetform", views.budgetform, name="budgetform"),
+    path("about", views.aboutPage, name="about"),
+    # main Pages
+    path("", views.creditPage, name="credit"),
+    path("schedule", views.schedulePage, name="schedule"),
+    path("budget", views.budgetPage, name="budget"),
+    # main Forms
+    path("creditForm", views.creditForm, name="creditForm"),
+    path("ScheduleForm", views.scheduleForm, name="scheduleForm"),
+    path("budgetForm", views.budgetForm, name="budgetForm"),
     # user
-    path("signup", views.signuppage, name="signup"),
-    path('activate/<uidb64>/<token>/',views.activate, name='activate'),
-    path("signin", views.signinpage, name="signin"),
-    path("signout", views.signout, name="signout"),
-    # user forms 
-    path("signupform", views.signupform, name="signupform"),
-    path("signinform", views.signinform, name="signinform"),
+    path("signUp", views.signUpPage, name="signUp"),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path("signIn", views.signInPage, name="signIn"),
+    path("signOut", views.signOut, name="signOut"),
+    # user Forms 
+    path("signUpForm", views.signUpForm, name="signUpForm"),
+    path("signInForm", views.signInForm, name="signInForm"),
     # for testing
     path("test", views.test, name="test"),
     
