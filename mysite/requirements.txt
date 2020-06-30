@@ -1,2 +1,5 @@
 Django==3.0.7
 psycopg2
+django-import-export
+six
+requests
