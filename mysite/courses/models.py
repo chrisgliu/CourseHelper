@@ -6,7 +6,7 @@ from django.db import models
 # --- MAJOR --- 
 # holds the name of a major
 class Major(models.Model):
-    major = models.CharField(max_length=64)
+    major = models.CharField(max_length=64, unique=True, null=False)
 
     def __str__(self):
         return f"{self.major}"

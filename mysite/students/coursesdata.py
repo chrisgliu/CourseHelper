@@ -25,3 +25,9 @@ def getMajorsList(request):
 
 def getMajorID(major_name):
     pass
+
+
+
+
+def getMajorthing(major_name):
+    pass
