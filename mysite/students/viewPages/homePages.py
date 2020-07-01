@@ -6,9 +6,6 @@ from django.shortcuts import render
 # home menu reflects if the user is logged in or not
 # home bar reflects if the user is on the credit, sched, or budget page
 
-# --- TESTING --- 
-def test(request):
-    return HttpResponse("Helllo World")
 
 # -- HOME MENU LINKS --
 def getLoggedInLinks(request):
@@ -25,11 +22,11 @@ def mergeDict(x, y):
     return z
 
 
-def renderHome(request, template_path, more_context):
-    loggedInContext = mergeDict(getLoggedInLinks(request), more_context)
-    loggedOutContext = mergeDict(getLoggedOutLinks(), more_context)
+def renderHome(request, template_path, more_context={}):
     if request.method == 'GET':
         if not request.user.is_authenticated:
-            return render(request=request, template_name="students/about.html", context=loggedInContext)
-        if request.user.is_authenticated:
+            loggedOutContext = mergeDict(getLoggedOutLinks(), more_context)
             return render(request=request, template_name="students/about.html", context=loggedOutContext)
+        if request.user.is_authenticated:
+            loggedInContext = mergeDict(getLoggedInLinks(request), more_context)
+            return render(request=request, template_name="students/about.html", context=loggedInContext)

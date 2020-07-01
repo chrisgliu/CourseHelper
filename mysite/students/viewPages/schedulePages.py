@@ -5,3 +5,5 @@ from .homePages import renderHome
 from ..dataforms.ScheduleForms import *
 
 # --- CLASS SCHEDULE --- 
+def schedulePageHelper(request):
+    return renderHome(request, 'students/schedule.html')

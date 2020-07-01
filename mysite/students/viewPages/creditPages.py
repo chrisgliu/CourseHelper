@@ -37,8 +37,8 @@ def requestData(request,
         return getAPList(request, name)
 
 # --- CREDIT PLANNER ---
-def creditPage(request):
-    pass
+def creditPageHelper(request):
+   return renderHome(request, 'students/credit.html')
 
 def processForm(request, model_form, command, redirect_name, template_path, context):
     if request.method == 'POST':

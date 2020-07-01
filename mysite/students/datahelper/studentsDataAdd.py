@@ -1,4 +1,4 @@
-from .studentsgetdata import *
+from .studentsDataGet import *
 from ..models import *
 
 # --- add operations ---

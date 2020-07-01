@@ -9,12 +9,12 @@ from django.shortcuts import render
 from ..dataforms.SignUpForm import SignUpForm
 
 # --- SIGN UP ---
-def signUpPage(request):
+def signUpPageHelper(request):
     if request.method == 'GET':
         return render(request, 'students/signUp.html')
 
 
-def signUpForm(request):
+def signUpFormHelper(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -29,7 +29,7 @@ def signUpForm(request):
     return render(request, "students/signUp.html", {"message": message})
 
 
-def activate(request, uidb64, token):
+def activateHelper(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(id=uid)
@@ -45,11 +45,11 @@ def activate(request, uidb64, token):
         return render(request, 'students/signUp.html', {"message": message})
 
 # --- SIGN IN ---
-def signInPage(request):
+def signInPageHelper(request):
     if request.method == "GET":
         return render(request, "students/signIn.html")
 
-def signInForm(request):
+def signInFormHelper(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
@@ -61,6 +61,6 @@ def signInForm(request):
             return render(request, "students/signIn.html", {"message": "Invalid credentials."})
 
 
-def signOut(request):
+def signOutHelper(request):
     logout(request)
     return render(request, "students/signIn.html", {"message": "Logged out."})

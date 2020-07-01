@@ -5,7 +5,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from .tokens import account_activation_token
+from ..tokens import account_activation_token
 from ..datahelper.studentsDataGet import *
 from ..datahelper.studentsDataAdd import *
 
