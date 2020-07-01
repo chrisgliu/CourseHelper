@@ -9,6 +9,8 @@ from .tokens import account_activation_token
 from .forms import SignUpForm, MajorForm, YearForm, SemesterForm, CourseForm
 from .datahelper.coursesdata import *
 from .datahelper.studentsdata import *
+from django.views.decorators.csrf import csrf_protect
+
 # Create your views here.
 
 # --- TESTING --- 
@@ -52,13 +54,24 @@ def creditPage(request):
         if request.user.is_authenticated:
             return render(request=request, template_name="students/credit.html", context=getLoggedInLinks(request))
 
-
-def creditForm(request):
+@csrf_protect
+def creditMajorFormAdd(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = MajorForm(request.POST)
             if form.is_valid():
-                form.process(request.user)
+                form.process(request.user, 'add')
+                return HttpResponseRedirect(reverse("credit"))
+    return render(request, "students/signIn.html", {"message": "Sign in first"})
+
+
+@csrf_protect
+def creditMajorFormDelete(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = MajorForm(request.POST)
+            if form.is_valid():
+                form.process(request.user, 'delete')
                 return HttpResponseRedirect(reverse("credit"))
     return render(request, "students/signIn.html", {"message": "Sign in first"})
 
@@ -71,7 +84,8 @@ def schedulePage(request):
         if request.user.is_authenticated:
             return render(request=request, template_name="students/schedule.html", context=getLoggedInLinks(request))
 
-
+@csrf_protect
+@require_POST
 def scheduleForm(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -90,7 +104,8 @@ def budgetPage(request):
         if request.user.is_authenticated:
             return render(request=request, template_name="students/budget.html", context=getLoggedInLinks(request))
 
-
+@csrf_protect
+@require_POST
 def budgetForm(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -106,7 +121,8 @@ def signUpPage(request):
     if request.method == 'GET':
         return render(request, 'students/signUp.html', {"message": None, "form.errors": None})
 
-
+@csrf_protect
+@require_POST
 def signUpForm(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -142,7 +158,8 @@ def signInPage(request):
     if request.method == "GET":
         return render(request, "students/signIn.html", {"message": None})
 
-
+@csrf_protect
+@require_POST
 def signInForm(request):
     if request.method == "POST":
         username = request.POST["username"]
