@@ -1,16 +1,15 @@
 from django.forms import ModelForm
 from django import forms
-from ..datahelper.coursesData import *
 from ..datahelper.studentsDataAdd import *
 from ..datahelper.studentsDataDelete import *
 
 # --- CREDIT PLANNER ---
 class MajorForm(ModelForm):
-    def process(self, user, add_or_delete="add"):
+    def process(self, user, add_or_delete='add'):
         major = self.cleaned_data.get('major')
-        if add_or_delete == "add":
+        if add_or_delete == 'add':
             addMajor(user, major)
-        if add_or_delete == "delete":
+        if add_or_delete == 'delete':
             deleteMajor(user, major)
 
     class Meta:
@@ -19,11 +18,11 @@ class MajorForm(ModelForm):
 
 
 class YearForm(ModelForm):
-    def process(self, user, add_or_delete="add"):
+    def process(self, user, add_or_delete='add'):
         year = self.cleaned_data.get('year')
-        if add_or_delete == "add":
+        if add_or_delete == 'add':
             addYear(user, year)
-        if add_or_delete == "delete":
+        if add_or_delete == 'delete':
             deleteYear(user, year)
 
     class Meta:
@@ -34,12 +33,12 @@ class YearForm(ModelForm):
 class SemesterForm(ModelForm):
     year = forms.CharField(label='years', required=True)
 
-    def process(self, user, add_or_delete="add"):
+    def process(self, user, add_or_delete='add'):
         year = self.data.get('year')
         semester = self.cleaned_data.get('semester')
-        if add_or_delete == "add":
+        if add_or_delete == 'add':
             addSemester(user, year, semester)
-        if add_or_delete == "delete":
+        if add_or_delete == 'delete':
             deleteSemester(user, year, semester)
 
     class Meta:
@@ -51,13 +50,13 @@ class CourseForm(ModelForm):
     year = forms.CharField(label='years', required=True)
     semester = forms.CharField(label='years', required=True)
 
-    def process(self, user, add_or_delete="add"):
+    def process(self, user, add_or_delete='add'):
         year = self.data.get('year')
         semester = self.data.get('semester')
         course = self.cleaned_data.get('course')
-        if add_or_delete == "add":
+        if add_or_delete == 'add':
             addCourse(user, year, semester, course)
-        if add_or_delete == "delete":
+        if add_or_delete == 'delete':
             deleteCourse(user, year, semester, course)
 
     class Meta:
