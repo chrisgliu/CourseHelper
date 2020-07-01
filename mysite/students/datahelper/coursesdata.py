@@ -1,7 +1,6 @@
 import requests
 from django.contrib.sites.shortcuts import get_current_site
 
-
 # --- get operations ---
 # given the name of a major
 # return related major data

@@ -1,6 +1,7 @@
-from .models import Student, Enrolled, Major, Year, Semester, Course
+from ..models import *
 
-
+if __name__ == "__main__":
+    print(Student.objects.all())
 # --- get operations ---
 # given user data (first name, last name, username)
 # return related user data

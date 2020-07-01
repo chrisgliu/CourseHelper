@@ -7,15 +7,13 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
 from .forms import SignUpForm, MajorForm, YearForm, SemesterForm, CourseForm
-from .coursesdata import *
-from .studentsdata import *
-
-
+from .datahelper.coursesdata import *
+from .datahelper.studentsdata import *
 # Create your views here.
 
 # --- TESTING --- 
 def test(request):
-    data = getMajorsList(request)
+    data = getMajorList(request)
     return HttpResponse(data)
 
 
@@ -35,9 +33,6 @@ def getLoggedInLinks(request):
 
 def getLoggedOutLinks():
     return {"links": [["Sign up", reverse("signUp")], ["Sign in", reverse("signIn")]]}
-
-
-# -- DISPLAY MODELS --
 
 
 # --- ABOUT ---
@@ -163,3 +158,21 @@ def signInForm(request):
 def signOut(request):
     logout(request)
     return render(request, "students/signIn.html", {"message": "Logged out."})
+
+# -- DISPLAY MODELS --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
