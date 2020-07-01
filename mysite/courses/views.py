@@ -13,40 +13,33 @@ from .models import Major, Category, SubCategory, Requirement, Course, Prereq, A
 class MajorViewSet(viewsets.ModelViewSet):
     queryset = Major.objects.all()
     serializer_class = MajorSerializer
-    lookup_field = 'major'
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    lookup_field = 'category'
 
 
 class SubCategoryViewSet(viewsets.ModelViewSet):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
-    lookup_field = 'subcategory'
 
 
 class RequirementViewSet(viewsets.ModelViewSet):
     queryset = Requirement.objects.all()
     serializer_class = RequirementSerializer
-    lookup_field = 'requirement'
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    lookup_field = 'course'
 
 
 class PrereqViewSet(viewsets.ModelViewSet):
     queryset = Prereq.objects.all()
     serializer_class = PrereqSerializer
-    lookup_field = 'prereq'
 
 
 class ApCreditViewSet(viewsets.ModelViewSet):
     queryset = ApCredit.objects.all()
     serializer_class = ApCreditSerializer
-    lookup_field = 'test'
