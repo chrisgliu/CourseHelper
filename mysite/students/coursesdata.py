@@ -20,6 +20,7 @@ def getCoursesAPI(request, data_model):
     api_domain = f'http://{current_site.domain}/courses/{data_set}/'
     return api_domain
 
+
 def getInstancePK(request, data_model, name):
     api_request = getCoursesAPI(request, data_model) 
     result = requests.get(api_request)
@@ -68,6 +69,7 @@ def getCategoryList(request, major_name):
             categories.append(category_name)
     return categories 
 
+
 def getSubCategoryList(request, category_name):
     subcategories = []
     api_request = getCoursesAPI(request, 'subcategory')
@@ -81,6 +83,7 @@ def getSubCategoryList(request, category_name):
             subcategory_name = subcategory['subcategory']
             subcategories.append(subcategory_name)
     return subcategories 
+
 
 def getRequirementList(request, subcategory_name):
     requirenents = []

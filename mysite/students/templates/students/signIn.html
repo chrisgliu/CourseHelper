@@ -15,7 +15,7 @@
                     <p> {{ message }} </p>
                 {% endif %}
                 <h1>Sign in to Chris Course Helper</h1>  
-                <form method="post" action="{% url 'signinform' %}">  
+                <form method="post" action="{% url 'signInForm' %}">  
                     {% csrf_token %}  
                     <div class="formgroup">
                         <label>Username:</label>  
