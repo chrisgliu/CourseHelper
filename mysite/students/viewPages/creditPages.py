@@ -8,14 +8,16 @@ from ..datahelper.studentsDataGet import *
 
 
 # --- CREDIT DATA ---- 
-def getCreditData():
-    credit_data = {
-        'my_majors': getMajors(),
-        'my_years': getYears(),
-        'my_semesters': getSemesters(),
-        'my_courses': getCourses()
-    }
-    return credit_data
+def getCreditData(request):
+    if request.user.is_authenticated:
+        credit_data = {
+            'my_majors': getMajors(request.user),
+            'my_years': getYears(request.user),
+            'my_semesters': getSemesters(request.user),
+            'my_courses': getCourses(request.user)
+        }
+        return credit_data
+    return {}
 
 def requestData(request, 
     major=False, category=False,
@@ -38,7 +40,7 @@ def requestData(request,
 
 # --- CREDIT PLANNER ---
 def creditPageHelper(request):
-   return renderHome(request, 'students/credit.html')
+   return renderHome(request, 'students/credit.html', getCreditData(request))
 
 def processForm(request, model_form, command, redirect_name, template_path, context):
     if request.method == 'POST':

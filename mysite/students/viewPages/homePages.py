@@ -26,7 +26,7 @@ def renderHome(request, template_path, more_context={}):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             loggedOutContext = mergeDict(getLoggedOutLinks(), more_context)
-            return render(request=request, template_name="students/about.html", context=loggedOutContext)
+            return render(request=request, template_name=template_path, context=loggedOutContext)
         if request.user.is_authenticated:
             loggedInContext = mergeDict(getLoggedInLinks(request), more_context)
-            return render(request=request, template_name="students/about.html", context=loggedInContext)
+            return render(request=request, template_name=template_path, context=loggedInContext)
