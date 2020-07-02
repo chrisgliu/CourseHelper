@@ -45,28 +45,29 @@ class ApCreditViewSet(viewsets.ModelViewSet):
 
 # --- COURSES REQUESTS ---
 def requestMajors(request):
-    return getMajorList(request)
+    return HttpResponse(the_xml_string, mime_type='application/xml')
+    # return HttpResponse(getMajorList(request))
 
 
 def requestCategories(request, major_name):
-    return getCategoryList(request, major_name)
+    return HttpResponse(getCategoryList(request, major_name))
 
 
 def requestSubCategories(request, category_name):
-    return getSubCategoryList(request, category_name)
+    return HttpResponse(getSubCategoryList(request, category_name))
 
 
 def requestRequirements(request, subcategory_name):
-    return getRequirementList(request, subcategory_name)
+    return HttpResponse(getRequirementList(request, subcategory_name))
 
 
 def requestCourses(request, requirement_name):
-    return getCourseList(request, requirement_name)
+    return HttpResponse(getCourseList(request, requirement_name))
 
 
 def requestPrereqs(request, course_name):
-    return getPrereqList(request, course_name)
+    return HttpResponse(getPrereqList(request, course_name))
 
 
 def requestAP(request, course_name):
-    return getAPList(request, course_name)
+    return HttpResponse(getAPList(request, course_name))

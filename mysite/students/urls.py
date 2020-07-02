@@ -18,8 +18,8 @@ urlpatterns = [
     path("", views.creditPage, name="credit"),
     path("schedule", views.schedulePage, name="schedule"),
     path("budget", views.budgetPage, name="budget"),
-    # main Forms
-    path("creditForm", views.creditForm, name="creditForm"),
-    path("ScheduleForm", views.scheduleForm, name="scheduleForm"),
-    path("budgetForm", views.budgetForm, name="budgetForm"),   
+    # # main Forms
+    # path("creditForm", views.creditForm, name="creditForm"),
+    # path("ScheduleForm", views.scheduleForm, name="scheduleForm"),
+    # path("budgetForm", views.budgetForm, name="budgetForm"),   
 ]

@@ -4,7 +4,6 @@ from .viewPages.creditPages import *
 from .viewPages.homePages import *
 from .viewPages.schedulePages import *
 from django.views.decorators.csrf import csrf_protect
-from .datahelper.coursesData import *
 
 # Create your views here.
 
@@ -86,13 +85,13 @@ def creditAddCourse(request):
 def creditDeleteCourse(request):
     return CourseFormDelete(request)
 
-# --- SCHEDULE FORMS ---
-@csrf_protect
-def scheduleForm(request):
-    pass
+# # --- SCHEDULE FORMS ---
+# @csrf_protect
+# def scheduleForm(request):
+#     pass
 
-# ---- BUDGET FORMS ---
-@csrf_protect
-def budgetForm(request):
-    pass
+# # ---- BUDGET FORMS ---
+# @csrf_protect
+# def budgetForm(request):
+#     pass
 
