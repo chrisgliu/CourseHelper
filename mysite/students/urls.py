@@ -21,13 +21,5 @@ urlpatterns = [
     # main Forms
     path("creditForm", views.creditForm, name="creditForm"),
     path("ScheduleForm", views.scheduleForm, name="scheduleForm"),
-    path("budgetForm", views.budgetForm, name="budgetForm"),
-    # courses requests
-    path('requestmajors/', views.requestMajors, name='request_majors'),
-    path('requestcategories/', views.requestCategories, name='request_categories'),
-    path('requestsubcategories/', views.requestSubCategories, name='request_subcategories'),
-    path('requestrequirements/', views.requestRequirements, name='request_requirements'),
-    path('requestcourses/', views.requestCourses, name='request_courses'),
-    path('requestprereqs/', views.requestPrereqs, name='request_prereqs'),
-    path('requestap/', views.requestAP, name='request_ap'),
+    path("budgetForm", views.budgetForm, name="budgetForm"),   
 ]

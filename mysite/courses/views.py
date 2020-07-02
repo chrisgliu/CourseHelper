@@ -2,10 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .serializers import MajorSerializer, CategorySerializer, SubCategorySerializer, RequirementSerializer, \
-    CourseSerializer, PrereqSerializer, ApCreditSerializer
-from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
-
+from .serializers import *
+from .models import *
+from .coursesData import *
 
 # Create your views here.
 
@@ -43,3 +42,31 @@ class PrereqViewSet(viewsets.ModelViewSet):
 class ApCreditViewSet(viewsets.ModelViewSet):
     queryset = ApCredit.objects.all()
     serializer_class = ApCreditSerializer
+
+# --- COURSES REQUESTS ---
+def requestMajors(request):
+    return getMajorList(request)
+
+
+def requestCategories(request, major_name):
+    return getCategoryList(request, major_name)
+
+
+def requestSubCategories(request, category_name):
+    return getSubCategoryList(request, category_name)
+
+
+def requestRequirements(request, subcategory_name):
+    return getRequirementList(request, subcategory_name)
+
+
+def requestCourses(request, requirement_name):
+    return getCourseList(request, requirement_name)
+
+
+def requestPrereqs(request, course_name):
+    return getPrereqList(request, course_name)
+
+
+def requestAP(request, course_name):
+    return getAPList(request, course_name)
