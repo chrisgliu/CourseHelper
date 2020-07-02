@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 from .homePages import *
-from ..datahelper.coursesData import *
 from ..dataforms.CreditForms import *
 from ..datahelper.studentsDataGet import *
 
@@ -19,28 +18,11 @@ def getCreditData(request):
         return credit_data
     return {}
 
-def requestData(request, 
-    major=False, category=False,
-    subcategory=False,requirement=False, 
-    course=False, prereq=False, ap=False, name=""):
-    if major:
-        return getMajorList(request)
-    if category:
-        return getCategoryList(request, name)
-    if subcategory:
-        return getSubCategoryList(request, name)
-    if requirement:
-        return getRequirementList(request, name)
-    if course:
-        return getCourseList(request, name)
-    if prereq:
-        return getPrereqList(request, name)
-    if ap:
-        return getAPList(request, name)
 
 # --- CREDIT PLANNER ---
 def creditPageHelper(request):
    return renderHome(request, 'students/credit.html', getCreditData(request))
+
 
 def processForm(request, model_form, command, redirect_name, template_path, context):
     if request.method == 'POST':
