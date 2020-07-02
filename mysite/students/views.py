@@ -37,10 +37,64 @@ def activate(request, uidb64, token):
 def signInForm(request):
     return signInFormHelper(request)
 
-
 @csrf_protect
 def signUpForm(request):
     return signUpFormHelper(request)
+
+# --- HOME PAGES ---
+def creditPage(request):
+    return creditPageHelper(request)
+
+
+def schedulePage(request):
+    return schedulePageHelper(request)
+
+
+def budgetPage(request):
+    return budgetPageHelper(request)
+
+# --- CREDIT FORMS ---
+@csrf_protect
+def creditAddMajor(request):
+    return MajorFormAdd(request)
+
+@csrf_protect
+def creditDeleteMajor(request):
+    return MajorFormDelete(request)
+
+@csrf_protect
+def creditAddYear(request):
+    return YearFormAdd(request)
+
+@csrf_protect
+def creditDeleteYear(request):
+    return YearFormDelete(request)
+
+@csrf_protect
+def creditAddSemester(request):
+    return SemesterFormAdd(request)
+
+@csrf_protect
+def creditDeleteSemester(request):
+    return SemesterFormDelete(request)
+
+@csrf_protect
+def creditAddCourse(request):
+    return CourseFormAdd(request)
+
+@csrf_protect
+def creditDeleteCourse(request):
+    return CourseFormDelete(request)
+
+# --- SCHEDULE FORMS ---
+@csrf_protect
+def scheduleForm(request):
+    pass
+
+# ---- BUDGET FORMS ---
+@csrf_protect
+def budgetForm(request):
+    pass
 
 # --- COURSES REQUESTS ---
 def requestMajors(request):
@@ -69,30 +123,3 @@ def requestPrereqs(request, course_name):
 
 def requestAP(request, course_name):
     return getAPList(request, course_name)
-
-# --- HOME PAGES ---
-def creditPage(request):
-    return creditPageHelper(request)
-
-
-def schedulePage(request):
-    return schedulePageHelper(request)
-
-
-def budgetPage(request):
-    return budgetPageHelper(request)
-
-# --- FORMS ---
-@csrf_protect
-def creditForm(request):
-    pass
-
-
-@csrf_protect
-def scheduleForm(request):
-    pass
-
-
-@csrf_protect
-def budgetForm(request):
-    pass

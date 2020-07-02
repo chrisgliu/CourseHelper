@@ -18,7 +18,6 @@ def getCreditData(request):
         return credit_data
     return {}
 
-
 # --- CREDIT PLANNER ---
 def creditPageHelper(request):
    return renderHome(request, 'students/credit.html', getCreditData(request))
@@ -49,9 +48,10 @@ def YearFormAdd(request):
         'students/signIn.html', {'message': 'Sign in first'})
 
 
-def YearFormAdd(request):
+def YearFormDelete(request):
     return processForm(request, YearForm, 'delete', 'credit', 
         'students/signIn.html', {'message': 'Sign in first'})
+
 
 def SemesterFormAdd(request):
     return processForm(request, SemesterForm, 'add', 'credit', 
@@ -68,8 +68,6 @@ def CourseFormAdd(request):
         'students/signIn.html', {'message': 'Sign in first'})
 
 
-def CourseFormAdd(request):
+def CourseFormDelete(request):
     return processForm(request, CourseForm, 'delete', 'credit', 
         'students/signIn.html', {'message': 'Sign in first'})
-
-
