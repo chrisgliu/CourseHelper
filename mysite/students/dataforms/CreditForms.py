@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
-from ..datahelper.studentsDataAdd import *
-from ..datahelper.studentsDataDelete import *
+from ..datahelper.students.studentsDataAdd import *
+from ..datahelper.students.studentsDataDelete import *
 
 # --- CREDIT PLANNER ---
 class MajorForm(ModelForm):

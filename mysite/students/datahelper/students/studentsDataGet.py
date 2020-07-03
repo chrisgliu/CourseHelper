@@ -1,4 +1,4 @@
-from ..models import *
+from ...models import *
 
 # --- get operations ---
 # given user data (first name, last name, username)

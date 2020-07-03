@@ -1,5 +1,5 @@
 from .studentsDataGet import *
-from ..models import *
+from ...models import *
 
 # --- delete operations ---
 # given user data and form data

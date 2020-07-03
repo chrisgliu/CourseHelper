@@ -3,8 +3,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from .homePages import *
 from ..dataforms.CreditForms import *
-from ..datahelper.studentsDataGet import *
-
+from ..datahelper.students.studentsDataGet import *
 
 # --- CREDIT DATA ---- 
 def getCreditData(request):

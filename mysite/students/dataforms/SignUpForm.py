@@ -6,8 +6,8 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from ..tokens import account_activation_token
-from ..datahelper.studentsDataGet import *
-from ..datahelper.studentsDataAdd import *
+from ..datahelper.students.studentsDataAdd import *
+from ..datahelper.students.studentsDataGet import *
 
 # --- SIGN UP ---
 class SignUpForm(UserCreationForm):

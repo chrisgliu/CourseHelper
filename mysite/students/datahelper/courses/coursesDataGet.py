@@ -1,10 +1,26 @@
 import requests
 from django.contrib.sites.shortcuts import get_current_site
 from lxml import etree
+from ..models import Student, Enrolled
 
 # --- get operations ---
-# given the name of a major
+# given user data
 # return related major data
+
+def getStudentID(user):
+    first_name = user.first_name
+    last_name = user.last_name
+    username = user.username
+    return Student.objects.get(firstname=first_name,
+                               lastname=last_name,
+                               username=username)
+
+
+def getEnrollmentKey(user):
+    student_id = getStudentID(user)
+    return Enrolled.objects.get(students=student_id)
+
+
 
 def pluralVersion(data_model):
     data_sets = {

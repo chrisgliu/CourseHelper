@@ -6,19 +6,39 @@ from .models import *
 
 
 # --- api serialization/formatting ---
-class MajorSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="majors-detail",
+class StudentSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="students-detail", 
                                                read_only=True)
 
     class Meta:
+        model = Student
+        fields = ('firstname', 'lastname', 'username', 'url')       
+
+class EnrolledSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="enrolled-detail", 
+                                               read_only=True)
+    students = serializers.HyperlinkedRelatedField(view_name="students-detail", 
+                                                   read_only=True)
+
+    class Meta:
+        model = Enrolled
+        fields = ('enrolled', 'students', 'url')
+
+class MajorSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="majors-detail", 
+                                               read_only=True)
+    enrolled = serializers.HyperlinkedRelatedField(view_name="enrolled-detail", 
+                                                   read_only=True)
+   
+    class Meta:
         model = Major
-        fields = ('pk', 'major', 'url')
+        fields = ('pk', 'major', 'enrolled', 'url')
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="categories-detail",
+    url = serializers.HyperlinkedIdentityField(view_name="categories-detail", 
                                                read_only=True)
-    major = serializers.HyperlinkedRelatedField(view_name="majors-detail",
+    major = serializers.HyperlinkedRelatedField(view_name="majors-detail", 
                                                 read_only=True)
 
     class Meta:
@@ -27,9 +47,9 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="subcategories-detail",
+    url = serializers.HyperlinkedIdentityField(view_name="subcategories-detail", 
                                                read_only=True)
-    categories = serializers.HyperlinkedRelatedField(view_name="categories-detail",
+    categories = serializers.HyperlinkedRelatedField(view_name="categories-detail", 
                                                      read_only=True,
                                                      many=True)
 
@@ -39,12 +59,12 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class RequirementSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="requirements-detail",
+    url = serializers.HyperlinkedIdentityField(view_name="requirements-detail", 
                                                read_only=True)
-    subcategories = serializers.HyperlinkedRelatedField(view_name="subcategories-detail",
+    subcategories = serializers.HyperlinkedRelatedField(view_name="subcategories-detail", 
                                                         read_only=True,
                                                         many=True)
-
+    
     class Meta:
         model = Requirement
         fields = ('pk','requirement', 'credit', 'subcategories', 'url')
@@ -53,10 +73,10 @@ class RequirementSerializer(serializers.HyperlinkedModelSerializer):
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="courses-detail",
                                                read_only=True)
-    requirements = serializers.HyperlinkedRelatedField(view_name="requirements-detail",
+    requirements = serializers.HyperlinkedRelatedField(view_name="requirements-detail", 
                                                        read_only=True,
                                                        many=True)
-
+    
     class Meta:
         model = Course
         fields = ('pk', 'course', 'credit', 'requirements', 'url')
