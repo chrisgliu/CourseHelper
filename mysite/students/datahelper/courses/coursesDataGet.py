@@ -24,6 +24,8 @@ def getEnrollmentKey(user):
 
 def pluralVersion(data_model):
     data_sets = {
+        'student': 'students',
+        'enrolled': 'enrolled',
         'major': 'majors',
         'category': 'categories',
         'subcategory': 'subcategories',

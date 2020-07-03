@@ -28,7 +28,8 @@ class MajorSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="majors-detail", 
                                                read_only=True)
     enrolled = serializers.HyperlinkedRelatedField(view_name="enrolled-detail", 
-                                                   read_only=True)
+                                                   read_only=True,
+                                                   many=True)
    
     class Meta:
         model = Major
@@ -39,7 +40,8 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="categories-detail", 
                                                read_only=True)
     major = serializers.HyperlinkedRelatedField(view_name="majors-detail", 
-                                                read_only=True)
+                                                read_only=True,
+                                                many=True)
 
     class Meta:
         model = Category
