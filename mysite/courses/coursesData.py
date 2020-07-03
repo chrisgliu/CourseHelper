@@ -1,5 +1,6 @@
 import requests
 from django.contrib.sites.shortcuts import get_current_site
+from lxml import etree
 
 # --- get operations ---
 # given the name of a major
@@ -99,4 +100,13 @@ def getPrereqList(request, course_name):
 
 def getAPList(request, course_name):
     return getSubDataList(request, 'test', 'course', course_name)
-    
+
+
+def getXMLString(data_list, data_set, data_model):
+    root = etree.Element(data_set)
+    for instance in data_list:
+        model = etree.Element(data_model)
+        model.text = instance       
+        root.append(model)
+    the_xml_string = etree.tostring(root, xml_declaration=True)
+    return the_xml_string

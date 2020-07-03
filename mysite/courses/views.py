@@ -6,6 +6,7 @@ from .serializers import *
 from .models import *
 from .coursesData import *
 
+
 # Create your views here.
 
 # --- view sets ---
@@ -44,30 +45,45 @@ class ApCreditViewSet(viewsets.ModelViewSet):
     serializer_class = ApCreditSerializer
 
 # --- COURSES REQUESTS ---
+# return XML
+
 def requestMajors(request):
-    return HttpResponse(the_xml_string, mime_type='application/xml')
-    # return HttpResponse(getMajorList(request))
+    data = getMajorList(request)
+    xml_response = getXMLString(data, 'majors', 'major') 
+    return HttpResponse(xml_response, mime_type='application/xml')
 
 
 def requestCategories(request, major_name):
-    return HttpResponse(getCategoryList(request, major_name))
-
+    data = getCategoryList(request, major_name)
+    xml_response = getXMLString(data, 'categories', 'category') 
+    return HttpResponse(xml_response, mime_type='application/xml')
+   
 
 def requestSubCategories(request, category_name):
-    return HttpResponse(getSubCategoryList(request, category_name))
+    data = getSubCategoryList(request, category_name)
+    xml_response = getXMLString(data, 'subcategories', 'subcategory') 
+    return HttpResponse(xml_response, mime_type='application/xml') 
 
 
 def requestRequirements(request, subcategory_name):
-    return HttpResponse(getRequirementList(request, subcategory_name))
+    data = getRequirementList(request, subcategory_name)
+    xml_response = getXMLString(data, 'requirements', 'requirement') 
+    return HttpResponse(xml_response, mime_type='application/xml')
 
 
 def requestCourses(request, requirement_name):
-    return HttpResponse(getCourseList(request, requirement_name))
+    data = getCourseList(request, requirement_name)
+    xml_response = getXMLString(data, 'courses', 'course') 
+    return HttpResponse(xml_response, mime_type='application/xml')
 
 
 def requestPrereqs(request, course_name):
-    return HttpResponse(getPrereqList(request, course_name))
+    data = getPrereqList(request, course_name)
+    xml_response = getXMLString(data, 'prereqs', 'prereq') 
+    return HttpResponse(xml_response, mime_type='application/xml')
 
 
 def requestAP(request, course_name):
-    return HttpResponse(getAPList(request, course_name))
+    data = getAPList(request, course_name)
+    xml_response = getXMLString(data, 'ap', 'test') 
+    return HttpResponse(xml_response, mime_type='application/xml')
