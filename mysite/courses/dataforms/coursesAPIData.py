@@ -104,6 +104,9 @@ def getAPList(request, course_name):
 
 def getXMLString(data_list, data_set, data_model):
     root = etree.Element(data_set)
+    length = etree.Element('length')
+    length.text = str(len(data_list))
+    root.append(length)
     for instance in data_list:
         model = etree.Element(data_model)
         model.text = instance       

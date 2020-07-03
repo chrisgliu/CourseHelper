@@ -2,12 +2,13 @@ from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ManyToManyWidget
 from django.contrib import admin
-from .models import Major, Category, SubCategory, Requirement, Course, Prereq, ApCredit
+from .models import *
 
 
 # Register your models here.
 
-# --- importing and exporting ---
+#--- importing and exporting ---
+
 class MajorResource(resources.ModelResource):
     class Meta:
         model = Major
@@ -70,6 +71,13 @@ class SubCategoryInLine(admin.StackedInline):
     model = SubCategory.categories.through
 
 
+class CategoryInLine(admin.StackedInline):
+    model = Category.major.through
+
+class MajorsInLine(admin.StackedInline):
+    model = Major.enrolled.through
+
+
 # --- admin register ---
 
 @admin.register(ApCredit)
@@ -109,10 +117,16 @@ class SubCategoryAdmin(ImportExportModelAdmin):
 class CategoryAdmin(ImportExportModelAdmin):
     resource_class = CategoryResource
     inlines = [SubCategoryInLine]
+    filter_horizontal = ("major",)
 
-
+@admin.register(Major)
 class MajorAdmin(ImportExportModelAdmin):
     resource_class = MajorResource
+    inlines = [CategoryInLine]
+    filter_horizontal = ("enrolled",)
 
+@admin.register(Enrolled)
+class EnrolledAdmin(admin.ModelAdmin):
+    inlines = [MajorsInLine]
 
-admin.site.register(Major, MajorAdmin)
+admin.site.register(Student)

@@ -3,36 +3,60 @@ from django.db import models
 
 # Create your models here.
 
-# --- MAJOR --- 
+
+# --- STUDENT --- 
+# used to link data to USER
+class Student(models.Model):
+    firstname = models.CharField(max_length=64)
+    lastname = models.CharField(max_length=64)
+    username = models.CharField(max_length=64)
+
+    def __str__(self):
+        return f"{self.firstname} {self.lastname}"
+
+    class Meta:
+        verbose_name_plural = "1. Students"
+
+
+# --- ENROLLED ---
+# links student to the rest of the data
+# holds enrollment status
+# if an enrolled student is deleted, all corresponding data is deleted
+class Enrolled(models.Model):
+    enrolled = models.BooleanField(default=True)
+    students = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="enrolled")
+
+    class Meta:
+        verbose_name_plural = "2. Enrolled"
+
+
+# --- MAJOR ---
 # holds the name of a major
+# enables accessing the students of a major and accessing the major of a student
 class Major(models.Model):
-    major = models.CharField(max_length=64, unique=True, null=False)
+    major = models.CharField(max_length=64)
+    enrolled = models.ManyToManyField(Enrolled, blank=False, related_name="majors")
 
     def __str__(self):
         return f"{self.major}"
 
-    def __unicode__(self):
-        return self.major
-
     class Meta:
-        verbose_name_plural = "1. Majors"
+        verbose_name_plural = "3. Majors"
+
 
 
 # --- CATEGORY ---
 # holds the name of a core section of a major ex: General Education
-# if a section is deleted, all corresponding data is deleted
+# enables accessing the major of a core section and accessing the core section of a major
 class Category(models.Model):
     category = models.CharField(max_length=64)
-    major = models.ForeignKey(Major, on_delete=models.CASCADE, related_name="categories")
+    major =  models.ManyToManyField(Major, blank=False, related_name="categories")
 
     def __str__(self):
         return f"{self.category}"
 
-    def __unicode__(self):
-        return self.category
-
     class Meta:
-        verbose_name_plural = "2. Categories"
+        verbose_name_plural = "4. Categories"
 
 
 # --- SUBCATEGORY ---
@@ -46,11 +70,8 @@ class SubCategory(models.Model):
     def __str__(self):
         return f"{self.subcategory}"
 
-    def __unicode__(self):
-        return self.subcategory
-
     class Meta:
-        verbose_name_plural = "3. Sub Categories"
+        verbose_name_plural = "5. Sub Categories"
 
 
 # --- REQUIREMENT ---
@@ -64,11 +85,8 @@ class Requirement(models.Model):
     def __str__(self):
         return f"{self.requirement}"
 
-    def __unicode__(self):
-        return self.requirement
-
     class Meta:
-        verbose_name_plural = "4. Requirements"
+        verbose_name_plural = "6. Requirements"
 
 
 # --- COURSE ---
@@ -82,11 +100,8 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.course}"
 
-    def __unicode__(self):
-        return self.course
-
     class Meta:
-        verbose_name_plural = "5. Courses"
+        verbose_name_plural = "7. Courses"
 
 
 # --- PREREQ ---
@@ -99,11 +114,8 @@ class Prereq(models.Model):
     def __str__(self):
         return f"{self.prereq}"
 
-    def __unicode__(self):
-        return self.prereq
-
     class Meta:
-        verbose_name_plural = "6. Prereqs"
+        verbose_name_plural = "8. Prereqs"
 
 
 # --- AP CREDIT ---
@@ -118,8 +130,5 @@ class ApCredit(models.Model):
     def __str__(self):
         return f"{self.test}:{self.scoremin}-{self.scoremax}"
 
-    def __unicode__(self):
-        return self.test
-
     class Meta:
-        verbose_name_plural = "7. ApCredit"
+        verbose_name_plural = "9. ApCredit"

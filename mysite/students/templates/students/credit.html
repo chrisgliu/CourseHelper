@@ -6,7 +6,9 @@
     {% load static %}
     <link rel="stylesheet" href="{%static '/css/homebar.css' %}">
     {% load static %}
-    <link rel="stylesheet" href="{%static '/css/form.css' %}">  
+    <link rel="stylesheet" href="{%static '/css/form.css' %}"> 
+    {% load static %}
+    <script src="{%static '/js/creditAjax.js' %}"></script>
 {% endblock %}
 
 {% block body%}
@@ -35,135 +37,15 @@
         <p>{{course}}</p>
     {% endfor %}
 {% endif %}
-<ul id="nav">
-    <li><a href="" class="nav-link" data-request="Majors">Majors</a></li>
-    <li><a href="" class="nav-link" data-request="Categories">Categpries</a></li>
-    <li><a href="" class="nav-link" data-request="SubCategories">SubCategories</a></li>
-    <li><a href="" class="nav-link" data-request="Requirements">Requirements</a></li>
-    <li><a href="" class="nav-link" data-request="Courses">Courses</a></li>
-    <li><a href="" class="nav-link" data-request="Prereqs">Prereqs</a></li>
-    <li><a href="" class="nav-link" data-request="Ap">Ap</a></li>
+<ul id='workspace'>
+
 </ul>
-<p id='testspace'></p>
-<script>
-    function requestMajors() {
-        let request = new XMLHttpRequest();
-        request.open('GET',`/courses/requestmajors/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-    }
-    function requestCategories() {
-        let request = new XMLHttpRequest();
-        // request.open('GET', `courses/requestcategories/${major_name}`, true);
-        request.open('GET',`/courses/requestcategories/EXAMPLE/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-    }
+<button onclick='requestMajors()'>Majors</button>
+<button onclick='requestCategories()'>Categories</button>
+<button onclick='requestSubcategories()'>SubCategories</button>
+<button onclick='requestRequirements()'>Requirements</button>
+<button onclick='requestCourses()'>Courses</button>
+<button onclick='requestPrereqs()'>Prereqs</button>
+<button onclick='requestAP()'>Ap</button>
 
-    function requestSubcategories(){
-        let request = new XMLHttpRequest();
-        // request.open('GET', `courses/requestsubcategories/${category_name}`, true);
-        request.open('GET',`/courses/requestsubcategories/GED/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-    }
-
-    function requestRequirements(){
-        let request = new XMLHttpRequest();
-        // request.open('GET', `courses/requestrequirements/${subcategory_name}`, true);
-        request.open('GET',`/courses/requestrequirements/Natural%20Sciences/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-    }
-
-    function requestCourses(){
-        let request = new XMLHttpRequest();
-        // request.open('GET', `courses/requestcourses/${requirement_name}`, true);
-        request.open('GET',`/courses/requestcourses/Lab/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-   
-    }
-
-    function requestPrereqs(){
-        let request = new XMLHttpRequest();
-        // request.open('GET', `courses/requestprereqs/${course_name}`, true);
-        request.open('GET',`/courses/requestprereqs/Biology%201101/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-    }
-
-    function requestAP(){
-        let request = new XMLHttpRequest();
-        // request.open('GET', `courses/requestap/${course_name}`, true);
-        request.open('GET',`/courses/requestap/Math%201152/`, true);
-        request.onload = () => { 
-            let response = request.responseText;
-            document.getElementById('testspace').innerHTML = response;
-            history.pushState({'text': response}, );
-        }
-        request.send();
-    }
-
-    window.onpopstate = e => {
-            const data = e.state;
-            document.getElementById('testspace').innerHTML = data.text;
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-        requestMajors();
-
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.onclick = () => {
-                let request = link.dataset.request;
-                if (request == 'Majors'){
-                    requestMajors();
-                }
-                if (request == "Categories"){
-                   requestCategories(); 
-                }
-                if (request == "SubCategories"){
-                    requestSubcategories();
-                }
-                if (request == 'Requirements'){
-                    requestRequirements();
-                } 
-                if (request == "Courses"){
-                    requestCourses();
-                }
-                if (request == "Prereqs"){
-                    requestPrereqs();
-                }
-                if (request == "Ap"){
-                    requestAP();
-                }
-                return false;
-            };
-        });
-    });
-</script>
 {% endblock %}
