@@ -2,21 +2,25 @@ import requests
 from django.contrib.sites.shortcuts import get_current_site
 
 # --- helper functions ---
+data_sets_A = {
+        'student': 'students','enrolled': 'enrolled','major': 'majors',
+        'category': 'categories','subcategory': 'subcategories','requirement': 'requirements',
+        'course': 'courses','prereq': 'prereqs','test': 'apcredits',
+    }
 
 def pluralVersion(data_model):
-    data_sets = {
-        'student': 'students',
-        'enrolled': 'enrolled',
-        'major': 'majors',
-        'category': 'categories',
-        'subcategory': 'subcategories',
-        'requirement': 'requirements',
-        'course': 'courses',
-        'prereq': 'prereqs',
-        'test': 'apcredits',
-    }
-    data_set = data_sets[data_model] 
+    data_set = data_sets_A[data_model] 
     return data_set
+
+data_sets_B = {
+        'students': 'student','enrolled': 'enrolled','majors': 'major',
+        'categories':'category','subcategories': 'subcategory','requirements': 'requirement',
+        'courses': 'course','prereqs': 'prereq', 'apcredits':'test',
+    }
+
+def singularVersion(data_reference):
+    data_model = data_sets_B[data_reference]
+    return data_model
 
 def getCoursesAPI(request, data_model):
     current_site = get_current_site(request)
@@ -51,7 +55,7 @@ def getInstanceNames(request, data_model, instance_links):
     names = []
     for instance in instance_links:
         result = requests.get(instance)
-        name = result.get(data_model)
+        name = result.json().get(data_model)
         names.append(name)
     return names
 
@@ -81,21 +85,17 @@ def compileSubDataLinks(request, data_model, parent_model, parent_links):
             all_sub_data_links.append(sub_data_link)
     return all_sub_data_links
 
-def filterLinks(links, parent_reference, parent_name):
+def filterLinks(request, links, parent_reference, parent_name):
     filtered_links = []
+    parent_model = 'major'
+    if parent_reference != 'major':
+        parent_model = singularVersion(parent_reference)
+    parent_pk = getInstancePK(request, parent_model, parent_name)
+    api_link = getCoursesAPI(request, parent_model)
+    parent_relation = f'{api_link}{parent_pk}/' 
     for link in links:
-        result = requests.get(link)
-        if result.get(parent_reference) == parent_name:
+        result = requests.get(link).json()
+        if parent_relation in result.get(parent_reference):
             filtered_links.append(link)
-    return filterLinks
+    return filtered_links
 
-def checkValidData(request, data_model, data_name):
-    data_pk = getInstancePK(request, data_model, data_name)
-    api_request = getCoursesAPI(request, data_model) + data_pk
-    result = requests.get(api_request)
-    if result.status_code != 200:
-        raise Exception('ERROR: API request unsuccessful.')
-    validity = True
-    try: validity = result.json()['detail'] == 'Not found.'
-    except KeyError: pass
-    return validity

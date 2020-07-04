@@ -66,37 +66,37 @@ def getMajorList(request):
 
 def getCategoryList(request, major_name):
     links = getCategoryLinks(request)
-    filtered_links = filterLinks(links, 'major', major_name)
+    filtered_links = filterLinks(request, links, 'major', major_name)
     data = getInstanceNames(request, 'category', filtered_links)
     return data
 
 def getSubCategoryList(request, category_name):
     links = getSubCategoryLinks(request)
-    filter_links = filterLinks(links, 'categories', category_name)
+    filter_links = filterLinks(request, links, 'categories', category_name)
     data = getInstanceNames(request, 'subcategory', filter_links)
     return data
 
 def getRequirementList(request, subcategory_name):
-    links = getSubCategoryLinks(request)
-    filter_links = filterLinks(links, 'subcategories', subcategory_name)
+    links = getRequirementLinks(request)
+    filter_links = filterLinks(request, links, 'subcategories', subcategory_name)
     data = getInstanceNames(request, 'requirement', filter_links)
     return data
 
 def getCourseList(request, requirement_name):
-    links = getSubCategoryLinks(request)
-    filter_links = filterLinks(links, 'requirements', requirement_name)
+    links = getCourseLinks(request)
+    filter_links = filterLinks(request, links, 'requirements', requirement_name)
     data = getInstanceNames(request, 'course', filter_links)
     return data
 
 def getPrereqList(request, course_name):
-    links = getSubCategoryLinks(request)
-    filter_links = filterLinks(links, 'courses', course_name)
+    links = getPrereqLinks(request)
+    filter_links = filterLinks(request, links, 'courses', course_name)
     data = getInstanceNames(request, 'prereq', filter_links)
     return data
 
 def getAPList(request, course_name):
-    links = getSubCategoryLinks(request)
-    filter_links = filterLinks(links, 'courses', course_name)
+    links = getApLinks(request)
+    filter_links = filterLinks(request, links, 'courses', course_name)
     data = getInstanceNames(request, 'test', filter_links)
     return data
 
