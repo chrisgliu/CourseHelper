@@ -158,7 +158,7 @@ def coursesAddAp(request):
     return listApFormAdd(request)
 
 @csrf_protect
-def coursesDeleteRequirement(request):
+def coursesDeleteAp(request):
     return listApFormDelete(request)
 
 # # --- SCHEDULE FORMS ---
