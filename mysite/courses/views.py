@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import *
 from .serializers import *
 from .models import *
 
@@ -12,7 +13,7 @@ from .models import *
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    
+
 
 class EnrolledViewSet(viewsets.ModelViewSet):
     queryset = Enrolled.objects.all()

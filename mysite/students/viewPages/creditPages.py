@@ -17,11 +17,11 @@ def getCreditData(request):
         return credit_data
     return {}
 
-# --- CREDIT PLANNER ---
+# --- CREDIT PAGE ---
 def creditPageHelper(request):
    return renderHome(request, 'students/credit.html', getCreditData(request))
 
-
+# --- CREDIT FORMS ---
 def processForm(request, model_form, command, redirect_name, template_path, context):
     if request.method == 'POST':
         if request.user.is_authenticated:

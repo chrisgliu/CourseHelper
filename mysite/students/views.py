@@ -3,23 +3,14 @@ from .viewPages.budgetPages import *
 from .viewPages.creditPages import *
 from .viewPages.homePages import *
 from .viewPages.schedulePages import *
+from .viewPages.coursesPages import *
 from django.views.decorators.csrf import csrf_protect
-from .datahelper.courses.coursesDataGet import *
 
 # Create your views here.
 
 # --- TESTING --- 
 def test(request):
-    # return HttpResponse(getStudentLink(request))
-    # return HttpResponse(str(getEnrollmentLink(request)))
-    # return HttpResponse(str(getMajorLinks(request)))
-    # return HttpResponse(str(getCategoryLinks(request)))
-    # return HttpResponse(str(getSubCategoryLinks(request)))
-    # return HttpResponse(str(getRequirementLinks(request)))
-    # return HttpResponse(str(getCourseLinks(request)))
-    # return HttpResponse(str(getPrereqLinks(request)))
     return HttpResponse(str(getApLinks(request)))
-
 
 # --- ABOUT ---
 def aboutPage(request):
@@ -29,14 +20,11 @@ def aboutPage(request):
 def signUpPage(request):
     return signUpPageHelper(request)
 
-
 def signInPage(request):
     return signInPageHelper(request)
 
-
 def signOut(request):
     return signOutHelper(request)
-
 
 def activate(request, uidb64, token):
     return activateHelper(request, uidb64, token)
@@ -54,10 +42,8 @@ def signUpForm(request):
 def creditPage(request):
     return creditPageHelper(request)
 
-
 def schedulePage(request):
     return schedulePageHelper(request)
-
 
 def budgetPage(request):
     return budgetPageHelper(request)
@@ -95,6 +81,86 @@ def creditAddCourse(request):
 def creditDeleteCourse(request):
     return CourseFormDelete(request)
 
+# --- COURSES REQUESTS ---
+# return XML
+def requestMajors(request):
+    return requestMajorsHelper(request)
+
+def requestCategories(request, major_name):
+    return requestCategoriesHelper(request, major_name)
+
+def requestSubCategories(request, category_name):
+    return requestSubCategoriesHelper(request, category_name)
+
+def requestRequirements(request, subcategory_name):
+    return requestRequirementsHelper(request, subcategory_name)
+
+def requestCourses(request, requirement_name):
+    return requestCoursesHelper(request, requirement_name)
+
+def requestPrereqs(request, course_name):
+    return requestPrereqsHelper(request, course_name)
+
+def requestAP(request, course_name):
+    return requestAPHelper(request, course_name)
+
+# --- COURSES FORMS ---
+@csrf_protect
+def coursesAddMajor(request):
+    return listMajorFormAdd(request)
+
+@csrf_protect
+def coursesDeleteMajor(request):
+    return listMajorFormDelete(request)
+
+@csrf_protect
+def coursesAddCategory(request):
+    return listCategoryFormAdd(request)
+
+@csrf_protect
+def coursesDeleteCategory(request):
+    return listCategoryFormDelete(request)
+
+@csrf_protect
+def coursesAddSubCategory(request):
+    return listSubCategoryFormAdd(request)
+
+@csrf_protect
+def coursesDeleteSubCategory(request):
+    return listSubCategoryFormDelete(request)
+
+@csrf_protect
+def coursesAddRequirement(request):
+    return listRequirementFormAdd(request)
+
+@csrf_protect
+def coursesDeleteRequirement(request):
+    return listRequirementFormDelete(request)
+
+@csrf_protect
+def coursesAddCourse(request):
+    return listCourseFormAdd(request)
+
+@csrf_protect
+def coursesDeleteCourse(request):
+    return listCourseFormDelete(request)
+
+@csrf_protect
+def coursesAddPrereq(request):
+    return listPrereqFormAdd(request)
+
+@csrf_protect
+def coursesDeletePrereq(request):
+    return listPrereqFormDelete(request) 
+
+@csrf_protect
+def coursesAddAp(request):
+    return listApFormAdd(request)
+
+@csrf_protect
+def coursesDeleteRequirement(request):
+    return listApFormDelete(request)
+
 # # --- SCHEDULE FORMS ---
 # @csrf_protect
 # def scheduleForm(request):
@@ -105,47 +171,3 @@ def creditDeleteCourse(request):
 # def budgetForm(request):
 #     pass
 
-
-# --- COURSES REQUESTS ---
-# return XML
-
-def requestMajors(request):
-    data = getMajorList(request)
-    xml_response = getXMLString(data, 'majors', 'major') 
-    return HttpResponse(xml_response, content_type='text/xml')
-
-
-def requestCategories(request, major_name):
-    data = getCategoryList(request, major_name)
-    xml_response = getXMLString(data, 'categories', 'category') 
-    return HttpResponse(xml_response, content_type='text/xml')
-   
-
-def requestSubCategories(request, category_name):
-    data = getSubCategoryList(request, category_name)
-    xml_response = getXMLString(data, 'subcategories', 'subcategory') 
-    return HttpResponse(xml_response, content_type='text/xml') 
-
-
-def requestRequirements(request, subcategory_name):
-    data = getRequirementList(request, subcategory_name)
-    xml_response = getXMLString(data, 'requirements', 'requirement') 
-    return HttpResponse(xml_response, content_type='text/xml')
-
-
-def requestCourses(request, requirement_name):
-    data = getCourseList(request, requirement_name)
-    xml_response = getXMLString(data, 'courses', 'course') 
-    return HttpResponse(xml_response, content_type='text/xml')
-
-
-def requestPrereqs(request, course_name):
-    data = getPrereqList(request, course_name)
-    xml_response = getXMLString(data, 'prereqs', 'prereq') 
-    return HttpResponse(xml_response, content_type='text/xml')
-
-
-def requestAP(request, course_name):
-    data = getAPList(request, course_name)
-    xml_response = getXMLString(data, 'ap', 'test') 
-    return HttpResponse(xml_response, content_type='text/xml')

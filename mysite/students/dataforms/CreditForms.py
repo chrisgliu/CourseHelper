@@ -34,7 +34,7 @@ class SemesterForm(ModelForm):
     year = forms.CharField(label='years', required=True)
 
     def process(self, user, add_or_delete='add'):
-        year = self.data.get('year')
+        year = self.cleaned_data.get('year')
         semester = self.cleaned_data.get('semester')
         if add_or_delete == 'add':
             addSemester(user, year, semester)
@@ -51,8 +51,8 @@ class CourseForm(ModelForm):
     semester = forms.CharField(label='years', required=True)
 
     def process(self, user, add_or_delete='add'):
-        year = self.data.get('year')
-        semester = self.data.get('semester')
+        year = self.cleaned_data.get('year')
+        semester = self.cleaned_data.get('semester')
         course = self.cleaned_data.get('course')
         if add_or_delete == 'add':
             addCourse(user, year, semester, course)

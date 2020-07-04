@@ -2,31 +2,30 @@ import requests
 from django.contrib.sites.shortcuts import get_current_site
 
 # --- helper functions ---
-data_sets_A = {
+data_sets = {
         'student': 'students','enrolled': 'enrolled','major': 'majors',
         'category': 'categories','subcategory': 'subcategories','requirement': 'requirements',
         'course': 'courses','prereq': 'prereqs','test': 'apcredits',
     }
 
+
 def pluralVersion(data_model):
-    data_set = data_sets_A[data_model] 
+    data_set = data_sets.get(data_model)
     return data_set
 
-data_sets_B = {
-        'students': 'student','enrolled': 'enrolled','majors': 'major',
-        'categories':'category','subcategories': 'subcategory','requirements': 'requirement',
-        'courses': 'course','prereqs': 'prereq', 'apcredits':'test',
-    }
 
 def singularVersion(data_reference):
-    data_model = data_sets_B[data_reference]
-    return data_model
+    for key, value in data_sets.items():
+        if value == data_reference:
+            return key
+
 
 def getCoursesAPI(request, data_model):
     current_site = get_current_site(request)
     data_set = pluralVersion(data_model)
     api_domain = f'http://{current_site.domain}/courses/{data_set}/'
     return api_domain
+
 
 def getInstances(request, data_model):
     instances = []
@@ -35,6 +34,7 @@ def getInstances(request, data_model):
     for instance in result.json():
         instances.append(instance)
     return instances
+
 
 def getInstancePK(request, data_model, name):
     instances = getInstances(request, data_model)
@@ -51,6 +51,7 @@ def getInstancePK(request, data_model, name):
                 return instance.get('pk')
     return -1
 
+
 def getInstanceNames(request, data_model, instance_links):
     names = []
     for instance in instance_links:
@@ -58,6 +59,7 @@ def getInstanceNames(request, data_model, instance_links):
         name = result.json().get(data_model)
         names.append(name)
     return names
+
 
 def getSubDataLinks(request, data_model, parent_model, parent_link):
     sub_data_links = []
@@ -77,6 +79,7 @@ def getSubDataLinks(request, data_model, parent_model, parent_link):
             sub_data_links.append(relation)
     return sub_data_links
 
+
 def compileSubDataLinks(request, data_model, parent_model, parent_links):
     all_sub_data_links = []
     for link in parent_links:
@@ -84,6 +87,7 @@ def compileSubDataLinks(request, data_model, parent_model, parent_links):
         for sub_data_link in sub_data_links:
             all_sub_data_links.append(sub_data_link)
     return all_sub_data_links
+
 
 def filterLinks(request, links, parent_reference, parent_name):
     filtered_links = []
@@ -99,3 +103,11 @@ def filterLinks(request, links, parent_reference, parent_name):
             filtered_links.append(link)
     return filtered_links
 
+
+def findInstanceLink(instance_links, reference, name):
+    instance_link = None
+    for link in instance_links:
+        result = requests.get(link).json()
+        if name == result.get(reference):
+            instance_link = link
+    return instance_link
