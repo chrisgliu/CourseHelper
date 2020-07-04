@@ -47,26 +47,29 @@ function addURLspace(message=''){
     return edited_message
 }
 function requestMajors(){
-    let test = 'Natural Sciences'
-    console.log(addURLspace(test))
-    
-    requestAJAX('/courses/requestmajors/', 'major')
+    requestAJAX('/requestmajors/', 'major')
 }
 function requestCategories(){
-    requestAJAX('/courses/requestcategories/EXAMPLE/', 'category')
+    parent_name = document.getElementById('parent').value
+    requestAJAX(`/requestcategories/${parent_name}/`, 'category')
 }
 function requestSubcategories(){
-    requestAJAX('/courses/requestsubcategories/GED/', 'subcategory') 
+    parent_name = document.getElementById('parent').value
+    requestAJAX(`/requestsubcategories/${parent_name}/`, 'subcategory') 
 }
 function requestRequirements(){
-    requestAJAX('/courses/requestrequirements/Natural%20Sciences/', 'requirement') 
+    parent_name = document.getElementById('parent').value
+    requestAJAX(`/requestrequirements/${parent_name}/`, 'requirement') 
 }
 function requestCourses(){
-    requestAJAX('/courses/requestcourses/Lab/', 'course') 
+    parent_name = document.getElementById('parent').value
+    requestAJAX(`/requestcourses/${parent_name}/`, 'course') 
 }
 function requestPrereqs(){
-    requestAJAX('/courses/requestprereqs/Biology%201101/', 'prereq') 
+    parent_name = document.getElementById('parent').value
+    requestAJAX(`/requestprereqs/${parent_name}/`, 'prereq') 
 }
 function requestAP(){
-    requestAJAX('/courses/requestap/Math%201152/', 'test') 
+    parent_name = document.getElementById('parent').value
+    requestAJAX(`/requestap/${parent_name}/`, 'test') 
 }
