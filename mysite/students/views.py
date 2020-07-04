@@ -4,12 +4,22 @@ from .viewPages.creditPages import *
 from .viewPages.homePages import *
 from .viewPages.schedulePages import *
 from django.views.decorators.csrf import csrf_protect
+from .datahelper.courses.coursesDataGet import *
 
 # Create your views here.
 
 # --- TESTING --- 
 def test(request):
-    return HttpResponse("Helllo World")
+    # return HttpResponse(getStudentLink(request))
+    # return HttpResponse(str(getEnrollmentLink(request)))
+    # return HttpResponse(str(getMajorLinks(request)))
+    # return HttpResponse(str(getCategoryLinks(request)))
+    # return HttpResponse(str(getSubCategoryLinks(request)))
+    # return HttpResponse(str(getRequirementLinks(request)))
+    # return HttpResponse(str(getCourseLinks(request)))
+    # return HttpResponse(str(getPrereqLinks(request)))
+    return HttpResponse(str(getApLinks(request)))
+
 
 # --- ABOUT ---
 def aboutPage(request):

@@ -1,124 +1,104 @@
+from .coursesHelper import *
 import requests
-from django.contrib.sites.shortcuts import get_current_site
 from lxml import etree
-from ..models import Student, Enrolled
 
 # --- get operations ---
 # given user data
 # return related major data
 
-def getStudentID(user):
-    first_name = user.first_name
-    last_name = user.last_name
-    username = user.username
-    return Student.objects.get(firstname=first_name,
-                               lastname=last_name,
-                               username=username)
 
+# --- get data links fuctions ---
 
-def getEnrollmentKey(user):
-    student_id = getStudentID(user)
-    return Enrolled.objects.get(students=student_id)
+def getStudentLink(request):
+    pk = getInstancePK(request, 'student', request.user)
+    api_link = getCoursesAPI(request, 'student')
+    relation = f'{api_link}{pk}/'
+    return relation
+    
+def getEnrollmentLink(request):
+    student_link = getStudentLink(request)
+    relations = getSubDataLinks(request, 'enrolled', 'student', student_link)
+    return relations
 
+def getMajorLinks(request):
+    enrolled_link = getEnrollmentLink(request)
+    relations = compileSubDataLinks(request, 'major', 'enrolled', enrolled_link)
+    return relations
 
+def getCategoryLinks(request):
+    major_link = getMajorLinks(request) 
+    relations = compileSubDataLinks(request, 'category', 'major', major_link)
+    return relations
 
-def pluralVersion(data_model):
-    data_sets = {
-        'student': 'students',
-        'enrolled': 'enrolled',
-        'major': 'majors',
-        'category': 'categories',
-        'subcategory': 'subcategories',
-        'requirement': 'requirements',
-        'course': 'courses',
-        'prereq': 'prereqs',
-        'test': 'apcredits',
-    }
-    data_set = data_sets[data_model] 
-    return data_set
+def getSubCategoryLinks(request):
+    category_link = getCategoryLinks(request)
+    relations = compileSubDataLinks(request, 'subcategory', 'category', category_link)
+    return relations
 
-# --- helper functions ---
-def getCoursesAPI(request, data_model):
-    current_site = get_current_site(request)
-    data_set = pluralVersion(data_model)
-    api_domain = f'http://{current_site.domain}/courses/{data_set}/'
-    return api_domain
+def getRequirementLinks(request):
+    subcategory_link = getSubCategoryLinks(request)
+    relations = compileSubDataLinks(request, 'requirement', 'subcategory', subcategory_link)
+    return relations
 
+def getCourseLinks(request):
+    req_link = getRequirementLinks(request)
+    relations = compileSubDataLinks(request, 'course', 'requirement', req_link)
+    return relations
 
-def getInstancePK(request, data_model, name):
-    api_request = getCoursesAPI(request, data_model) 
-    result = requests.get(api_request)
-    for instance in result.json():
-        instance_name = instance[data_model]
-        if instance_name == name:
-            return instance.get('pk')
-    return -1
+def getPrereqLinks(request):
+    course_link = getCourseLinks(request)
+    relations = compileSubDataLinks(request, 'prereq', 'course', course_link)
+    return relations
 
-
-def getSubDataList(request, data_model, parent_model, parent_name):
-    sub_data_names = []
-    api_requuest = getCoursesAPI(request, data_model)
-    relation = None
-    if parent_model is not None:
-        parent_pk = getInstancePK(request, parent_model, parent_name)
-        relation = f'{getCoursesAPI(request, parent_model)}{parent_pk}/'
-    result = requests.get(api_requuest)
-    if result.status_code != 200:
-        raise Exception('ERROR: API request unsuccessful.') 
-    for instance in result.json():
-        if relation is not None:
-            parent_set = pluralVersion(parent_model)
-            if parent_model == 'major':
-                parent_set = parent_model
-            if instance[parent_set] == relation or relation in instance[parent_set]:
-                instance_name = instance[data_model]
-                sub_data_names.append(instance_name)
-        if relation is None:
-            instance_name = instance[data_model]
-            sub_data_names.append(instance_name)
-    return sub_data_names
-
-
-def checkValidData(request, data_model, data_name):
-    data_pk = getInstancePK(request, data_model, data_name)
-    api_request = getCoursesAPI(request, data_model) + data_pk
-    result = requests.get(api_request)
-    if result.status_code != 200:
-        raise Exception('ERROR: API request unsuccessful.')
-    validity = True
-    try: validity = result.json()['detail'] == 'Not found.'
-    except KeyError: pass
-    return validity
+def getApLinks(request):
+    course_link = getCourseLinks(request)
+    relations = compileSubDataLinks(request, 'test', 'course', course_link)
+    return relations
 
 # %20 = space in url
 
 # --- get data list fuctions ---
 def getMajorList(request):
-    return getSubDataList(request, 'major', None, None)
+    links = getMajorLinks(request)
+    data = getInstanceNames(request, 'major', links)
+    return data
 
 
 def getCategoryList(request, major_name):
-    return getSubDataList(request, 'category', 'major', major_name)
-
+    links = getCategoryLinks(request)
+    filtered_links = filterLinks(links, 'major', major_name)
+    data = getInstanceNames(request, 'category', filtered_links)
+    return data
 
 def getSubCategoryList(request, category_name):
-    return getSubDataList(request, 'subcategory', 'category', category_name)
+    links = getSubCategoryLinks(request)
+    filter_links = filterLinks(links, 'categories', category_name)
+    data = getInstanceNames(request, 'subcategory', filter_links)
+    return data
 
 def getRequirementList(request, subcategory_name):
-    return getSubDataList(request, 'requirement', 'subcategory', subcategory_name)
-
+    links = getSubCategoryLinks(request)
+    filter_links = filterLinks(links, 'subcategories', subcategory_name)
+    data = getInstanceNames(request, 'requirement', filter_links)
+    return data
 
 def getCourseList(request, requirement_name):
-    return getSubDataList(request, 'course', 'requirement', requirement_name)
-
+    links = getSubCategoryLinks(request)
+    filter_links = filterLinks(links, 'requirements', requirement_name)
+    data = getInstanceNames(request, 'course', filter_links)
+    return data
 
 def getPrereqList(request, course_name):
-    return getSubDataList(request, 'prereq', 'course', course_name)
-
+    links = getSubCategoryLinks(request)
+    filter_links = filterLinks(links, 'courses', course_name)
+    data = getInstanceNames(request, 'prereq', filter_links)
+    return data
 
 def getAPList(request, course_name):
-    return getSubDataList(request, 'test', 'course', course_name)
-
+    links = getSubCategoryLinks(request)
+    filter_links = filterLinks(links, 'courses', course_name)
+    data = getInstanceNames(request, 'test', filter_links)
+    return data
 
 def getXMLString(data_list, data_set, data_model):
     root = etree.Element(data_set)

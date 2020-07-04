@@ -12,7 +12,7 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Student
-        fields = ('firstname', 'lastname', 'username', 'url')       
+        fields = ('pk', 'firstname', 'lastname', 'username', 'url')       
 
 class EnrolledSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="enrolled-detail", 
@@ -22,7 +22,7 @@ class EnrolledSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Enrolled
-        fields = ('enrolled', 'students', 'url')
+        fields = ('pk', 'enrolled', 'students', 'url')
 
 class MajorSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="majors-detail", 
