@@ -1,0 +1,34 @@
+{% extends "students/base.html" %}
+{% block title %}
+    student homepage
+{% endblock %}
+{% block external %}
+{% load static %}
+<link rel="stylesheet" href="{%static '/css/homebar.css' %}"> 
+{% endblock %}
+{% block body%}
+<nav class="home">
+    <a class="homebar" href="{% url 'credit_one' %}">CREDITS NEEDED</a>
+    <a class="homebar  active" href="{% url 'credit_two' %}">CREDITS WANTED</a>
+</nav>
+{% if my_majors%}
+    {% for major in my_majors %}
+        <p>{{major}}</p>
+    {% endfor %}
+{% endif %}
+{% if my_years %}
+    {% for year in my_years %}
+        <p>{{year}}</p>
+    {% endfor %}
+{% endif %}
+{% if my_semesters %}
+    {% for semester in my_semesters %}
+        <p>{{semester}}</p>
+    {% endfor %}
+{% endif %}
+{% if my_courses %}
+    {% for course in my_courses %}
+        <p>{{course}}</p>
+    {% endfor %}
+{% endif %}
+{% endblock %}

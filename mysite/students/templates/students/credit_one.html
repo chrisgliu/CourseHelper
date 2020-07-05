@@ -1,0 +1,56 @@
+{% extends "students/base.html" %}
+{% block title %}
+    student homepage
+{% endblock %}
+{% block external %}
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/homebar.css' %}">
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/form.css' %}"> 
+    {% load static %}
+    <script src="{%static '/js/creditManager.js' %}"></script>
+{% endblock %}
+
+{% block body%}
+<nav class="home">
+    <a class="homebar active" href="{% url 'credit_one' %}">CREDITS NEEDED</a>
+    <a class="homebar" href="{% url 'credit_two' %}">CREDITS WANTED</a>
+</nav>
+<h1>Define what you need</h1>
+<hr>
+<table id=courses_data>
+    <tr id='Majors'>
+        <th>Majors</th>
+    </tr>
+    <tr id='Categories'>
+        <th>Categories</th>
+    </tr>
+    <tr id='Subcategories'>
+        <th>SubCategories</th>
+    </tr>
+    <tr id='Requirements'>
+        <th>Requirements</th>
+    </tr>
+    <tr id='Courses'>
+        <th>Courses</th>
+    </tr>
+    <tr id='Prereqs'>
+        <th>Prereqs</th>
+    </tr>
+    <tr id='Ap'>
+        <th>Ap</th>
+    </tr>
+</table>
+<ul id='workspace'>
+
+</ul>
+<input type="text" id="parent" name="parent">
+<button onclick='listMajors()'>Majors</button>
+<button onclick='listCategories()'>Categories</button>
+<button onclick='listSubcategories()'>SubCategories</button>
+<button onclick='listRequirements()'>Requirements</button>
+<button onclick='listCourses()'>Courses</button>
+<button onclick='listPrereqs()'>Prereqs</button>
+<button onclick='listAP()'>Ap</button>
+
+{% endblock %}

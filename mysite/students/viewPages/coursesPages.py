@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from .homePages import *
 from ..dataforms.CoursesForms import *
-from ..datahelper.coursesDataGet import *
+from ..datahelper.courses.coursesDataGet import *
 
 # --- COURSES DATA ---- 
 def requestMajorsHelper(request):

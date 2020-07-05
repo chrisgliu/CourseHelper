@@ -18,8 +18,12 @@ def getCreditData(request):
     return {}
 
 # --- CREDIT PAGE ---
-def creditPageHelper(request):
-   return renderHome(request, 'students/credit.html', getCreditData(request))
+def creditPageHelperOne(request):
+   return renderHome(request, 'students/credit_one.html')
+
+
+def creditPageHelperTwo(request):
+   return renderHome(request, 'students/credit_two.html', getCreditData(request))
 
 # --- CREDIT FORMS ---
 def processForm(request, model_form, command, redirect_name, template_path, context):

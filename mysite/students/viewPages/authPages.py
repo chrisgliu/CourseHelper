@@ -56,7 +56,7 @@ def signInFormHelper(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("credit"))
+            return HttpResponseRedirect(reverse("credit_one"))
         else:
             return render(request, "students/signIn.html", {"message": "Invalid credentials."})
 

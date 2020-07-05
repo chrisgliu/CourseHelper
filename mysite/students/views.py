@@ -1,8 +1,6 @@
 from .viewPages.authPages import *
-from .viewPages.budgetPages import *
 from .viewPages.creditPages import *
 from .viewPages.homePages import *
-from .viewPages.schedulePages import *
 from .viewPages.coursesPages import *
 from django.views.decorators.csrf import csrf_protect
 
@@ -39,14 +37,11 @@ def signUpForm(request):
     return signUpFormHelper(request)
 
 # --- HOME PAGES ---
-def creditPage(request):
-    return creditPageHelper(request)
+def creditPageOne(request):
+    return creditPageHelperOne(request)
 
-def schedulePage(request):
-    return schedulePageHelper(request)
-
-def budgetPage(request):
-    return budgetPageHelper(request)
+def creditPageTwo(request):
+    return creditPageHelperTwo(request)
 
 # --- CREDIT FORMS ---
 @csrf_protect
@@ -160,14 +155,3 @@ def coursesAddAp(request):
 @csrf_protect
 def coursesDeleteAp(request):
     return listApFormDelete(request)
-
-# # --- SCHEDULE FORMS ---
-# @csrf_protect
-# def scheduleForm(request):
-#     pass
-
-# # ---- BUDGET FORMS ---
-# @csrf_protect
-# def budgetForm(request):
-#     pass
-
