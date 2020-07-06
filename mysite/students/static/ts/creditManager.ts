@@ -1,88 +1,68 @@
 ///<reference path='creditAjax.ts' />
 
-var filter_majors:string[]= [];
-var filter_categories:string[] = [];
-var filter_subcategories:string[] = [];
-var filter_requirements:string[] = [];
-var filter_courses:string[] = [];
-
 
 function listMajors(){
-    clearWorkSpace('Majors');
-    requestMajors('Majors');
-    filter_majors = [];
-    let data:string[] = retrieveData('Majors'); 
-    data.forEach(element => {
-        filter_majors.push(element);
-    });
+    clearWorkSpace('Majors', '#listMajors');
+    requestAJAX('/requestmajors/', 'major', 'Majors');
 }
 
 
 function listCategories(){
-    clearWorkSpace('Categories');
-    for (let major_name of filter_majors) {
-        requestCategories('Categories', major_name);
+    clearWorkSpace('Categories', '#listCategories');
+    let majors:string[] = retrieveData('Majors'); 
+    for (let major_name of majors) {
+        let name:string = substituteURLSpace(major_name);
+        requestAJAX(`/requestcategories/${name}/`, 'category', 'Categories');
     }
-    filter_categories = [];
-    let data:string[] = retrieveData('Categories');
-    data.forEach(element => {
-        filter_categories.push(element);
-    });
-
 }
 
 
 function listSubcategories(){
-    clearWorkSpace('Subcategories');
-    for (let category_name of filter_categories) {
-        requestSubcategories('Subcategories', category_name)
+    clearWorkSpace('Subcategories', '#listSubcategories');
+    let categories:string[] = retrieveData('Categories');
+    for (let category_name of categories) {
+        let name:string = substituteURLSpace(category_name);
+        requestAJAX(`/requestsubcategories/${name}/`, 'subcategory', 'Subcategories'); 
     }
-    filter_subcategories = [];
-    let data:string[] = retrieveData('Subcategories');
-    data.forEach(element => {
-        filter_subcategories.push(element);
-    });
 }
 
 
 function listRequirements(){
-    clearWorkSpace('Requirements');
-    for (let subcategory_name of filter_subcategories) {
-        requestSubcategories('Requirements', subcategory_name)
+    clearWorkSpace('Requirements', '#listRequirements');
+    let subcategories:string[] = retrieveData('Subcategories');
+    for (let subcategory_name of subcategories) {
+        let name:string = substituteURLSpace(subcategory_name);
+        requestAJAX(`/requestrequirements/${name}/`, 'requirement', 'Requirements');
     }
-    filter_requirements = [];
-    let data:string[] = retrieveData('Requirements');
-    data.forEach(element => {
-        filter_requirements.push(element);
-    });
 }
 
 
 function listCourses(){
-    clearWorkSpace('Courses');
-    for (let requirement_name of filter_requirements) {
-        requestSubcategories('Courses', requirement_name)
+    clearWorkSpace('Courses', '#listCourses');
+    let requirements:string[] = retrieveData('Requirements');
+    for (let requirement_name of requirements) {
+        let name:string = substituteURLSpace(requirement_name);
+        requestAJAX(`/requestcourses/${name}/`, 'course', 'Courses'); 
     }
-    filter_courses = []
-    let data:string[] = retrieveData('Courses');
-    data.forEach(element => {
-        filter_courses.push(element);
-    });
 }
 
 
 function listPrereqs(){
-    clearWorkSpace('Prereqs');
-    for (let course_name of filter_courses) {
-        requestPrereqs('Prereqs', course_name);
+    clearWorkSpace('Prereqs', '#listPrereqs');
+    let courses:string[] = retrieveData('Courses');
+    for (let course_name of courses) {
+        let name:string = substituteURLSpace(course_name);
+        requestAJAX(`/requestprereqs/${name}/`, 'prereq', 'Prereqs'); 
     }
 }
 
 
 function listAP(){
-    clearWorkSpace('Ap');
-    for (let course_name of filter_courses) {
-        requestAP('Ap', course_name);
+    clearWorkSpace('Ap', '#listAP');
+    let courses:string[] = retrieveData('Courses');
+    for (let course_name of courses) {
+        let name:string = substituteURLSpace(course_name);
+        requestAJAX(`/requestap/${name}/`, 'test', 'Ap');
     }
 }
 

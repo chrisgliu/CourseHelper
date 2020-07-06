@@ -2,7 +2,8 @@ from django.forms import ModelForm
 from django import forms
 from ..datahelper.courses.coursesDataAdd import *
 from ..datahelper.courses.coursesDataDelete import *
-
+# --- note ---
+# does not work with duplicate names in sections
 # --- COURSES DATA ---
 class ListMajorForm(forms.Form):
     major = forms.CharField(label='major', required=True) 

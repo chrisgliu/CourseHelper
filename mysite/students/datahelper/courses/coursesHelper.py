@@ -1,5 +1,6 @@
 import requests
 from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 
 # --- helper functions ---
 data_sets = {
@@ -21,9 +22,8 @@ def singularVersion(data_reference):
 
 
 def getCoursesAPI(request, data_model):
-    current_site = get_current_site(request)
     data_set = pluralVersion(data_model)
-    api_domain = f'http://{current_site.domain}/courses/{data_set}/'
+    api_domain = f'http://{settings.SITE_URL}/courses/{data_set}/'
     return api_domain
 
 
@@ -35,20 +35,34 @@ def getInstances(request, data_model):
         instances.append(instance)
     return instances
 
+def getStudentInstancePK(request):
+    instances = getInstances(request, 'student')
+    if not request.user.is_authenticated:
+            return -1
+    if request.user.is_authenticated: 
+        for instance in instances:
+           instance_username = instance.get("username")
+           username = request.user.username
+           if instance_username == username:
+                    return instance.get('pk')
+    return -1
+
+def getAPInstancePK(request, test_name, scoremin, scoremax):
+    instances = getInstances(request, 'test')
+    for instance in instances:
+        _name = instance.get('test')
+        _min = instance.get('scoremin')
+        _max = instance.get('scoremax')
+        if (_name == test_name and _min == scoremin and _max==scoremax):
+            return instance.get('pk')
+    return -1
 
 def getInstancePK(request, data_model, name):
     instances = getInstances(request, data_model)
     for instance in instances:
-        if data_model=='student':
-            instance_username = instance.get("username")
-            user = name
-            username = user.username
-            if instance_username == username:
-                return instance.get('pk')
-        else:
-            instance_name = instance.get(data_model)
-            if instance_name == name:
-                return instance.get('pk')
+        instance_name = instance.get(data_model)
+        if instance_name == name:
+            return instance.get('pk')
     return -1
 
 

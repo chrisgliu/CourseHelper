@@ -1,16 +1,16 @@
 // --- displaying data ---
-function clearWorkSpace(workspace_id:string) {
+function clearWorkSpace(workspace_id:string, header_id:string) {
     let workspace = document.getElementById(workspace_id);
     if (workspace == null){ return}
+    let header = workspace.querySelector(header_id);
+    let copy = header.cloneNode(true);
     while (workspace.firstChild) {
         let child:ChildNode | null= workspace.lastChild;
         if (child != null){
             workspace.removeChild(child);
         }
     }
-    let header = document.createElement('th');
-    header.innerHTML = workspace_id;
-    workspace.appendChild(header);
+    workspace.appendChild(copy);
 }
 
 
@@ -48,12 +48,19 @@ function substituteChar(message:string, spot:number, item:string){
 }
 
 
+function checkFoWhitespace(message:string){
+    return message.indexOf(' ') !== -1;
+}
+
+
 function substituteURLSpace(message:string){
     let edited_message: string = message;
-    for (let index = 0; index < message.length; index++) {
-        let char:string = message.charAt(index);
-        if (char == ' '){
-            edited_message = substituteChar(edited_message, index, '%20');
+    if (checkFoWhitespace(message)){
+        for (let index = 0; index < message.length; index++) {
+            let char:string = message.charAt(index);
+            if (char == ' '){
+                edited_message = substituteChar(edited_message, index, '%20');
+            }
         }
     }
     return edited_message;
@@ -70,48 +77,4 @@ function retrieveData(workspace_id:string) {
     }
     return info_list;
 }
-
-
-// --- request functions ---
-function requestMajors(workspace_id:string){
-    requestAJAX('/requestmajors/', 'major', workspace_id);
-}
-
-
-function requestCategories(workspace_id:string, parent_name:string){
-    let name:string = substituteURLSpace(parent_name);
-    requestAJAX(`/requestcategories/${name}/`, 'category', workspace_id);
-}
-
-
-function requestSubcategories(workspace_id:string, parent_name:string){
-    let name:string = substituteURLSpace(parent_name);
-    requestAJAX(`/requestsubcategories/${name}/`, 'subcategory', workspace_id); 
-}
-
-
-function requestRequirements(workspace_id:string, parent_name:string){
-    let name:string = substituteURLSpace(parent_name);
-    requestAJAX(`/requestrequirements/${name}/`, 'requirement', workspace_id); 
-}
-
-
-function requestCourses(workspace_id:string, parent_name:string){
-    let name:string = substituteURLSpace(parent_name);
-    requestAJAX(`/requestcourses/${name}/`, 'course', workspace_id); 
-}
-
-
-function requestPrereqs(workspace_id:string, parent_name:string){
-    let name:string = substituteURLSpace(parent_name);
-    requestAJAX(`/requestprereqs/${name}/`, 'prereq', workspace_id); 
-}
-
-
-function requestAP(workspace_id:string, parent_name:string){
-    let name:string = substituteURLSpace(parent_name);
-    requestAJAX(`/requestap/${name}/`, 'test', workspace_id);
-}
-
-
 

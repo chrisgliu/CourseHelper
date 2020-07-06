@@ -18,37 +18,189 @@
 <hr>
 <table id=courses_data>
     <tr id='Majors'>
-        <th>Majors</th>
+        <th id='listMajors'>
+            <button onclick='listMajors()'>Majors</button>
+        </th>
     </tr>
     <tr id='Categories'>
-        <th>Categories</th>
+        <th id='listCategories'>
+            <button onclick='listCategories()'>Categories</button>
+        </th>
     </tr>
     <tr id='Subcategories'>
-        <th>SubCategories</th>
+        <th id='listSubcategories'>
+            <button onclick='listSubcategories()'>SubCategories</button> 
+        </th>
     </tr>
     <tr id='Requirements'>
-        <th>Requirements</th>
+        <th id='listRequirements'>
+            <button onclick='listRequirements()'>Requirements</button>
+        </th>
     </tr>
     <tr id='Courses'>
-        <th>Courses</th>
+        <th id='listCourses'>
+            <button onclick='listCourses()'>Courses</button>
+        </th>
     </tr>
     <tr id='Prereqs'>
-        <th>Prereqs</th>
+        <th id='listPrereqs'>
+            <button onclick='listPrereqs()'>Prereqs</button> 
+        </th>
     </tr>
     <tr id='Ap'>
-        <th>Ap</th>
+        <th id='listAP'>
+            <button onclick='listAP()'>Ap</button>
+        </th>
     </tr>
 </table>
-<ul id='workspace'>
-
-</ul>
-<input type="text" id="parent" name="parent">
-<button onclick='listMajors()'>Majors</button>
-<button onclick='listCategories()'>Categories</button>
-<button onclick='listSubcategories()'>SubCategories</button>
-<button onclick='listRequirements()'>Requirements</button>
-<button onclick='listCourses()'>Courses</button>
-<button onclick='listPrereqs()'>Prereqs</button>
-<button onclick='listAP()'>Ap</button>
-
+<div id='Majorformadd'>
+    <h3>Add Major</h3>  
+        <form method="post" action="{% url 'addListMajor' %}">  
+            {% csrf_token %}  
+            <label>Major:</label>  
+            <input type="text" placeholder="Enter the name of a major" name="major"> 
+            <button type="submit">Add</button>  
+        </form>  
+</div>
+<div id='Majorformdelete'>
+    <h3>Delete Major</h3>  
+        <form method="post" action="{% url 'deleteListMajor' %}">  
+            {% csrf_token %}  
+            <label>Major:</label>  
+            <input type="text" placeholder="Enter the name of a major" name="major"> 
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
+<div id='Categoryformadd'>
+    <h3>Add Category</h3>  
+        <form method="post" action="{% url 'addListCategory' %}">  
+            {% csrf_token %}  
+            <label>Major:</label>  
+            <input type="text" placeholder="Enter the name of a major" name="major"> 
+            <label>Category:</label>  
+            <input type="text" placeholder="Enter the name of a category" name="category"> 
+            <button type="submit">Add</button>  
+        </form>  
+</div>
+<div id='Categoryformdelete'>
+    <h3>Delete Category</h3>  
+        <form method="post" action="{% url 'deleteListCategory' %}">  
+            {% csrf_token %}  
+            <label>Major:</label>  
+            <input type="text" placeholder="Enter the name of a major" name="major"> 
+            <label>Category:</label>  
+            <input type="text" placeholder="Enter the name of a category" name="category"> 
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
+<div id='Subcategoryformadd'>
+    <h3>Add Subcategory</h3>  
+        <form method="post" action="{% url 'addListSubcategory' %}">  
+            {% csrf_token %}  
+            <label>Category:</label>  
+            <input type="text" placeholder="Enter the name of a category" name="category"> 
+            <label>Subcategory:</label>  
+            <input type="text" placeholder="Enter the name of a subcategory" name="subcategory"> 
+            <button type="submit">Add</button>  
+        </form>  
+</div>
+<div id='Subcategoryformdelete'>
+    <h3>Delete Subcategory</h3>  
+        <form method="post" action="{% url 'deleteListSubcategory' %}">  
+            {% csrf_token %}  
+            <label>Category:</label>  
+            <input type="text" placeholder="Enter the name of a category" name="category"> 
+            <label>Subcategory:</label>  
+            <input type="text" placeholder="Enter the name of a subcategory" name="subcategory"> 
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
+<div id='Requirementformadd'>
+    <h3>Add Requirement</h3>  
+        <form method="post" action="{% url 'addListRequirement' %}">  
+            {% csrf_token %}  
+            <label>Subcategory:</label>  
+            <input type="text" placeholder="Enter the name of a subcategory" name="subcategory"> 
+            <label>Requirement:</label>   
+            <input type="text" placeholder="Enter the name of a requirement" name="requirement">  
+            <button type="submit">Add</button>  
+        </form>  
+</div>
+<div id='Requirementformdelete'>
+    <h3>Delete Requirement</h3>  
+        <form method="post" action="{% url 'deleteListRequirement' %}">  
+            {% csrf_token %}  
+            <label>Subcategory:</label>  
+            <input type="text" placeholder="Enter the name of a subcategory" name="subcategory"> 
+            <label>Requirement:</label>   
+            <input type="text" placeholder="Enter the name of a requirement" name="requirement">  
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
+<div id='Courseformadd'>
+    <h3>Add Courser</h3>  
+        <form method="post" action="{% url 'addListCourse' %}">  
+            {% csrf_token %}  
+            <label>Requirement:</label>   
+            <input type="text" placeholder="Enter the name of a requirement" name="requirement">  
+            <label>Course:</label>  
+            <input type="text" placeholder="Enter the name of a course" name="course"> 
+            <button type="submit">Add</button> 
+        </form>  
+</div>
+<div id='Courseformdelete'>
+    <h3>Delete Course</h3>  
+        <form method="post" action="{% url 'deleteListCourse' %}">  
+            {% csrf_token %}  
+            <label>Requirement:</label>   
+            <input type="text" placeholder="Enter the name of a requirement" name="requirement">  
+            <label>Course:</label>  
+            <input type="text" placeholder="Enter the name of a course" name="course"> 
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
+<div id='Prereqformadd'>
+    <h3>Add Prereq</h3>  
+        <form method="post" action="{% url 'addListPrereq' %}">  
+            {% csrf_token %} 
+            <label>Course:</label>  
+            <input type="text" placeholder="Enter the name of a course" name="course">  
+            <label>Prereq:</label>  
+            <input type="text" placeholder="Enter the name of a prereq" name="prereq"> 
+            <button type="submit">Add</button>  
+        </form>  
+</div>
+<div id='Prereqformdelete'>
+    <h3>Delete Prereq</h3>  
+        <form method="post" action="{% url 'deleteListPrereq' %}">  
+            {% csrf_token %}  
+            <label>Course:</label>  
+            <input type="text" placeholder="Enter the name of a course" name="course"> 
+            <label>Prereq:</label>  
+            <input type="text" placeholder="Enter the name of a prereq" name="prereq"> 
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
+<div id='Apformadd'>
+    <h3>Add Ap Test</h3>  
+        <form method="post" action="{% url 'addListAp' %}">  
+            {% csrf_token %}  
+            <label>Course:</label>  
+            <input type="text" placeholder="Enter the name of a course" name="course"> 
+            <label>Test:</label>  
+            <input type="text" placeholder="Enter the name of a test" name="test"> 
+            <button type="submit">Add</button>  
+        </form>  
+</div>
+<div id='Apformdelete'>
+    <h3>Delete Ap Test</h3>  
+        <form method="post" action="{% url 'deleteListAp' %}">  
+            {% csrf_token %}  
+            <label>Course:</label>  
+            <input type="text" placeholder="Enter the name of a course" name="course"> 
+            <label>Test:</label>  
+            <input type="text" placeholder="Enter the name of a test" name="test"> 
+            <button type="submit">Delete</button>  
+        </form>  
+</div>
 {% endblock %}

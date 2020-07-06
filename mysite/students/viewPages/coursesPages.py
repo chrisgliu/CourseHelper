@@ -54,76 +54,76 @@ def processForm(request, model_form, command, redirect_name, template_path, cont
         if request.user.is_authenticated:
             form = model_form(request.POST)
             if form.is_valid():
-                form.process(request.user, command)
+                form.process(request, command)
                 return HttpResponseRedirect(reverse(redirect_name)) 
     return render(request, template_path, context)
 
 
 def listMajorFormAdd(request):
-    return processForm(request, ListMajorForm, 'add', 'credit', 
+    return processForm(request, ListMajorForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listMajorFormDelete(request):
-    return processForm(request, ListMajorForm, 'delete', 'credit', 
+    return processForm(request, ListMajorForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listCategoryFormAdd(request):
-    return processForm(request, ListCategoryForm, 'add', 'credit', 
+    return processForm(request, ListCategoryForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listCategoryFormDelete(request):
-    return processForm(request, ListCategoryForm, 'delete', 'credit', 
+    return processForm(request, ListCategoryForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listSubCategoryFormAdd(request):
-    return processForm(request, ListSubCategoryForm, 'add', 'credit', 
+    return processForm(request, ListSubCategoryForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listSubCategoryFormDelete(request):
-    return processForm(request, ListSubCategoryForm, 'delete', 'credit', 
+    return processForm(request, ListSubCategoryForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listRequirementFormAdd(request):
-    return processForm(request, ListRequirementForm, 'add', 'credit', 
+    return processForm(request, ListRequirementForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listRequirementFormDelete(request):
-    return processForm(request, ListRequirementForm, 'delete', 'credit', 
+    return processForm(request, ListRequirementForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listCourseFormAdd(request):
-    return processForm(request, ListCourseForm, 'add', 'credit', 
+    return processForm(request, ListCourseForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listCourseFormDelete(request):
-    return processForm(request, ListCourseForm, 'delete', 'credit', 
+    return processForm(request, ListCourseForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 def listPrereqFormAdd(request):
-    return processForm(request, ListPrereqForm, 'add', 'credit', 
+    return processForm(request, ListPrereqForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listPrereqFormDelete(request):
-    return processForm(request, ListPrereqForm, 'delete', 'credit', 
+    return processForm(request, ListPrereqForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 def listApFormAdd(request):
-    return processForm(request, ListApForm, 'add', 'credit', 
+    return processForm(request, ListApForm, 'add', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 
 def listApFormDelete(request):
-    return processForm(request, ListApForm, 'delete', 'credit', 
+    return processForm(request, ListApForm, 'delete', 'credit_one', 
         'students/signIn.html', {'message': 'Sign in first'})
 
 

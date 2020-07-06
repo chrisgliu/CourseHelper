@@ -18,38 +18,39 @@ class StudentViewSet(viewsets.ModelViewSet):
 class EnrolledViewSet(viewsets.ModelViewSet):
     queryset = Enrolled.objects.all()
     serializer_class = EnrolledSerializer
-
+  
 
 class MajorViewSet(viewsets.ModelViewSet):
     queryset = Major.objects.all()
     serializer_class = MajorSerializer
-
+ 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
+   
 
 class SubCategoryViewSet(viewsets.ModelViewSet):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
-
+   
 
 class RequirementViewSet(viewsets.ModelViewSet):
     queryset = Requirement.objects.all()
     serializer_class = RequirementSerializer
-
+  
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-
+  
 
 class PrereqViewSet(viewsets.ModelViewSet):
     queryset = Prereq.objects.all()
     serializer_class = PrereqSerializer
-
+   
 
 class ApCreditViewSet(viewsets.ModelViewSet):
     queryset = ApCredit.objects.all()
     serializer_class = ApCreditSerializer
+   

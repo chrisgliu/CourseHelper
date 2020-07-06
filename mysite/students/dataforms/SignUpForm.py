@@ -8,6 +8,7 @@ from django.utils.http import urlsafe_base64_encode
 from ..tokens import account_activation_token
 from ..datahelper.students.studentsDataAdd import *
 from ..datahelper.students.studentsDataGet import *
+from django.conf import settings
 
 # --- SIGN UP ---
 class SignUpForm(UserCreationForm):
@@ -25,11 +26,10 @@ class SignUpForm(UserCreationForm):
         return user  # for activation
 
     def sendActivationEmail(self, request, user):
-        current_site = get_current_site(request)
         mail_subject = 'Activate your account.'
         message = render_to_string('students/acc_active_email.html', {
             'user': user,
-            'domain': current_site.domain,
+            'domain': settings.SITE_URL,
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
         })

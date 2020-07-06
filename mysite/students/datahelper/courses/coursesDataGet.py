@@ -10,7 +10,7 @@ from lxml import etree
 # --- get data links fuctions ---
 
 def getStudentLink(request):
-    pk = getInstancePK(request, 'student', request.user)
+    pk = getStudentInstancePK(request)
     api_link = getCoursesAPI(request, 'student')
     relation = f'{api_link}{pk}/'
     return relation

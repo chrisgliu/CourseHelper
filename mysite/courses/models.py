@@ -23,7 +23,7 @@ class Student(models.Model):
 # holds enrollment status
 # if an enrolled student is deleted, all corresponding data is deleted
 class Enrolled(models.Model):
-    enrolled = models.BooleanField(default=True)
+    enrolled = models.CharField(max_length=64)
     students = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="enrolled")
 
     class Meta:
