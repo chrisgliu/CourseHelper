@@ -24,24 +24,22 @@ function addData(workspace_id, info) {
     data.innerHTML = info;
     workspace.appendChild(data);
 }
-function readXMLData(workspace_id, xml_data, data_tag) {
-    let data = xml_data.getElementsByTagName(data_tag);
-    for (let data_instance of data) {
-        let info = data_instance.innerHTML;
-        addData(workspace_id, info);
-    }
-}
 // --- making a request for data ---
-function requestAJAX(url_source, data_tag, work_space_id) {
+function requestAJAX(url_source, data_tag, workspace_id) {
     let request = new XMLHttpRequest();
     request.open('GET', url_source, true);
     request.onload = () => {
         let response = request.responseXML;
         if (response != null) {
-            readXMLData(work_space_id, response, data_tag);
+            let data = response.getElementsByTagName(data_tag);
+            for (let data_instance of data) {
+                let info = data_instance.innerHTML;
+                addData(workspace_id, info);
+            }
         }
     };
     request.send();
+    // cant return value in asynchronous request
 }
 function substituteChar(message, spot, item) {
     let before = message.substring(0, spot);
@@ -58,6 +56,20 @@ function substituteURLSpace(message) {
         }
     }
     return edited_message;
+}
+// retrieving listed data
+function retrieveData(workspace_id) {
+    let workspace = document.getElementById(workspace_id);
+    if (workspace == null) {
+        return;
+    }
+    let info_list = [];
+    let data = workspace.children;
+    for (let index = 1; index < data.length; index++) {
+        const info = data[index].innerHTML;
+        info_list.push(info);
+    }
+    return info_list;
 }
 // --- request functions ---
 function requestMajors(workspace_id) {
@@ -88,33 +100,75 @@ function requestAP(workspace_id, parent_name) {
     requestAJAX(`/requestap/${name}/`, 'test', workspace_id);
 }
 ///<reference path='creditAjax.ts' />
+var filter_majors = [];
+var filter_categories = [];
+var filter_subcategories = [];
+var filter_requirements = [];
+var filter_courses = [];
 function listMajors() {
     clearWorkSpace('Majors');
     requestMajors('Majors');
+    filter_majors = [];
+    let data = retrieveData('Majors');
+    data.forEach(element => {
+        filter_majors.push(element);
+    });
 }
-function listCategories(major_name) {
+function listCategories() {
     clearWorkSpace('Categories');
-    requestCategories('Categories', major_name);
+    for (let major_name of filter_majors) {
+        requestCategories('Categories', major_name);
+    }
+    filter_categories = [];
+    let data = retrieveData('Categories');
+    data.forEach(element => {
+        filter_categories.push(element);
+    });
 }
-function listSubcategories(category_name) {
+function listSubcategories() {
     clearWorkSpace('Subcategories');
-    requestSubcategories('Subcategories', category_name);
+    for (let category_name of filter_categories) {
+        requestSubcategories('Subcategories', category_name);
+    }
+    filter_subcategories = [];
+    let data = retrieveData('Subcategories');
+    data.forEach(element => {
+        filter_subcategories.push(element);
+    });
 }
-function listRequirements(subcategory_name) {
+function listRequirements() {
     clearWorkSpace('Requirements');
-    requestRequirements('Requirements', subcategory_name);
+    for (let subcategory_name of filter_subcategories) {
+        requestSubcategories('Requirements', subcategory_name);
+    }
+    filter_requirements = [];
+    let data = retrieveData('Requirements');
+    data.forEach(element => {
+        filter_requirements.push(element);
+    });
 }
-function listCourses(requirement_name) {
+function listCourses() {
     clearWorkSpace('Courses');
-    requestCourses('Courses', requirement_name);
+    for (let requirement_name of filter_requirements) {
+        requestSubcategories('Courses', requirement_name);
+    }
+    filter_courses = [];
+    let data = retrieveData('Courses');
+    data.forEach(element => {
+        filter_courses.push(element);
+    });
 }
-function listPrereqs(course_name) {
+function listPrereqs() {
     clearWorkSpace('Prereqs');
-    requestPrereqs('Prereqs', course_name);
+    for (let course_name of filter_courses) {
+        requestPrereqs('Prereqs', course_name);
+    }
 }
-function listAP(course_name) {
+function listAP() {
     clearWorkSpace('Ap');
-    requestAP('Ap', course_name);
+    for (let course_name of filter_courses) {
+        requestAP('Ap', course_name);
+    }
 }
 function toggleShow(id) {
     let element = document.getElementById(id);
