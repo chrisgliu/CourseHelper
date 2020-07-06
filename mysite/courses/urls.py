@@ -20,5 +20,14 @@ urlpatterns = [
     path('', include(router.urls)),
     # login URLs for the browsable API.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # get operation for relations
+    path("linkStudentAndEnrollment/<student_pk>/<enrollment_pk>/", linkStudentAndEnrollment),
+    path("linkEnrollmentAndMajor/<enrollment_pk>/<major_pk>/", linkEnrollmentAndMajor),
+    path("linkMajorAndCategory/<major_pk>/<category_pk>/", linkMajorAndCategory),
+    path("linkCategoryAndSubcategory/<category_pk>/<subcategory_pk>/", linkCategoryAndSubcategory),
+    path("linkSubcategoryAndRequirement/<subcategory_pk>/<requirement_pk>/", linkSubcategoryAndRequirement),
+    path("linkRequirementAndCourse/<requirement_pk>/<course_pk>/", linkRequirementAndCourse),
+    path("linkCourseAndPrereq/<course_pk>/<prereq_pk>/", linkCourseAndPrereq),
+    path("linkCourseAndAp/<course_pk>/<ap_pk>/", linkCourseAndAp),
    
 ]

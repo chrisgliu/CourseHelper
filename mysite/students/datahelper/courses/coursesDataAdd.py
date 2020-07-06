@@ -10,21 +10,10 @@ def createData(request, data_model, data):
     api_link = getCoursesAPI(request, data_model)
     requests.post(api_link, data=data) 
 
-def addRelation(request, data_model, relation, **kwargs):
-    api_link = getCoursesAPI(request, data_model)
-    instance_pk = 0
-    if data_model == 'student':
-        instance_pk = getStudentInstancePK(request)
-    elif data_model == 'test':
-        test = kwargs.get('test')
-        scoremin = kwargs.get('scoremin')
-        scoremax = kwargs.get('scoremax')
-        instance_pk == getAPInstancePK(request, test, scoremin, scoremax)
-    else:
-        name = kwargs.get('name')
-        instance_pk = getInstancePK(request, data_model, name)
-    instance_link = f'{api_link}{instance_pk}/'
-    requests.patch(instance_link, data=relation)
+
+def addRelation(method_reference, relation_pk, data_pk):
+    api_link = f'http://{settings.SITE_URL}/courses/{method_reference}/{relation_pk}/{data_pk}/'
+    requests.get(api_link)
 
 
 def addListStudent(request, first_name, last_name, username):
@@ -33,70 +22,63 @@ def addListStudent(request, first_name, last_name, username):
 
 
 def addListEnrollment(request, username):
-    student_relation = getStudentLink(request)
     data = { "enrolled": username,}
-    relation = { "students": student_relation,}
     createData(request, 'enrolled', data=data)
-    addRelation(request, 'enrolled', relation=relation, name=username)
+    relation_pk = getStudentInstancePK(request)
+    data_pk = getInstancePK(request, 'enrolled', username)
+    addRelation('linkStudentAndEnrollment', relation_pk, data_pk)
 
 
 def addListMajor(request, major_name):
-    enrollment_relation = getEnrollmentLink(request)
     data = { "major": major_name,}
-    relation = { "enrolled": enrollment_relation}
     createData(request, 'major', data=data)
-    addRelation(request, 'major', relation=relation, name=major_name)
+    relation_pk = getInstancePK(request, 'enrolled', request.user.username)
+    data_pk = getInstancePK(request, 'major', major_name)
+    addRelation('linkEnrollmentAndMajor', relation_pk, data_pk)
  
 
 def addListCategory(request, major_name, category_name):
-    major_relations = getMajorLinks(request)
-    major_relation = filterLinks(request, major_relations, "major", major_name)
     data = { "category": category_name,}
-    relation = { "major": major_relation}
     createData(request, 'category', data=data)
-    addRelation(request, 'category', relation=relation, name=category_name)
-
+    relation_pk = getInstancePK(request, 'major', major_name)
+    data_pk = getInstancePK(request, 'category', category_name)
+    addRelation('linkMajorAndCategory', relation_pk, data_pk)
 
 def addListSubCategory(request, category_name, subcategory_name, note):
-    category_relations = getCategoryLinks(request)
-    category_relation = filterLinks(request, category_relations, "categories", category_name)
     data = { "subcategory": subcategory_name, "note": note,}
-    relation = { "categories": category_relation}
     createData(request, 'subcategory', data=data)
-    addRelation(request, 'subcategory', relation=relation, name=subcategory_name)
+    relation_pk = getInstancePK(request, 'category', category_name)
+    data_pk = getInstancePK(request, 'subcategory', subcategory_name) 
+    addRelation('linkCategoryAndSubcategory', relation_pk, data_pk)
+
 
 def addListRequirement(request, subcategory_name, requirement_name, credit):
-    subcategory_relations = getSubCategoryLinks(request)
-    subcategory_relation = filterLinks(request, subcategory_relations, "subcategories", subcategory_name)
     data = { "requirement": requirement_name, "credit": credit,}
-    relation = { "subcategories": subcategory_relation}
     createData(request, 'requirement', data=data)
-    addRelation(request, 'requirement', relation=relation, name=requirement_name)
-   
+    relation_pk = getInstancePK(request, 'subcategory', subcategory_name)
+    data_pk = getInstancePK(request, 'requirement', requirement_name) 
+    addRelation('linkSubcategoryAndRequirement', relation_pk, data_pk)
+
 
 def addListCourses(request, requirement_name, course_name, credit):
-    requirement_relations = getRequirementLinks(request)
-    requirement_relation = filterLinks(request, requirement_relations, "requirements", requirement_name)
     data = { "course": course_name, "credit": credit,}
-    relation = { "requirements": requirement_relation}
     createData(request, 'course', data=data)
-    addRelation(request, 'course', relation=relation, name=course_name)
+    relation_pk = getInstancePK(request, 'requirement', requirement_name)
+    data_pk = getInstancePK(request, 'course', course_name)
+    addRelation('linkRequirementAndCourse', relation_pk, data_pk)  
 
 
 def addListPrereq(request, course_name, prereq_name):
-    course_relations = getCourseLinks(request)
-    course_relation = filterLinks(request, course_relations, "courses", course_name)
     data = { "prereq": prereq_name,}
-    relation = { "courses": course_relations}
     createData(request, 'prereq', data=data)
-    addRelation(request, 'prereq', relation=relation, name=prereq_name)
-    
+    relation_pk = getInstancePK(request, 'course', course_name)
+    data_pk = getInstancePK(request, 'prereq', prereq_name)
+    addRelation('linkCourseAndPrereq', relation_pk, data_pk)
+
 
 def addListAp(request, course_name, test_name, scoremin, scoremax):
-    course_relations = getCourseLinks(request)
-    course_relation = filterLinks(request, course_relations, "courses", course_name)
     data = { "test": test_name, "scoremin": scoremin, "scoremax": scoremax,}
-    relation = { "courses": course_relation}
     createData(request, 'test', data=data)
-    addRelation(request, 'test', relation=relation, test=test_name, scoremin=scoremin, scoremax=scoremax)
-   
+    relation_pk = getInstancePK(request, 'course', course_name)
+    data_pk = getAPInstancePK(request, test_name, scoremin, scoremax)
+    addRelation('linkCourseAndAp', relation_pk, data_pk)

@@ -53,4 +53,52 @@ class PrereqViewSet(viewsets.ModelViewSet):
 class ApCreditViewSet(viewsets.ModelViewSet):
     queryset = ApCredit.objects.all()
     serializer_class = ApCreditSerializer
-   
+
+# --- manipulate relationships ---
+def linkStudentAndEnrollment(request, student_pk, enrollment_pk):
+    student = Student.objects.get(pk=student_pk)
+    enrolled = Enrolled.objects.get(pk=enrollment_pk)
+    enrolled.students = student
+    enrolled.save()
+
+def linkEnrollmentAndMajor(request, enrollment_pk, major_pk):
+    enrolled = Enrolled.objects.get(pk=enrollment_pk)
+    major = Major.objects.get(pk=major_pk)
+    major.enrolled.add(enrolled)
+    major.save()
+
+def linkMajorAndCategory(request, major_pk, category_pk):
+    major = Major.objects.get(pk=major_pk)
+    category = Category.objects.get(pk=category_pk)
+    category.major.add(major)
+    category.save()
+
+def linkCategoryAndSubcategory(request, category_pk, subcategory_pk):
+    category = Category.objects.get(pk=category_pk)
+    subcategory = subcategory.objects.get(pk=subcategory_pk)
+    subcategory.categories.add(category) 
+    subcategory.save()
+
+def linkSubcategoryAndRequirement(request, subcategory_pk, requirement_pk):
+    subcategory = SubCategory.objects.get(pk=subcategory_pk)
+    requirement = Requirement.objects.get(pk=requirement_pk)
+    requirement.subcategories.add(subcategory) 
+    requirement.save()
+
+def linkRequirementAndCourse(request, requirement_pk, course_pk):
+    requirement = Requirement.objects.get(pk=requirement_pk)
+    course = Course.objects.get(course_pk)
+    course.requirements.add(requirement)
+    course.save()
+
+def linkCourseAndPrereq(request, course_pk, prereq_pk):
+    course = Course.objects.get(course_pk)
+    prereq = Prereq.objects.get(prereq_pk)
+    prereq.courses.add(course)
+    prereq.save()
+
+def linkCourseAndAp(request, course_pk, ap_pk):
+    course = Course.objects.get(course_pk)
+    test = ApCredit.objects.get(prereq_pk)
+    test.courses.add(course)
+    test.save()
