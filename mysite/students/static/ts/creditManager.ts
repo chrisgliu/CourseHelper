@@ -12,7 +12,7 @@ function displayForms(forms_to_show:string[]){
         'Apformadd', 'Apformdelete'
     ];
     all_forms.forEach(element => {
-       dontShowIt(element);
+        dontShowIt(element);
     });
     forms_to_show.forEach(element => {
         showIt(element);

@@ -21,7 +21,16 @@ function addData(workspace_id, info) {
         return;
     }
     let data = document.createElement('td');
-    data.innerHTML = info;
+    data.className = info;
+    let button = document.createElement('button');
+    let classes = button.classList;
+    classes.add('btn');
+    classes.add('btn-submit');
+    button.innerHTML = info;
+    button.onclick = () => {
+        workspace.getElementsByClassName(info)[0].remove();
+    };
+    data.appendChild(button);
     workspace.appendChild(data);
 }
 // --- making a request for data ---
@@ -71,7 +80,7 @@ function retrieveData(workspace_id) {
     let info_list = [];
     let data = workspace.children;
     for (let index = 1; index < data.length; index++) {
-        const info = data[index].innerHTML;
+        const info = data[index].getElementsByTagName('button')[0].innerHTML;
         info_list.push(info);
     }
     return info_list;

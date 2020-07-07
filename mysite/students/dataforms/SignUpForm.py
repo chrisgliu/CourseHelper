@@ -8,12 +8,13 @@ from django.utils.http import urlsafe_base64_encode
 from ..tokens import account_activation_token
 from ..datahelper.students.studentsDataAdd import *
 from ..datahelper.students.studentsDataGet import *
+from ..datahelper.courses.coursesDataAdd import *
 from django.conf import settings
 
 # --- SIGN UP ---
 class SignUpForm(UserCreationForm):
 
-    def saveButDontActivate(self):
+    def saveButDontActivate(self, request):
         user = self.save(commit=False)
         user.is_active = False
         username = self.cleaned_data.get('username')
@@ -22,6 +23,8 @@ class SignUpForm(UserCreationForm):
         addStudent(first_name, last_name, username)
         this_student = getStudentID(user)
         addEnrollment(this_student)
+        addListStudent(request, first_name, last_name, username)
+        addListEnrollment(request, username)
         user.save()
         return user  # for activation
 

@@ -18,7 +18,7 @@ def signUpFormHelper(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.saveButDontActivate()
+            user = form.saveButDontActivate(request)
             form.sendActivationEmail(request, user)
             message = 'Please confirm your email address to complete the registration'
             return render(request, 'students/signUp.html', {"message": message})
