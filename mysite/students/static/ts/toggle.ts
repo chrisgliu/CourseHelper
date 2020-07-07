@@ -1,3 +1,13 @@
+function showIt(id: string){
+    let element = document.getElementById(id);
+    if (element == null){ return}
+    element.style.display = 'block'
+}
+function dontShowIt(id: string){
+    let element = document.getElementById(id);
+    if (element == null){ return}
+    element.style.display = 'none'
+}
 function toggleShow(id: string){
     let element = document.getElementById(id);
     if (element == null){ return}

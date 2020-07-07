@@ -22,7 +22,7 @@ class ListCategoryForm(forms.Form):
     
     def process(self, request, add_or_delete='add'):
         major = self.cleaned_data.get('major')
-        category = self.cleaned_dat.get('category')
+        category = self.cleaned_data.get('category')
         if add_or_delete == 'add':
             addListCategory(request, major, category)
         if add_or_delete == 'delete':
@@ -32,12 +32,14 @@ class ListCategoryForm(forms.Form):
 class ListSubCategoryForm(forms.Form):
     category = forms.CharField(label='category', required=True)
     subcategory = forms.CharField(label='subcategory', required=True)
+    note = forms.CharField(label='note', required=False)
 
     def process(self, request, add_or_delete='add'):
         category = self.cleaned_data.get('category')
         subcategory = self.cleaned_data.get('subcategory')
+        note = self.cleaned_data.get('note')
         if add_or_delete == 'add':
-            addListSubCategory(request, category, subcategory)
+            addListSubCategory(request, category, subcategory, note)
         if add_or_delete == 'delete':
             deleteListSubCategory(request, category, subcategory)
 
@@ -45,12 +47,14 @@ class ListSubCategoryForm(forms.Form):
 class ListRequirementForm(forms.Form):
     subcategory = forms.CharField(label='subcategory', required=True)
     requirement = forms.CharField(label='requirement', required=True)
+    credit = forms.IntegerField(label='credit', required=False)
 
     def process(self, request, add_or_delete='add'):
-        subcategory = self.clean_data.get('subcategory')
+        subcategory = self.cleaned_data.get('subcategory')
         requirement = self.cleaned_data.get('requirement')
+        credit = self.cleaned_data.get('credit')
         if add_or_delete == 'add':
-            addListRequirement(request, subcategory, requirement)
+            addListRequirement(request, subcategory, requirement, credit)
         if add_or_delete == 'delete':
             deleteListRequirement(request, subcategory, requirement)
 
@@ -58,12 +62,14 @@ class ListRequirementForm(forms.Form):
 class ListCourseForm(forms.Form):
     requirement = forms.CharField(label='requirement', required=True)
     course = forms.CharField(label='course', required=True)
+    credit = forms.IntegerField(label='credit', required=False)
 
     def process(self, request, add_or_delete='add'):
-        requirement = self.clean_data.get('requirement')
+        requirement = self.cleaned_data.get('requirement')
         course = self.cleaned_data.get('course')
+        credit = self.cleaned_data.get('credit')
         if add_or_delete == 'add':
-            addListCourses(request, requirement, course)
+            addListCourses(request, requirement, course, credit)
         if add_or_delete == 'delete':
             deleteListCourses(request, requirement, course)
 
@@ -74,7 +80,7 @@ class ListPrereqForm(forms.Form):
 
     def process(self, request, add_or_delete='add'):
         course = self.cleaned_data.get('course')
-        prereq = self.clean_data.get('prereq')
+        prereq = self.cleaned_data.get('prereq')
         if add_or_delete == 'add':
             addListPrereq(request, course, prereq)
         if add_or_delete == 'delete':
@@ -84,12 +90,16 @@ class ListPrereqForm(forms.Form):
 class ListApForm(forms.Form):
     course = forms.CharField(label='course', required=True)
     test = forms.CharField(label='test', required=True)
+    scoremin = forms.IntegerField(label='scoremin', required=True)
+    scoremax = forms.IntegerField(label='scoremax', required=True)
 
     def process(self, request, add_or_delete='add'):
         course = self.cleaned_data.get('course')
-        test = self.clean_data.get('test')
+        test = self.cleaned_data.get('test')
+        scoremin = self.cleaned_data.get('scoremin')
+        scoremax = self.cleaned_data.get('scoremax')
         if add_or_delete == 'add':
-            addListAp(request, course, test)
+            addListAp(request, course, test, scoremin, scoremax)
         if add_or_delete == 'delete':
-            deleteListAp(request, course, test)
+            deleteListAp(request, course, test, scoremin, scoremax)
 

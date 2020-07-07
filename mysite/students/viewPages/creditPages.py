@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .homePages import *
 from ..dataforms.CreditForms import *
 from ..datahelper.students.studentsDataGet import *
-
+from ..dataforms.CoursesForms import *
 # --- CREDIT DATA ---- 
 def getCreditData(request):
     if request.user.is_authenticated:
@@ -19,7 +19,16 @@ def getCreditData(request):
 
 # --- CREDIT PAGE ---
 def creditPageHelperOne(request):
-   return renderHome(request, 'students/credit_one.html')
+    courses_forms = {
+        'ListMajorForm': ListMajorForm(),
+        'ListCategoryForm': ListCategoryForm(),
+        'ListSubCategoryForm': ListSubCategoryForm(),
+        'ListRequirementForm': ListRequirementForm(),
+        'ListCourseForm': ListCourseForm(),
+        'ListPrereqForm': ListPrereqForm(),
+        'ListApForm': ListApForm(),
+    }
+    return renderHome(request, 'students/credit_one.html', courses_forms)
 
 
 def creditPageHelperTwo(request):

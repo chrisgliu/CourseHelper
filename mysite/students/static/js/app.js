@@ -47,12 +47,17 @@ function substituteChar(message, spot, item) {
     let result = before + item + after;
     return result;
 }
+function checkFoWhitespace(message) {
+    return message.indexOf(' ') !== -1;
+}
 function substituteURLSpace(message) {
     let edited_message = message;
-    for (let index = 0; index < message.length; index++) {
-        let char = message.charAt(index);
-        if (char == ' ') {
-            edited_message = substituteChar(edited_message, index, '%20');
+    if (checkFoWhitespace(message)) {
+        for (let index = 0; index < message.length; index++) {
+            let char = message.charAt(index);
+            if (char == ' ') {
+                edited_message = substituteChar(edited_message, index, '%20');
+            }
         }
     }
     return edited_message;
@@ -71,58 +76,19 @@ function retrieveData(workspace_id) {
     }
     return info_list;
 }
-///<reference path='creditAjax.ts' />
-function listMajors() {
-    clearWorkSpace('Majors', '#listMajors');
-    requestAJAX('/requestmajors/', 'major', 'Majors');
-}
-function listCategories() {
-    clearWorkSpace('Categories', '#listCategories');
-    let majors = retrieveData('Majors');
-    for (let major_name of majors) {
-        let name = substituteURLSpace(major_name);
-        requestAJAX(`/requestcategories/${name}/`, 'category', 'Categories');
+function showIt(id) {
+    let element = document.getElementById(id);
+    if (element == null) {
+        return;
     }
+    element.style.display = 'block';
 }
-function listSubcategories() {
-    clearWorkSpace('Subcategories', '#listSubcategories');
-    let categories = retrieveData('Categories');
-    for (let category_name of categories) {
-        let name = substituteURLSpace(category_name);
-        requestAJAX(`/requestsubcategories/${name}/`, 'subcategory', 'Subcategories');
+function dontShowIt(id) {
+    let element = document.getElementById(id);
+    if (element == null) {
+        return;
     }
-}
-function listRequirements() {
-    clearWorkSpace('Requirements', '#listRequirements');
-    let subcategories = retrieveData('Subcategories');
-    for (let subcategory_name of subcategories) {
-        let name = substituteURLSpace(subcategory_name);
-        requestAJAX(`/requestrequirements/${name}/`, 'requirement', 'Requirements');
-    }
-}
-function listCourses() {
-    clearWorkSpace('Courses', '#listCourses');
-    let requirements = retrieveData('Requirements');
-    for (let requirement_name of requirements) {
-        let name = substituteURLSpace(requirement_name);
-        requestAJAX(`/requestcourses/${name}/`, 'course', 'Courses');
-    }
-}
-function listPrereqs() {
-    clearWorkSpace('Prereqs', '#listPrereqs');
-    let courses = retrieveData('Courses');
-    for (let course_name of courses) {
-        let name = substituteURLSpace(course_name);
-        requestAJAX(`/requestprereqs/${name}/`, 'prereq', 'Prereqs');
-    }
-}
-function listAP() {
-    clearWorkSpace('Ap', '#listAP');
-    let courses = retrieveData('Courses');
-    for (let course_name of courses) {
-        let name = substituteURLSpace(course_name);
-        requestAJAX(`/requestap/${name}/`, 'test', 'Ap');
-    }
+    element.style.display = 'none';
 }
 function toggleShow(id) {
     let element = document.getElementById(id);
@@ -135,4 +101,82 @@ function toggleShow(id) {
     else {
         element.style.display = 'block';
     }
+}
+///<reference path='creditAjax.ts' />
+///<reference path='toggle.ts' />
+function displayForms(forms_to_show) {
+    let all_forms = [
+        'Majorformadd', 'Majorformdelete',
+        'Categoryformadd', 'Categoryformdelete',
+        'Subcategoryformadd', 'Subcategoryformdelete',
+        'Requirementformadd', 'Requirementformdelete',
+        'Courseformadd', 'Courseformdelete',
+        'Prereqformadd', 'Prereqformdelete',
+        'Apformadd', 'Apformdelete'
+    ];
+    all_forms.forEach(element => {
+        dontShowIt(element);
+    });
+    forms_to_show.forEach(element => {
+        showIt(element);
+    });
+}
+function listMajors() {
+    clearWorkSpace('Majors', '#listMajors');
+    requestAJAX('/requestmajors/', 'major', 'Majors');
+    displayForms(['Majorformadd', 'Majorformdelete']);
+}
+function listCategories() {
+    clearWorkSpace('Categories', '#listCategories');
+    let majors = retrieveData('Majors');
+    for (let major_name of majors) {
+        let name = substituteURLSpace(major_name);
+        requestAJAX(`/requestcategories/${name}/`, 'category', 'Categories');
+    }
+    displayForms(['Categoryformadd', 'Categoryformdelete']);
+}
+function listSubcategories() {
+    clearWorkSpace('Subcategories', '#listSubcategories');
+    let categories = retrieveData('Categories');
+    for (let category_name of categories) {
+        let name = substituteURLSpace(category_name);
+        requestAJAX(`/requestsubcategories/${name}/`, 'subcategory', 'Subcategories');
+    }
+    displayForms(['Subcategoryformadd', 'Subcategoryformdelete']);
+}
+function listRequirements() {
+    clearWorkSpace('Requirements', '#listRequirements');
+    let subcategories = retrieveData('Subcategories');
+    for (let subcategory_name of subcategories) {
+        let name = substituteURLSpace(subcategory_name);
+        requestAJAX(`/requestrequirements/${name}/`, 'requirement', 'Requirements');
+    }
+    displayForms(['Requirementformadd', 'Requirementformdelete']);
+}
+function listCourses() {
+    clearWorkSpace('Courses', '#listCourses');
+    let requirements = retrieveData('Requirements');
+    for (let requirement_name of requirements) {
+        let name = substituteURLSpace(requirement_name);
+        requestAJAX(`/requestcourses/${name}/`, 'course', 'Courses');
+    }
+    displayForms(['Courseformadd', 'Courseformdelete']);
+}
+function listPrereqs() {
+    clearWorkSpace('Prereqs', '#listPrereqs');
+    let courses = retrieveData('Courses');
+    for (let course_name of courses) {
+        let name = substituteURLSpace(course_name);
+        requestAJAX(`/requestprereqs/${name}/`, 'prereq', 'Prereqs');
+    }
+    displayForms(['Prereqformadd', 'Prereqformdelete']);
+}
+function listAP() {
+    clearWorkSpace('Ap', '#listAP');
+    let courses = retrieveData('Courses');
+    for (let course_name of courses) {
+        let name = substituteURLSpace(course_name);
+        requestAJAX(`/requestap/${name}/`, 'test', 'Ap');
+    }
+    displayForms(['Apformadd', 'Apformdelete']);
 }

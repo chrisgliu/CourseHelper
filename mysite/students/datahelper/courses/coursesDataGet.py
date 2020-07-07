@@ -1,6 +1,7 @@
 from .coursesHelper import *
 import requests
 from lxml import etree
+from django.http import HttpResponse
 
 # --- get operations ---
 # given user data

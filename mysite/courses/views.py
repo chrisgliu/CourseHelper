@@ -75,7 +75,7 @@ def linkMajorAndCategory(request, major_pk, category_pk):
 
 def linkCategoryAndSubcategory(request, category_pk, subcategory_pk):
     category = Category.objects.get(pk=category_pk)
-    subcategory = subcategory.objects.get(pk=subcategory_pk)
+    subcategory = SubCategory.objects.get(pk=subcategory_pk)
     subcategory.categories.add(category) 
     subcategory.save()
 
@@ -87,18 +87,18 @@ def linkSubcategoryAndRequirement(request, subcategory_pk, requirement_pk):
 
 def linkRequirementAndCourse(request, requirement_pk, course_pk):
     requirement = Requirement.objects.get(pk=requirement_pk)
-    course = Course.objects.get(course_pk)
+    course = Course.objects.get(pk=course_pk)
     course.requirements.add(requirement)
     course.save()
 
 def linkCourseAndPrereq(request, course_pk, prereq_pk):
-    course = Course.objects.get(course_pk)
-    prereq = Prereq.objects.get(prereq_pk)
+    course = Course.objects.get(pk=course_pk)
+    prereq = Prereq.objects.get(pk=prereq_pk)
     prereq.courses.add(course)
     prereq.save()
 
 def linkCourseAndAp(request, course_pk, ap_pk):
-    course = Course.objects.get(course_pk)
-    test = ApCredit.objects.get(prereq_pk)
+    course = Course.objects.get(pk=course_pk)
+    test = ApCredit.objects.get(pk=ap_pk)
     test.courses.add(course)
     test.save()

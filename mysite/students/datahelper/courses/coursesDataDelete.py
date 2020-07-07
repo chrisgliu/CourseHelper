@@ -42,22 +42,22 @@ def deleteListRequirement(request, subcategory_name, requirement_name):
     requests.delete(instance_link)
 
 def deleteListCourses(request, requirement_name, course_name):
-    instance_links = getRequirementLinks(request)
+    instance_links = getCourseLinks(request)
     sub_links = filterLinks(request, instance_links, 'requirements', requirement_name)
     instance_link = findInstanceLink(sub_links, 'course', course_name)
     requests.delete(instance_link)
  
 
 def deleteListPrereq(request, course_name, prereq_name):
-    instance_links = getRequirementLinks(request)
+    instance_links = getPrereqLinks(request)
     sub_links = filterLinks(request, instance_links, 'courses', course_name)
     instance_link = findInstanceLink(sub_links, 'prereq', prereq_name)
     requests.delete(instance_link)
 
 
-def deleteListAp(request, course_name, test_name):
-    instance_links = getRequirementLinks(request)
+def deleteListAp(request, course_name, test_name, scoremin, scoremax):
+    instance_links = getApLinks(request)
     sub_links = filterLinks(request, instance_links, 'courses', course_name)
-    instance_link = findInstanceLink(sub_links, 'test', test_name)
+    instance_link = findAPInstanceLink(sub_links, test_name, scoremin, scoremax)
     requests.delete(instance_link)
    
