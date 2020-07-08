@@ -17,7 +17,7 @@ function clearWorkSpace(workspace_id:string, header_id:string) {
 function addData(workspace_id:string, info:string) {
     let workspace = document.getElementById(workspace_id);
     if (workspace == null){ return}
-    let data = document.createElement('td');
+    let data = document.createElement('div');
     data.className = info;
     let button = document.createElement('button')
     let classes:DOMTokenList = button.classList

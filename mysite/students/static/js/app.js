@@ -20,7 +20,7 @@ function addData(workspace_id, info) {
     if (workspace == null) {
         return;
     }
-    let data = document.createElement('td');
+    let data = document.createElement('div');
     data.className = info;
     let button = document.createElement('button');
     let classes = button.classList;
