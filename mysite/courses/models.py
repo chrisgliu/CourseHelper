@@ -24,7 +24,10 @@ class Student(models.Model):
 # if an enrolled student is deleted, all corresponding data is deleted
 class Enrolled(models.Model):
     enrolled = models.CharField(max_length=64)
-    students = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="enrolled")
+    students = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="enrolled",
+    blank=True,
+    null=True
+    )
 
     class Meta:
         verbose_name_plural = "2. Enrolled"

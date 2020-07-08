@@ -24,7 +24,7 @@ def addListStudent(request, first_name, last_name, username):
 def addListEnrollment(request, username):
     data = { "enrolled": username,}
     createData(request, 'enrolled', data=data)
-    relation_pk = getStudentInstancePK(request)
+    relation_pk = getStudentInstancePK(request, username)
     data_pk = getInstancePK(request, 'enrolled', username)
     addRelation('linkStudentAndEnrollment', relation_pk, data_pk)
 

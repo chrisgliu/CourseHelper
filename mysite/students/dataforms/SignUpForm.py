@@ -24,8 +24,8 @@ class SignUpForm(UserCreationForm):
         this_student = getStudentID(user)
         addEnrollment(this_student)
         addListStudent(request, first_name, last_name, username)
-        addListEnrollment(request, username)
         user.save()
+        addListEnrollment(request, username)
         return user  # for activation
 
     def sendActivationEmail(self, request, user):

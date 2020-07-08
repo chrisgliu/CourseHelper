@@ -35,10 +35,13 @@ def getInstances(request, data_model):
         instances.append(i)
     return instances
 
-def getStudentInstancePK(request):
+def getStudentInstancePK(request, username):
     instances = getInstances(request, 'student')
     if not request.user.is_authenticated:
-            return -1
+        for i in instances:
+           i_username = i.get("username")
+           if i_username == username:
+                return i.get('pk')
     if request.user.is_authenticated: 
         for i in instances:
            i_username = i.get("username")

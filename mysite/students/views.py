@@ -3,12 +3,21 @@ from .viewPages.creditPages import *
 from .viewPages.homePages import *
 from .viewPages.coursesPages import *
 from django.views.decorators.csrf import csrf_protect
-
+import requests
 # Create your views here.
 
 # --- TESTING --- 
 def test(request):
-    return HttpResponse(str(getApLinks(request)))
+    username = 'bsmith'
+    data = { "enrolled": username,}
+
+    api_link = getCoursesAPI(request, 'enrolled')
+    result = requests.post(api_link, data)
+    # createData(request, 'enrolled', data=data)
+    # relation_pk = getStudentInstancePK(request, username)
+    # data_pk = getInstancePK(request, 'enrolled', username)
+    # addRelation('linkStudentAndEnrollment', relation_pk, data_pk)
+    return HttpResponse(result)
 
 # --- ABOUT ---
 def aboutPage(request):
