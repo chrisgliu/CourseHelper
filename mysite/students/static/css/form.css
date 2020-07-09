@@ -21,16 +21,18 @@
     display: block;
 }
  /* this positions the button in the center and defaults as white */
+.btn{
+    display: inline-block;
+    font-size: 16px;
+    padding: 16px 32px;
+    margin: 4px 2px;
+}
 .btn-submit {
     background-color: white; 
     color: black; 
     transition-duration: 0.4s;
     border: 2px solid #333;
     text-align: center;
-    display: inline-block;
-    font-size: 16px;
-    padding: 16px 32px;
-    margin: 4px 2px;
 }
  /* when hovering, the text turns white and the button black*/
 .btn-submit:hover {

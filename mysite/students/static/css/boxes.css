@@ -1,0 +1,17 @@
+.boxspace{
+    display: flex;
+    flex-wrap: wrap;
+}
+.boxspace > div{
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+table > tr > td{
+    border: 1px solid black;
+}

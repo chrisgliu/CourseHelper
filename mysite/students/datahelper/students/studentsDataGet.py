@@ -27,20 +27,18 @@ def getYears(user):
     return Year.objects.filter(enrolled=key)
         
 
-def getSemesters(user):
+def getSemesters(user, year):
     semesters = []
-    years = getYears(user)
-    for year in years:
+    if year in getYears(user):
         terms = Semester.objects.filter(years=year)
         for semester in terms:
             semesters.append(semester)
     return semesters
 
 
-def getCourses(user):
+def getCourses(user, year, semester):
     courses = []
-    semesters = getSemesters(user)
-    for semester in semesters:
+    if year in getYears(user) and semester in getSemesters(user, year):
         classes = Course.objects.filter(semesters=semester)
         for course in classes:
             courses.append(course)

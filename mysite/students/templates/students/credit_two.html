@@ -3,32 +3,41 @@
     student homepage
 {% endblock %}
 {% block external %}
-{% load static %}
-<link rel="stylesheet" href="{%static '/css/homebar.css' %}"> 
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/homebar.css' %}"> 
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/form.css' %}">
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/boxes.css' %}"> 
 {% endblock %}
 {% block body%}
 <nav class="home">
     <a class="homebar" href="{% url 'credit_one' %}">CREDITS NEEDED</a>
     <a class="homebar  active" href="{% url 'credit_two' %}">CREDITS WANTED</a>
 </nav>
-{% if my_majors%}
+<br>
+<div id='progress'>
+
+</div>
+<div id='req'>
+
+</div>
+<div id='sched'>
+
+</div>
+<!-- {% if my_majors%}
     {% for major in my_majors %}
-        <p>{{major}}</p>
+        {{major}}
     {% endfor %}
 {% endif %}
 {% if my_years %}
     {% for year in my_years %}
-        <p>{{year}}</p>
+        <p>{{year.year}}</p>
     {% endfor %}
 {% endif %}
 {% if my_semesters %}
     {% for semester in my_semesters %}
         <p>{{semester}}</p>
     {% endfor %}
-{% endif %}
-{% if my_courses %}
-    {% for course in my_courses %}
-        <p>{{course}}</p>
-    {% endfor %}
-{% endif %}
+{% endif %} -->
 {% endblock %}

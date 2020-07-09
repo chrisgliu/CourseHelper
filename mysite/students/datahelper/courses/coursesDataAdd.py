@@ -1,4 +1,3 @@
-from .coursesHelper import *
 from .coursesDataGet import *
 import requests
 

@@ -8,7 +8,7 @@
     {% load static %}
     <link rel="stylesheet" href="{%static '/css/form.css' %}">
     {% load static %}
-    <link rel="stylesheet" href="{%static '/css/coursesforms.css' %}"> 
+    <link rel="stylesheet" href="{%static '/css/boxes.css' %}"> 
 {% endblock %}
 
 {% block body%}
@@ -36,7 +36,7 @@
     <div class="workspace">  
         <div class="centerspace">
             <br>
-            <div class='courses'>
+            <div class='boxspace'>
                 <div id='Majorformadd' style="display: none;">
                     <h3>+ Major</h3>  
                         <form method="post" action="{% url 'addListMajor' %}">  
@@ -54,7 +54,7 @@
                         </form> 
                 </div>
             </div>
-            <div class='courses'>
+            <div class='boxspace'>
                 <div id='Categoryformadd' style="display: none;">
                     <h3>+ Category</h3>  
                         <form method="post" action="{% url 'addListCategory' %}">  
@@ -72,7 +72,7 @@
                         </form>  
                 </div>
             </div>
-            <div class='courses'>
+            <div class='boxspace''>
                 <div id='Subcategoryformadd' style="display: none;">
                     <h3>+ Subcategory</h3>  
                         <form method="post" action="{% url 'addListSubcategory' %}">  
@@ -90,7 +90,7 @@
                         </form>  
                 </div>
             </div>
-            <div class='courses'>
+            <div class='boxspace''>
                 <div id='Requirementformadd' style="display: none;">
                     <h3>+ Requirement</h3>  
                         <form method="post" action="{% url 'addListRequirement' %}">  
@@ -108,7 +108,7 @@
                         </form>  
                 </div>
             </div>
-            <div class='courses'>
+            <div class='boxspace''>
                 <div id='Courseformadd' style="display: none;">
                     <h3>+ Course</h3>  
                         <form method="post" action="{% url 'addListCourse' %}">  
@@ -126,7 +126,7 @@
                         </form>  
                 </div>
             </div>
-            <div class='courses'>
+            <div class='boxspace''>
                 <div id='Prereqformadd' style="display: none;">
                     <h3>+ Prereq</h3>  
                         <form method="post" action="{% url 'addListPrereq' %}">  
@@ -144,7 +144,7 @@
                         </form>  
                 </div>
             </div>
-            <div class='courses'>
+            <div class='boxspace''>
                 <div id='Apformadd' style="display: none;">
                     <h3>+ Ap Test</h3>  
                         <form method="post" action="{% url 'addListAp' %}">  
@@ -169,7 +169,7 @@
 <!-- table data -->
 <div class="workspace">  
     <div class="centerspace"> 
-        <div class='courses'>
+        <div class='boxspace'>
             <div id='Majors' >
                 <div id='listMajors'>
                     <button class="btn btn-submit" onclick='listMajors()'>Majors</button>
