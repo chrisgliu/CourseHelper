@@ -2,21 +2,24 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # main Pages
+    path("", views.main, name="main"),
     # for testing
     path("test", views.test, name="test"),
-    # about
-    path("about", views.aboutPage, name="about"),
+    # user 
+    path("signUpForm", views.signUpForm, name="signUpForm"),
+    path("signInForm", views.signInForm, name="signInForm"),
+    path("signOut", views.signOut, name="signOut"),
+
+
+
+
     # user
     path("signUp", views.signUpPage, name="signUp"),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path("signIn", views.signInPage, name="signIn"),
-    path("signOut", views.signOut, name="signOut"),
-    # user Forms 
-    path("signUpForm", views.signUpForm, name="signUpForm"),
-    path("signInForm", views.signInForm, name="signInForm"),
-    # main Pages
-    path("", views.creditPageOne, name="credit_one"),
-    path("plan", views.creditPageTwo, name="credit_two"),
+    ,
+    
     # credit forms
     path("addMajor", views.creditAddMajor, name='addMajor'),
     path("deleteMajor", views.creditDeleteMajor, name='deleteMajor'),

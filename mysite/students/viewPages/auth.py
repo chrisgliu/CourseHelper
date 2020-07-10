@@ -3,17 +3,10 @@ from django.contrib.auth.models import User
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from ..tokens import account_activation_token
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.shortcuts import render
 from ..dataforms.SignUpForm import SignUpForm
+from .home import *
 
 # --- SIGN UP ---
-def signUpPageHelper(request):
-    if request.method == 'GET':
-        return render(request, 'students/signUp.html')
-
-
 def signUpFormHelper(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -21,14 +14,13 @@ def signUpFormHelper(request):
             user = form.saveButDontActivate(request)
             form.sendActivationEmail(request, user)
             message = 'Please confirm your email address to complete the registration'
-            return render(request, 'students/signUp.html', {"message": message})
+            return renderHome(request, 'students/main.html', {"messages": [message]})
         else:
             message = "The operation could not be performed because one or more error(s) occurred"
-            return render(request, 'students/signUp.html', {"message": message, "form": form})
-    message = 'Please enter information here'
-    return render(request, "students/signUp.html", {"message": message})
+            return renderHome(request, 'students/main.html', {"messages": [message]}, "form": form})
+    return HttpResponseRedirect(reverse("main"))
 
-
+# --- ACTIVATION ---
 def activateHelper(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -39,16 +31,12 @@ def activateHelper(request, uidb64, token):
         user.is_active = True
         user.save()
         message = 'Thank you for your email confirmation. Now you can login your account.'
-        return render(request, "students/signIn.html", {"message": message})
+        return renderHome(request, 'students/main.html', {"messages": [message]}) 
     else:
         message = 'Activation link is invalid!'
-        return render(request, 'students/signUp.html', {"message": message})
+        return renderHome(request, 'students/main.html', {"messages": [message]}) 
 
 # --- SIGN IN ---
-def signInPageHelper(request):
-    if request.method == "GET":
-        return render(request, "students/signIn.html")
-
 def signInFormHelper(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -56,11 +44,13 @@ def signInFormHelper(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("credit_one"))
+            return HttpResponseRedirect(reverse("main"))
         else:
-            return render(request, "students/signIn.html", {"message": "Invalid credentials."})
+            message = 'Invalid credentials.'
+            return renderHome(request, 'students/main.html', {"messages": [message]}) 
 
-
+# --- SIGN OUT ---
 def signOutHelper(request):
     logout(request)
-    return render(request, "students/signIn.html", {"message": "Logged out."})
+    message = 'Logged out.'
+    return renderHome(request, 'students/main.html', {"messages": [message]}) 

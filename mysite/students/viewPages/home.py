@@ -4,17 +4,15 @@ from django.shortcuts import render
 
 # --- HOME PAGES ---
 # home menu reflects if the user is logged in or not
-# home bar reflects if the user is on the credit, sched, or budget page
-
 
 # -- HOME MENU LINKS --
-def getLoggedInLinks(request):
-    return {"links": [["Sign out", reverse("signOut")]], "name": request.user.first_name}
+def getLoggedInNav(request):
+    return {'signout':True, 'signin':False, 'signup':False, 'name': request.user.first_name}
 
-
-def getLoggedOutLinks():
-    return {"links": [["Sign up", reverse("signUp")], ["Sign in", reverse("signIn")]]}
-
+def getLoggedOutNav():
+    return {'signout':False, 'signin':True, 'signup':True}
+ 
+   
 # --- HOME PAGES ---
 def mergeDict(x, y):
     z = x.copy()
@@ -25,8 +23,8 @@ def mergeDict(x, y):
 def renderHome(request, template_path, more_context={}):
     if request.method == 'GET':
         if not request.user.is_authenticated:
-            loggedOutContext = mergeDict(getLoggedOutLinks(), more_context)
+            loggedOutContext = mergeDict(getLoggedOutNav(), more_context)
             return render(request=request, template_name=template_path, context=loggedOutContext)
         if request.user.is_authenticated:
-            loggedInContext = mergeDict(getLoggedInLinks(request), more_context)
+            loggedInContext = mergeDict(getLoggedInNav(request), more_context)
             return render(request=request, template_name=template_path, context=loggedInContext)

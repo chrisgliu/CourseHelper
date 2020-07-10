@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title> 
+    {% block external %} {% endblock %}
+</head>
+<body>
+    <div id='workspace'>
+        <div id='main'>
+            {% if messages %}
+                {% for message in messages %}
+                    <p>message</p>
+                {% endfor %}
+                {% if form.errors %}
+                    {% for error in form.errors %}
+                        <p>{{error}}</p>
+                    {% endfor %}
+                {% endif %}
+                <hr>
+            {% endif %}
+            <header>
+                {% block navbuttons %} {% endblock %}
+                <hr>
+            </header>
+            <section id='section-a'>
+                {% block a %} {% endblock %}
+            </section>
+            <section id='section-b'>
+                {% block b %} {% endblock %}
+            </section>
+            <section id='section-c'>
+                {% block c %} {% endblock %}
+            </section>
+            <footer>
+                <hr>
+                {% block footer %} {% endblock %}
+            </footer>
+        </div>
+    </div>
+    {% block modalitems %} {% endblock %}
+</body>
+</html>

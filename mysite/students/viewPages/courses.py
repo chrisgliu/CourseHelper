@@ -4,6 +4,7 @@ from django.shortcuts import render
 from .homePages import *
 from ..dataforms.CoursesForms import *
 from ..datahelper.courses.coursesDataGet import *
+from ..datahelper.courses.XMLString import getXMLString
 
 # --- COURSES DATA ---- 
 def requestMajorsHelper(request):

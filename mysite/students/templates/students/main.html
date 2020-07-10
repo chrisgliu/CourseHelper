@@ -1,0 +1,28 @@
+{% extends "students/e_external.html" %}
+
+{% block title %}
+    Course Helper
+{% endblock %}
+
+{% block a %}
+    <h1>Course Helper</h1>
+    <p>tracking and managing course credit</p>
+{% endblock %}
+
+{% block footer %} 
+    <h5>Created By Chris Liu</h5>
+{% endblock %}
+
+{% block navbuttons %}
+<button id='creditsneeded'>Credits Needed</button>
+<button id='creditswanted'>Credits Wanted</button> 
+{% if signin %}
+    <button id='signin' onclick="document.getElementById('signinform').style.display='block'">Sign In</button>
+{% endif %}
+{% if signup %}
+    <button id='signup' onclick="document.getElementById('signupform').style.display='block'">Sign Up</button>
+{% endif %}
+{% if signout %}
+    <button id='signout'>Sign Out</button>
+{% endif %}
+{% endblock %}

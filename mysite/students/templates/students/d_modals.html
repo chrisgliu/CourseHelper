@@ -1,0 +1,47 @@
+{% extends "students/c_helper.html" %}
+
+{% block modalitems %} 
+
+<div id='signinform' class='modal'>
+    <form method="post" action="{% url 'signUpForm' %}" class='modal-content'>
+        <h1>Course Helper Sign In</h1>
+        {% csrf_token %} 
+        <button type="button" onclick="document.getElementById('signinform').style.display='none'" class="cancelbtn">Cancel</button>
+        <div class="container">
+            <hr>
+            <label><b>Username</b></label>
+            <input type="text" placeholder="Enter username" name="username" required>
+            <label><b>Password</b></label>
+            <input type="password" placeholder="Enter password" name="password" required>  
+            <hr>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+</div>
+
+<div id='signupform' class='modal'>
+    <form method="post" action="{% url 'signInForm' %}" class='modal-content'>
+        <h1>Course Helper Sign Up</h1>
+        {% csrf_token %} 
+        <button type="button" onclick="document.getElementById('signupform').style.display='none'" class="cancelbtn">Cancel</button>
+        <div class="container">
+            <hr>
+            <label>First Name:</label>  
+            <input type="text" placeholder="Enter first name" name="first_name">  
+            <label>Last Name:</label>  
+            <input type="text" placeholder="Enter last name" name="last_name"> 
+            <label>Username:</label>  
+            <input type="text" placeholder="Enter username" name="username"> 
+            <label>Email:</label>  
+            <input type="email" placeholder="Enter email" name="email"> 
+            <label>Password:</label>  
+            <input type="password" placeholder="Enter password" name="password1">  
+            <label>Confirm Password:</label>  
+            <input type="password" placeholder="Reenter password" name="password2">
+            <hr>
+            <button type="submit" class="cancelbtn">Create account</button> 
+        </div>
+    </form>
+</div>
+
+{% endblock %}
