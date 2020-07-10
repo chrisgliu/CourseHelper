@@ -2,54 +2,54 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # main Pages
+    # --- MAIN -----
     path("", views.main, name="main"),
-    # for testing
+    # --- TESTING --- 
     path("test", views.test, name="test"),
-    # user 
+    # --- AUTH OPERATIONS ---
     path("signUpForm", views.signUpForm, name="signUpForm"),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path("signInForm", views.signInForm, name="signInForm"),
     path("signOut", views.signOut, name="signOut"),
-
-
-
-
-    # user
-    path("signUp", views.signUpPage, name="signUp"),
-    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
-    path("signIn", views.signInPage, name="signIn"),
-    ,
+    # --- COURSES XML DATA REQUESTS --
+    path('requestmajors', views.requestMajors),
+    path('requestcategories/<major_name>/', views.requestCategories),
+    path('requestsubcategories/<category_name>/', views.requestSubCategories),
+    path('requestsubcategory/<category_name>/<subcategory_name>/', views.requestSubCategory).
+    path('requestrequirements/<subcategory_name>/', views.requestRequirements),
+    path('requestrequirement/<subcategory_name>/<requirement_name>/', views.requestRequirement),
+    path('requestcourses/<requirement_name>/', views.requestCourses),
+    path('requestcourse/<requirement_name>/<course_name>/', views.requestCourse),
+    path('requestprereqs/<course_name>/', views.requestPrereqs),
+    path('requestap/<course_name>/', views.requestAP),
+    # --- HELPER XML DATA REQUESTS ---
+    path('requestmymajors', views.requestMyMajors),
+    path('requestmyyears', views.requestMyYears), 
+    path('requestmysemesters/<year>/', views.requestMySemesters)
+    path('requestmycourses/<semester>', views.requestMyCourses)
+    # --- COURSES OPERATIONS ---
+    path("addMajor", views.addMajor, name='addMajor'),
+    path("deleteMajor", views.deleteMajor, name='deleteMajor'),
+    path("addCategory", views.addCategory, name='addCategory'),
+    path("deleteCategory", views.deleteCategory, name='deleteCategory'),
+    path("addSubcategory", views.addSubCategory, name='addSubcategory'),
+    path("deleteSubcategory", views.deleteSubCategory, name='deleteSubcategory'),
+    path("addRequirement", views.addRequirement, name='addRequirement'),
+    path("deleteRequirement", views.deleteRequirement, name='deleteRequirement'),
+    path("addCourse", views.addCourse, name='addCourse'),
+    path("deleteCourse", views.deleteCourse, name='deleteCourse'),
+    path("addPrereq", views.addPrereq, name='addPrereq'),
+    path("deletePrereq", views.deletePrereq, name='deletePrereq'),
+    path("addAp", views.addAp, name='addAp'),
+    path("deleteAp", views.deleteAp, name='deleteAp'),
+    # --- HELPER OPERATIONS ---
+    path("addMyMajor", views.addMyMajor, name='addMyMajor'),
+    path("deleteMajor", views.deleteMyMajor, name='deleteMyMajor'),
+    path("addMyYear", views.addMyYear, name='addMyYear'),
+    path("deleteMyYear", views.deleteMyYear, name='deleteMyYear'),
+    path("addMySemester", views.addMySemester, name='addMySemester'),
+    path("deleteMySemester", views.deleteMySemester, name='deleteMySemester'),
+    path("addMyCourse", views.addMyCourse, name='addMyCourse'),
+    path("deleteMyCourse", views.deleteMyCourse, name='deleteMyCourse'),
     
-    # credit forms
-    path("addMajor", views.creditAddMajor, name='addMajor'),
-    path("deleteMajor", views.creditDeleteMajor, name='deleteMajor'),
-    path("addYear", views.creditAddYear, name='addYear'),
-    path("deleteYear", views.creditDeleteYear, name='deleteYear'),
-    path("addSemester", views.creditAddSemester, name='addSemester'),
-    path("deleteSemester", views.creditDeleteSemester, name='deleteSemester'),
-    path("addCourse", views.creditAddCourse, name='addCourse'),
-    path("deleteCourse", views.creditDeleteCourse, name='deleteCourse'),
-    # courses requests
-    path('requestmajors/', views.requestMajors, name='request_majors'),
-    path('requestcategories/<major_name>/', views.requestCategories, name='request_categories'),
-    path('requestsubcategories/<category_name>/', views.requestSubCategories, name='request_subcategories'),
-    path('requestrequirements/<subcategory_name>/', views.requestRequirements, name='request_requirements'),
-    path('requestcourses/<requirement_name>/', views.requestCourses, name='request_courses'),
-    path('requestprereqs/<course_name>/', views.requestPrereqs, name='request_prereqs'),
-    path('requestap/<course_name>/', views.requestAP, name='request_ap'),
-    # courses forms 
-    path("addListMajor", views.coursesAddMajor, name='addListMajor'),
-    path("deleteListMajor", views.coursesDeleteMajor, name='deleteListMajor'),
-    path("addListCategory", views.coursesAddCategory, name='addListCategory'),
-    path("deleteListCategory", views.coursesDeleteCategory, name='deleteListCategory'),
-    path("addListSubcategory", views.coursesAddSubCategory, name='addListSubcategory'),
-    path("deleteListSubcategory", views.coursesDeleteSubCategory, name='deleteListSubcategory'),
-    path("addListRequirement", views.coursesAddRequirement, name='addListRequirement'),
-    path("deleteListRequirement", views.coursesDeleteRequirement, name='deleteListRequirement'),
-    path("addListCourse", views.coursesAddCourse, name='addListCourse'),
-    path("deleteListCourse", views.coursesDeleteCourse, name='deleteListCourse'),
-    path("addListPrereq", views.coursesAddPrereq, name='addListPrereq'),
-    path("deleteListPrereq", views.coursesDeletePrereq, name='deleteListPrereq'),
-    path("addListAp", views.coursesAddAp, name='addListAp'),
-    path("deleteListAp", views.coursesDeleteAp, name='deleteListAp'),
 ]

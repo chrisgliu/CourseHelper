@@ -2,7 +2,6 @@ import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
 import requests
-from lxml import etree
 from django.http import HttpResponse
 
 # --- getting api link ---
@@ -269,15 +268,3 @@ def getAPList(request, course_name):
     filter_links = filterLinks(request, links, 'courses', course_name)
     data = getInstanceNames(request, 'test', filter_links)
     return data
-
-def getXMLString(data_list, data_set, data_model):
-    root = etree.Element(data_set)
-    length = etree.Element('length')
-    length.text = str(len(data_list))
-    root.append(length)
-    for instance in data_list:
-        model = etree.Element(data_model)
-        model.text = instance       
-        root.append(model)
-    the_xml_string = etree.tostring(root, xml_declaration=True)
-    return the_xml_string
