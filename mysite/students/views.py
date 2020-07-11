@@ -43,7 +43,7 @@ def requestSubCategory(request, category_name, subcategory_name):
     return requestSubCategoryHelper(request, category_name, subcategory_name)
 
 def requestRequirements(request, subcategory_name):
-    return requestRequirementsHelper(subcategory_name)
+    return requestRequirementsHelper(request, subcategory_name)
 
 def requestRequirement(request, subcategory_name, requirement_name):
     return requestRequirementHelper(request, subcategory_name, requirement_name)
@@ -70,8 +70,8 @@ def requestMyYears(request):
 def requestMySemesters(request, year):
     return requestMySemestersHelper(request, year)
 
-def requestMyCourses(request, semester):
-    return requestMyCoursesHelper(request, semester)
+def requestMyCourses(request, year, semester):
+    return requestMyCoursesHelper(request, year, semester)
 
 # --- COURSES OPERATIONS ---
 @csrf_protect

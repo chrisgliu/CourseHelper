@@ -3,7 +3,7 @@
 {% block modalitems %} 
 
 <div id='signinform' class='modal'>
-    <form method="post" action="{% url 'signUpForm' %}" class='modal-content'>
+    <form method="post" action="{% url 'signInForm' %}" class='modal-content'>
         <h1>Course Helper Sign In</h1>
         {% csrf_token %} 
         <button type="button" onclick="document.getElementById('signinform').style.display='none'" class="cancelbtn">Cancel</button>
@@ -20,7 +20,7 @@
 </div>
 
 <div id='signupform' class='modal'>
-    <form method="post" action="{% url 'signInForm' %}" class='modal-content'>
+    <form method="post" action="{% url 'signUpForm' %}" class='modal-content'>
         <h1>Course Helper Sign Up</h1>
         {% csrf_token %} 
         <button type="button" onclick="document.getElementById('signupform').style.display='none'" class="cancelbtn">Cancel</button>

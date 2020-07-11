@@ -30,8 +30,8 @@ def requestSubCategoryHelper(request, category_name, subcategory_name):
     sub_links = filterLinks(request, links, 'categories', category_name)
     specific_link = findInstanceLink(sub_links, 'subcategory', subcategory_name)
     result = requests.get(specific_link)
-    xml_response = getXMLComplex('subcategories', 'subcategory', 
-    one_ref='note', one_data=result.json().get('note'))
+    note = result.json().get('note')
+    xml_response = getXMLComplex('subcategories', 'subcategory', one_ref='note', one_data=note)
     return HttpResponse(xml_response, content_type='text/xml') 
 
 
@@ -45,8 +45,8 @@ def requestRequirementHelper(request, subcategory_name, requirement_name):
     sub_links = filterLinks(request, links, 'subcategories', subcategory_name)
     specific_link = findInstanceLink(sub_links, 'requirement', requirement_name)
     result = requests.get(specific_link)
-    xml_response = getXMLComplex('requirements', 'requirement', 
-    one_ref='credit', one_data=result.json().get('credit'))
+    credit = str(result.json().get('credit'))
+    xml_response = getXMLComplex('requirements', 'requirement', one_ref='credit', one_data=credit)
     return HttpResponse(xml_response, content_type='text/xml') 
 
 def requestCoursesHelper(request, requirement_name):
@@ -59,8 +59,8 @@ def requestCourseHelper(request, requirement_name, course_name):
     sub_links = filterLinks(request, links, 'requirements', requirement_name)
     specific_link = findInstanceLink(sub_links, 'course', course_name)
     result = requests.get(specific_link)
-    xml_response = getXMLComplex('courses', 'course', 
-    one_ref='credit', one_data=result.json().get('credit'))
+    credit = str(result.json().get('credit'))
+    xml_response = getXMLComplex('courses', 'course', one_ref='credit', one_data=credit)
     return HttpResponse(xml_response, content_type='text/xml') 
 
 def requestPrereqsHelper(request, course_name):

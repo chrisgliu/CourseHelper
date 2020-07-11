@@ -4,26 +4,26 @@ from ...models import *
 # --- delete operations ---
 # given user data and form data
 # remove old related user data
-def deleteStudent(user):
-    old_student = getStudentID(user)
+def deleteStudent(request):
+    old_student = getStudentID(request)
     old_student.delete()
 
 
-def deleteMajor(user, major_name):
-    old_major = getSpecificMajor(user, major_name)
+def deleteMajor(request, major_name):
+    old_major = getSpecificMajor(request, major_name)
     old_major.delete()
 
 
-def deleteYear(user, year_name):
-    old_year = getSpecificYear(user, year_name)
+def deleteYear(request, year_name):
+    old_year = getSpecificYear(request, year_name)
     old_year.delete()
 
 
-def deleteSemester(user, year_name, semester_name):
-    old_semester = getSpecificSemester(user, year_name, semester_name)
+def deleteSemester(request, year_name, semester_name):
+    old_semester = getSpecificSemester(request, year_name, semester_name)
     old_semester.delete()
 
 
-def deleteCourse(user, year_name, semester_name, course_name):
-    old_course = getSpecificCourse(user, year_name, semester_name, course_name)
+def deleteCourse(request, year_name, semester_name, course_name):
+    old_course = getSpecificCourse(request, year_name, semester_name, course_name)
     old_course.delete()

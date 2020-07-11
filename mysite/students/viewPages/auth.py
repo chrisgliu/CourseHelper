@@ -4,7 +4,9 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from ..tokens import account_activation_token
 from ..dataforms.SignUpForm import SignUpForm
-from .home import *
+from .home import renderHome
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 
 # --- SIGN UP ---
 def signUpFormHelper(request):
@@ -14,10 +16,10 @@ def signUpFormHelper(request):
             user = form.saveButDontActivate(request)
             form.sendActivationEmail(request, user)
             message = 'Please confirm your email address to complete the registration'
-            return renderHome(request, 'students/main.html', {"messages": [message]})
+            return renderHome(request, 'students/main.html', more_context={"messages": [message]})
         else:
             message = "The operation could not be performed because one or more error(s) occurred"
-            return renderHome(request, 'students/main.html', {"messages": [message]}, "form": form})
+            return renderHome(request, 'students/main.html', more_context={"messages": [message], "form": form})
     return HttpResponseRedirect(reverse("main"))
 
 # --- ACTIVATION ---
@@ -44,7 +46,8 @@ def signInFormHelper(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("main"))
+            message = f'Hello, {request.user.first_name}'
+            return renderHome(request, 'students/main.html', {"messages": [message]}) 
         else:
             message = 'Invalid credentials.'
             return renderHome(request, 'students/main.html', {"messages": [message]}) 

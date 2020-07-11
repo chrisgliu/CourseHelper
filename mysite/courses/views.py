@@ -60,36 +60,43 @@ def linkStudentAndEnrollment(request, student_pk, enrollment_pk):
     enrolled = Enrolled.objects.get(pk=enrollment_pk)
     enrolled.students = student
     enrolled.save()
+    return HttpResponse('complete')
 
 def linkEnrollmentAndMajor(request, enrollment_pk, major_pk):
     enrolled = Enrolled.objects.get(pk=enrollment_pk)
     major = Major.objects.get(pk=major_pk)
     major.enrolled.add(enrolled)
     major.save()
+    return HttpResponse('complete')
 
 def linkMajorAndCategory(request, major_pk, category_pk):
     major = Major.objects.get(pk=major_pk)
     category = Category.objects.get(pk=category_pk)
     category.major.add(major)
     category.save()
+    return HttpResponse('complete')
+
 
 def linkCategoryAndSubcategory(request, category_pk, subcategory_pk):
     category = Category.objects.get(pk=category_pk)
     subcategory = SubCategory.objects.get(pk=subcategory_pk)
     subcategory.categories.add(category) 
     subcategory.save()
+    return HttpResponse('complete')
 
 def linkSubcategoryAndRequirement(request, subcategory_pk, requirement_pk):
     subcategory = SubCategory.objects.get(pk=subcategory_pk)
     requirement = Requirement.objects.get(pk=requirement_pk)
     requirement.subcategories.add(subcategory) 
     requirement.save()
+    return HttpResponse('complete')
 
 def linkRequirementAndCourse(request, requirement_pk, course_pk):
     requirement = Requirement.objects.get(pk=requirement_pk)
     course = Course.objects.get(pk=course_pk)
     course.requirements.add(requirement)
     course.save()
+    return HttpResponse('complete')
 
 def linkCourseAndPrereq(request, course_pk, prereq_pk):
     course = Course.objects.get(pk=course_pk)
@@ -102,3 +109,4 @@ def linkCourseAndAp(request, course_pk, ap_pk):
     test = ApCredit.objects.get(pk=ap_pk)
     test.courses.add(course)
     test.save()
+    return HttpResponse('complete')

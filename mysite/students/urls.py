@@ -15,7 +15,7 @@ urlpatterns = [
     path('requestmajors', views.requestMajors),
     path('requestcategories/<major_name>/', views.requestCategories),
     path('requestsubcategories/<category_name>/', views.requestSubCategories),
-    path('requestsubcategory/<category_name>/<subcategory_name>/', views.requestSubCategory).
+    path('requestsubcategory/<category_name>/<subcategory_name>/', views.requestSubCategory),
     path('requestrequirements/<subcategory_name>/', views.requestRequirements),
     path('requestrequirement/<subcategory_name>/<requirement_name>/', views.requestRequirement),
     path('requestcourses/<requirement_name>/', views.requestCourses),
@@ -25,8 +25,8 @@ urlpatterns = [
     # --- HELPER XML DATA REQUESTS ---
     path('requestmymajors', views.requestMyMajors),
     path('requestmyyears', views.requestMyYears), 
-    path('requestmysemesters/<year>/', views.requestMySemesters)
-    path('requestmycourses/<semester>', views.requestMyCourses)
+    path('requestmysemesters/<year>/', views.requestMySemesters),
+    path('requestmycourses/<year>/<semester>/', views.requestMyCourses),
     # --- COURSES OPERATIONS ---
     path("addMajor", views.addMajor, name='addMajor'),
     path("deleteMajor", views.deleteMajor, name='deleteMajor'),

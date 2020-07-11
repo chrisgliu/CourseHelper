@@ -164,10 +164,11 @@ def findAPInstanceLink(instance_links, test_name, scoremin, scoremax):
 def getInstances(request, data_model):
     api_requests = []
     instances = []
-    if data_model == 'enrolled': # enroll key linked to student
-        api_request = getEnrollmentLink(request)
+    if data_model == 'enrolled': # search enitre dir for username
+        api_request = getCoursesAPI(request, 'enrolled')
         result = requests.get(api_request)
-        instances.append(result.json())
+        for i in result.json():
+            instances.append(i)
         return instances
     elif data_model == 'major': # linked to student
         for api_request in getMajorLinks(request):

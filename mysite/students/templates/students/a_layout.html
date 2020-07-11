@@ -11,7 +11,7 @@
         <div id='main'>
             {% if messages %}
                 {% for message in messages %}
-                    <p>message</p>
+                    <p>{{message}}</p>
                 {% endfor %}
                 {% if form.errors %}
                     {% for error in form.errors %}

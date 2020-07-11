@@ -7,7 +7,7 @@ from ..datahelper.XMLString import *
 from .home import *
 
 # --- HELPER DATA ---- 
-def getNames(data_objects, name_attr)
+def getNames(data_objects, name_attr):
     data = []
     for instance in data_objects:
         name = getattr(instance, name_attr)
@@ -36,7 +36,7 @@ def requestMySemestersHelper(request, year):
     return HttpResponse(xml_response, content_type='text/xml')
 
 
-def requestMyCoursesHelper(request, semester):
+def requestMyCoursesHelper(request, year, semester):
     data_objects = getCourses(request, year, semester)
     data = getNames(data_objects, 'course')
     xml_response = getXMLString(data, data_set='courses', data_model='course')
