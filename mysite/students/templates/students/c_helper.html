@@ -2,4 +2,76 @@
 
 {% block c %}
    
+<div class="contentbox">
+  <div id='helperdata' class="box">
+
+  </div>
+  
+  <div id='helperforms' class="box">
+    <div id="mymajorformadd" class="form">
+			<h3>Add My Major</h3>
+			<form method="post" action="{% url 'addMyMajor' %}">
+        {% csrf_token %}      
+        <table> {{ MajorForm }} </table>
+        <button type="submit">Add</button>
+      </form>
+		</div>
+		<div id='mymajorformdelete' class="form"> 
+      <h3>Delete My Major</h3>  
+      <form method="post" action="{% url 'deleteMyMajor' %}">  
+        {% csrf_token %} 
+        <table> {{ MajorForm }} </table> 
+        <button type="submit">Delete</button>  
+      </form> 
+    </div>
+    <div id="myyearformadd" class="form">
+			<h3>Add My Year</h3>
+			<form method="post" action="{% url 'addMyYear' %}">
+        {% csrf_token %}      
+        <table> {{ YearForm }} </table>
+        <button type="submit">Add</button>
+      </form>
+		</div>
+		<div id='myyearformdelete' class="form"> 
+      <h3>Delete My Year</h3>  
+      <form method="post" action="{% url 'deleteMyYear' %}">  
+        {% csrf_token %} 
+        <table> {{ YearForm }} </table> 
+        <button type="submit">Delete</button>  
+      </form> 
+    </div>
+    <div id="mysemesterformadd" class="form">
+			<h3>Add My Semester</h3>
+			<form method="post" action="{% url 'addMySemester' %}">
+        {% csrf_token %}      
+        <table> {{ SemesterForm }} </table>
+        <button type="submit">Add</button>
+      </form>
+		</div>
+		<div id='mysemesterformdelete' class="form"> 
+      <h3>Delete My Semester</h3>  
+      <form method="post" action="{% url 'deleteMySemester' %}">  
+        {% csrf_token %} 
+        <table> {{ SemesterForm }} </table> 
+        <button type="submit">Delete</button>  
+      </form> 
+    </div>
+    <div id="mycourseformadd" class="form">
+			<h3>Add My Course</h3>
+			<form method="post" action="{% url 'addMyCourse' %}">
+        {% csrf_token %}      
+        <table> {{ CourseForm }} </table>
+        <button type="submit">Add</button>
+      </form>
+		</div>
+		<div id='mycourseformdelete' class="form"> 
+      <h3>Delete My Course</h3>  
+      <form method="post" action="{% url 'deleteMyCourse' %}">  
+        {% csrf_token %} 
+        <table> {{ CourseForm }} </table> 
+        <button type="submit">Delete</button>  
+      </form> 
+    </div>
+  </div>
+</div>
 {% endblock %}

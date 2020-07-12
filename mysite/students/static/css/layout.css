@@ -13,6 +13,11 @@
   width: 500px;
 }
 
+.contentbox {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 button {
   width: 110px;
   background-color: white;

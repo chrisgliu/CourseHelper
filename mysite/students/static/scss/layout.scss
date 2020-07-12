@@ -1,7 +1,7 @@
 $fonts: Arial, Helvetica, sans-serif;
 * {
     font-family: $fonts;
-    box-sizing: border-box;
+    box-sizing: border-box; //child fits in parent
 }
 #workspace{
     text-align: center;
@@ -12,7 +12,11 @@ $fonts: Arial, Helvetica, sans-serif;
         }
     }
 }
-button{
+.contentbox{
+	display: flex;
+	flex-wrap: wrap;
+}
+button{ //default button
     width: 110px;
     background-color: white;
     border: 2px solid black;

@@ -1,4 +1,15 @@
-{% extends "students/e_external.html" %}
+{% extends "students/d_modals.html" %}
+
+{% block external %} 
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/layout.css' %}"> 
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/forms.css' %}">
+    {% load static %}
+    <link rel="stylesheet" href="{%static '/css/treedata.css' %}">
+    {% load static %}
+    <script src="{%static '/js/app.js' %}"></script>
+{% endblock %}
 
 {% block title %}
     Course Helper
@@ -14,15 +25,15 @@
 {% endblock %}
 
 {% block navbuttons %}
-<button id='creditsneeded'>Credits Needed</button>
-<button id='creditswanted'>Credits Wanted</button> 
-{% if signin %}
-    <button id='signin' onclick="document.getElementById('signinform').style.display='block'">Sign In</button>
-{% endif %}
-{% if signup %}
-    <button id='signup' onclick="document.getElementById('signupform').style.display='block'">Sign Up</button>
-{% endif %}
-{% if signout %}
-    <button id='signout' onclick="location.href='/signOut';">Sign Out</button>
-{% endif %}
+    <button id='creditsneeded'>Credits Needed</button>
+    <button id='creditswanted'>Credits Wanted</button> 
+    {% if signin %}
+    <button id='signin'>Sign In</button>
+    {% endif %}
+    {% if signup %}
+    <button id='signup'>Sign Up</button>
+    {% endif %}
+    {% if signout %}
+    <button id='signout'>Sign Out</button>
+    {% endif %}
 {% endblock %}

@@ -1,22 +1,38 @@
 from django.shortcuts import render
-
+from ..dataforms.CoursesForms import * 
+from ..dataforms.HelperForms import *
 # --- HOME PAGES ---
 # home menu reflects if the user is logged in or not
 
-# -- HOME MENU LINKS --
-def getLoggedInNav(request):
-    return {'signout':True, 'signin':False, 'signup':False}
+all_forms = {
+    'ListMajorForm':ListMajorForm,
+    'ListCategoryForm':ListCategoryForm,
+    'ListSubCategoryForm':ListSubCategoryForm,
+    'ListRequirementForm':ListRequirementForm,
+    'ListCourseForm':ListCourseForm,
+    'ListPrereqForm':ListPrereqForm,
+    'ListApForm':ListApForm,
+    'MajorForm':MajorForm,
+    'YearForm':YearForm,
+    'SemesterForm':SemesterForm,
+    'CourseForm':CourseForm
+}
 
-def getLoggedOutNav():
-    return {'signout':False, 'signin':True, 'signup':True}
- 
-   
-# --- HOME PAGES ---
 def mergeDict(x, y):
     z = x.copy()
     z.update(y)
     return z
 
+# -- HOME MENU LINKS --
+def getLoggedInNav(request):
+    nav = {'signout':True, 'signin':False, 'signup':False}
+    return mergeDict(nav, all_forms)
+
+def getLoggedOutNav():
+    nav = {'signout':False, 'signin':True, 'signup':True}
+    return mergeDict(nav, all_forms)
+   
+# --- HOME PAGES ---
 
 def renderHome(request, template_path, more_context={}):
     if not request.user.is_authenticated:
