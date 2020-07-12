@@ -1,0 +1,16 @@
+ul{
+    list-style-type: none;
+}
+// add cosmetic content to an element
+.caret::before{
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 10px;
+}
+.caret-down::before {
+    transform: rotate(90deg);
+}
+.nested {
+    display: none;
+}

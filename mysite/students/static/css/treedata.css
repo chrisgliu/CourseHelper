@@ -1,0 +1,21 @@
+@charset "UTF-8";
+ul {
+  list-style-type: none;
+}
+
+.caret::before {
+  content: "▶";
+  color: black;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+.nested {
+  display: none;
+}
+
+/*# sourceMappingURL=treedata.css.map */
