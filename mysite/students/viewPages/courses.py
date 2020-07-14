@@ -66,16 +66,22 @@ def requestCoursesDataHelper(request):
                         course_item.append(prereqs)
                         course_item.append(ap)
                         courses.append(course_item)
-                    requirement_item.append(courses)
+                    if len(courses):
+                        requirement_item.append(courses)
                     requirements.append(requirement_item)
-                subcategory_item.append(requirements)
+                if len(requirements):
+                    subcategory_item.append(requirements)
                 subcategories.append(subcategory_item)
-            category_item.append(subcategories)
+            if len(subcategories):
+                category_item.append(subcategories)
             categories.append(category_item)
-        major_item.append(categories)
+        if len(categories):
+            major_item.append(categories)
         root.append(major_item)
     xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
+
+
 # --- COURSES FORMS ---
 def processForm(request, model_form, command):
     if request.method == 'POST':

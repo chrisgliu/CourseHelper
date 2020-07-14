@@ -13,9 +13,30 @@
   width: 500px;
 }
 
-.contentbox {
-  display: flex;
-  flex-wrap: wrap;
+section {
+  text-align: center;
+}
+section .hstack {
+  border: 1px solid black;
+  padding: 10px;
+  margin: -1px;
+  display: inline-flex;
+  flex-direction: row;
+  overflow: hidden;
+  justify-content: space-evenly;
+}
+section .hstack .box {
+  display: inline-flex;
+  flex-direction: column;
+}
+section .hstack .box .stack {
+  display: block;
+}
+section .vstack {
+  border: 2px solid black;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 button {

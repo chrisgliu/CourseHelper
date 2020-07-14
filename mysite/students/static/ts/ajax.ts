@@ -4,9 +4,11 @@ function requestAJAX(url_source:string, workspace_id:string,
   let my_request:XMLHttpRequest = new XMLHttpRequest();
   my_request.open('GET', url_source, true);
   my_request.onload = () => {
-    let response:Document | null = my_request.responseXML;
-    if (response != null){
-      add_data_function(workspace_id, response)
+    if (my_request.status == 200){
+      let response:Document | null = my_request.responseXML;
+      if (response != null){
+        add_data_function(workspace_id, response)
+      }
     }
   }
   my_request.send();

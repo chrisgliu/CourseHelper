@@ -1,13 +1,19 @@
 @charset "UTF-8";
 ul {
   list-style-type: none;
+  margin: 0px;
+}
+ul li {
+  margin: 0px;
+}
+ul span {
+  margin: 0px;
 }
 
 .caret::before {
   content: "▶";
   color: black;
   display: inline-block;
-  margin-right: 10px;
 }
 
 .caret-down::before {

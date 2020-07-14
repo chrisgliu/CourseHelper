@@ -1,27 +1,78 @@
 {% extends "students/a_layout.html" %}
 
 {% block b %}
-<div class="contentbox">
-<!-- coursesdata tree -->
-	<div class="box">
-    <ul id='coursesdata'>
-    </ul>      		
-	</div>
-<!-- toggle course operations -->    
-  <div class='box'>
-    <button id='refreshcoursesdata'>refresh</button>    
-    <button id='majoroperation'>major</button>    
-    <button id='categoryoperation'>category</button>    
-    <button id='subcategoryoperation'>subcategory</button>    
-    <button id='requirementoperation'>requirement</button>    
-    <button id='courseoperation'>course</button>    
-    <button id='prereqoperation'>prereq</button>    
-    <button id='apoperation'>ap</button>    
+<div class='vstack'>
+
+  <div class='hstack'>
+    <!-- coursesdata tree -->
+	  <div class='box'>
+ <ul id="myUL">
+  <li><span class="caret">Beverages</span>
+    <ul class="nested">
+      <li>Water</li>
+      <li>Coffee</li>
+      <li><span class="caret">Tea</span>
+        <ul class="nested">
+          <li>Black Tea</li>
+          <li>White Tea</li>
+          <li><span class="caret">Green Tea</span>
+            <ul class="nested">
+              <li>Sencha</li>
+              <li>Gyokuro</li>
+              <li>Matcha</li>
+              <li>Pi Lo Chun</li>
+              <li><span class="caret">Green Tea</span>
+                <ul class="nested">
+                  <li>Sencha</li>
+                  <li>Gyokuro</li>
+                  <li>Matcha</li>
+                  <li>Pi Lo Chun</li>
+                  <li><span class="caret">Green Tea</span>
+                    <ul class="nested">
+                      <li>Sencha</li>
+                      <li>Gyokuro</li>
+                      <li>Matcha</li>
+                      <li>Pi Lo Chun</li>
+                      <li><span class="caret">Green Tea</span>
+                        <ul class="nested">
+                          <li>Sencha</li>
+                          <li>Gyokuro</li>
+                          <li>Matcha</li>
+                          <li>Pi Lo Chun</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>  
+    </ul>
+  </li>
+</ul>
+
+      <ul id='coursesdata'>
+      </ul>      		
+	  </div>
+    <!-- toggle course operations -->    
+    <div class='box'>
+      <button class='stack' id='refreshcoursesdata'>refresh</button>    
+      <button class='stack' id='majoroperation'>major</button>    
+      <button class='stack' id='categoryoperation'>category</button>    
+      <button class='stack' id='subcategoryoperation'>subcategory</button>    
+      <button class='stack' id='requirementoperation'>requirement</button>    
+      <button class='stack' id='courseoperation'>course</button>    
+      <button class='stack' id='prereqoperation'>prereq</button>    
+      <button class='stack' id='apoperation'>ap</button>    
+    </div>
   </div>
-	<div class="box">
-<!-- major operation -->
+
+  <div class='hstack'>
+    <!-- major operation -->
     <div id='majorforms' style="display: none;">
-		  <div class="form">
+		  <div class="form box">
 			  <h3>Add Major</h3>
 			  <form method='post' action="{% url 'addMajor' %}">
           {% csrf_token %}      
@@ -29,7 +80,7 @@
           <button type='submit'>Add</button>
         </form>
 		  </div>
-		  <div class="form"> 
+		  <div class="form box"> 
         <h3>Delete Major</h3>  
         <form method='post' action="{% url 'deleteMajor' %}">  
           {% csrf_token %} 
@@ -38,9 +89,9 @@
         </form> 
       </div>
     </div> 
-<!-- category operation -->
+    <!-- category operation -->
     <div id='categoryforms' style="display: none;">
-		  <div class="form">
+		  <div class="form box">
         <h3>Add Category</h3>  
         <form method='post' action="{% url 'addCategory' %}">  
           {% csrf_token %} 
@@ -48,7 +99,7 @@
           <button type='submit'>Add</button> 
         </form> 
       </div>
-      <div class="form">     
+      <div class="form box">     
         <h3>Delete Category</h3>  
         <form method='post' action="{% url 'deleteCategory' %}">  
           {% csrf_token %} 
@@ -57,9 +108,9 @@
         </form>  
       </div>
     </div>
-<!-- subcategory operation -->
+    <!-- subcategory operation -->
     <div id='subcategoryforms' style="display: none;">
-		  <div class="form"> 
+		  <div class="form box"> 
         <h3>Add Subcategory</h3>  
         <form method='post' action="{% url 'addSubcategory' %}">  
           {% csrf_token %} 
@@ -67,7 +118,7 @@
           <button type='submit'>Add</button> 
         </form>
       </div>
-      <div class="form"> 
+      <div class="form box"> 
         <h3>Delete Subcategory</h3>  
         <form method='post' action="{% url 'deleteSubcategory' %}">  
           {% csrf_token %}  
@@ -76,9 +127,9 @@
         </form>  
       </div>
     </div>
-<!-- requirement operation -->
+    <!-- requirement operation -->
 		<div id='requirementforms' style="display: none;">
-      <div class="form">
+      <div class="form box">
         <h3>Add Requirement</h3>  
         <form method='post' action="{% url 'addRequirement' %}">  
           {% csrf_token %}
@@ -86,7 +137,7 @@
           <button type='submit'>Add</button>   
         </form> 
       </div>
-      <div class="form"> 
+      <div class="form box"> 
         <h3>Delete Requirement</h3>  
         <form method='post' action="{% url 'deleteRequirement' %}">  
           {% csrf_token %}
@@ -95,9 +146,9 @@
         </form>  
       </div>
 		</div>
-<!-- course operation -->
+    <!-- course operation -->
 		<div id='courseforms' style="display: none;">
-      <div class="form">
+      <div class="form box">
         <h3>Add Course</h3>  
         <form method='post' action="{% url 'addCourse' %}">  
           {% csrf_token %} 
@@ -105,7 +156,7 @@
           <button type='submit'>Add</button>  
         </form>
       </div>
-      <div class="form">
+      <div class="form box">
         <h3>Delete Course</h3>  
         <form method='post' action="{% url 'deleteCourse' %}">  
           {% csrf_token %} 
@@ -114,9 +165,9 @@
         </form>  
       </div>
 		</div>  
-<!-- prereq operation -->
+    <!-- prereq operation -->
 		<div id='prereqforms' style="display: none;">
-      <div class="form">
+      <div class="form box">
         <h3>Add Prereq</h3>  
         <form method='post' action="{% url 'addPrereq' %}">  
           {% csrf_token %} 
@@ -124,7 +175,7 @@
           <button type='submit'>Add</button>
         </form>  
       </div>
-      <div class="form">
+      <div class="form box">
         <h3>Delete Prereq</h3>  
         <form method='post' action="{% url 'deletePrereq' %}">  
           {% csrf_token %} 
@@ -133,9 +184,9 @@
         </form>  
       </div>
 		</div>
-<!-- ap operation -->
+    <!-- ap operation -->
 		<div id='apforms' style="display: none;">
-      <div class="form">
+      <div class="form box">
         <h3>Add Ap Test</h3>  
         <form method='post' action="{% url 'addAp' %}">  
           {% csrf_token %} 
@@ -143,7 +194,7 @@
           <button type='submit'>Add</button> 
         </form> 
       </div>
-      <div class="form">
+      <div class="form box">
         <h3>Delete Ap Test</h3>  
         <form method='post' action="{% url 'deleteAp' %}">  
           {% csrf_token %} 

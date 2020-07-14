@@ -12,10 +12,34 @@ $fonts: Arial, Helvetica, sans-serif;
         }
     }
 }
-.contentbox{
-	display: flex;
-	flex-wrap: wrap;
+section{
+  text-align: center;
+
+  .hstack{
+    border: 1px solid black;
+    padding: 10px;
+    margin: -1px;
+    display: inline-flex;
+    flex-direction: row;
+    overflow: hidden;
+    justify-content: space-evenly;
+    .box{
+      display: inline-flex;
+      flex-direction: column;
+      .stack{
+        display: block;
+      }
+    }
+  }
+  .vstack{
+    border: 2px solid black;
+    display: inline-flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 }
+  
+
 button{ //default button
     width: 110px;
     background-color: white;
