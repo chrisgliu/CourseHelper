@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import *
 from .serializers import *
 from .models import *
-
+from .courseslist import *
 
 # Create your views here.
 
@@ -110,3 +110,36 @@ def linkCourseAndAp(request, course_pk, ap_pk):
     test.courses.add(course)
     test.save()
     return HttpResponse('complete')
+
+# --- get json data list ---
+def requestMajorList(request, username):
+    return requestMajorListHelper(request, username)
+
+def requestCategoriesList(request, username, major_name):
+    return requestCategoriesListHelper(request, username, major_name)
+    
+def requestSubcategoriesList(request, username, major_name, category_name):
+    return requestSubcategoriesListHelper(request, username, major_name, category_name)   
+
+def requestRequirementsList(request, username, major_name, category_name, subcategory_name):
+    return requestRequirementsListHelper(request, username, major_name, category_name, subcategory_name)
+
+def requestCoursesList(request, username, major_name, category_name, subcategory_name, requirement_name):
+    return requestCoursesListHelper(request, username, major_name, category_name, subcategory_name, requirement_name)     
+
+def requestPrereqList(request, username, major_name, category_name, subcategory_name, requirement_name, course_name):
+    return requestPrereqListHelper(request, username, major_name, category_name, subcategory_name, requirement_name, course_name)
+     
+def requestApList(request, username, major_name, category_name, subcategory_name, requirement_name, course_name):
+    return requestApListHelper(request, username, major_name, category_name, subcategory_name, requirement_name, course_name)
+
+# --- request specific data ---
+def requestSubcategoryNote(request, username, major_name, category_name, subcategory_name):
+    return requestSubcategoryNoteHelper(request, username, major_name, category_name, subcategory_name)
+
+def requestRequirementCredit(request, username, major_name, category_name, subcategory_name, requirement_name):
+    return requestRequirementCreditHelper(request, username, major_name, category_name, subcategory_name, requirement_name)
+
+def requestCoursesCredit(request, username, major_name, category_name, subcategory_name, requirement_name, course_name):
+    return requestCoursesCreditHelper(request, username, major_name, category_name, subcategory_name, requirement_name, course_name)
+

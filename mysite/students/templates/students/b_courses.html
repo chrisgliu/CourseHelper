@@ -1,125 +1,157 @@
 {% extends "students/a_layout.html" %}
 
 {% block b %}
-
 <div class="contentbox">
-	<div id='coursesdata'class="box">
-      		
+<!-- coursesdata tree -->
+	<div class="box">
+    <ul id='coursesdata'>
+    </ul>      		
 	</div>
-
-	<div id='coursesforms' class="box">
-		<div id="majorformadd" class="form">
-			<h3>Add Major</h3>
-			<form method="post" action="{% url 'addMajor' %}">
-        {% csrf_token %}      
-        <table> {{ ListMajorForm }} </table>
-        <button type="submit">Add</button>
-      </form>
+<!-- toggle course operations -->    
+  <div class='box'>
+    <button id='refreshcoursesdata'>refresh</button>    
+    <button id='majoroperation'>major</button>    
+    <button id='categoryoperation'>category</button>    
+    <button id='subcategoryoperation'>subcategory</button>    
+    <button id='requirementoperation'>requirement</button>    
+    <button id='courseoperation'>course</button>    
+    <button id='prereqoperation'>prereq</button>    
+    <button id='apoperation'>ap</button>    
+  </div>
+	<div class="box">
+<!-- major operation -->
+    <div id='majorforms' style="display: none;">
+		  <div class="form">
+			  <h3>Add Major</h3>
+			  <form method='post' action="{% url 'addMajor' %}">
+          {% csrf_token %}      
+          <table> {{ ListMajorForm }} </table>
+          <button type='submit'>Add</button>
+        </form>
+		  </div>
+		  <div class="form"> 
+        <h3>Delete Major</h3>  
+        <form method='post' action="{% url 'deleteMajor' %}">  
+          {% csrf_token %} 
+          <table> {{ ListMajorForm }} </table> 
+          <button type='submit'>Delete</button>  
+        </form> 
+      </div>
+    </div> 
+<!-- category operation -->
+    <div id='categoryforms' style="display: none;">
+		  <div class="form">
+        <h3>Add Category</h3>  
+        <form method='post' action="{% url 'addCategory' %}">  
+          {% csrf_token %} 
+          <table> {{ ListCategoryForm }} </table> 
+          <button type='submit'>Add</button> 
+        </form> 
+      </div>
+      <div class="form">     
+        <h3>Delete Category</h3>  
+        <form method='post' action="{% url 'deleteCategory' %}">  
+          {% csrf_token %} 
+          <table> {{ ListCategoryForm }} </table>  
+			    <button type='submit'>Delete</button>
+        </form>  
+      </div>
+    </div>
+<!-- subcategory operation -->
+    <div id='subcategoryforms' style="display: none;">
+		  <div class="form"> 
+        <h3>Add Subcategory</h3>  
+        <form method='post' action="{% url 'addSubcategory' %}">  
+          {% csrf_token %} 
+          <table> {{ ListSubCategoryForm }} </table>  
+          <button type='submit'>Add</button> 
+        </form>
+      </div>
+      <div class="form"> 
+        <h3>Delete Subcategory</h3>  
+        <form method='post' action="{% url 'deleteSubcategory' %}">  
+          {% csrf_token %}  
+          <table> {{ ListSubCategoryForm }} </table>   
+          <button type='submit'>Delete</button>
+        </form>  
+      </div>
+    </div>
+<!-- requirement operation -->
+		<div id='requirementforms' style="display: none;">
+      <div class="form">
+        <h3>Add Requirement</h3>  
+        <form method='post' action="{% url 'addRequirement' %}">  
+          {% csrf_token %}
+          <table> {{ ListRequirementForm }} </table> 
+          <button type='submit'>Add</button>   
+        </form> 
+      </div>
+      <div class="form"> 
+        <h3>Delete Requirement</h3>  
+        <form method='post' action="{% url 'deleteRequirement' %}">  
+          {% csrf_token %}
+          <table> {{ ListRequirementForm }} </table>  
+          <button type='submit'>Delete</button>
+        </form>  
+      </div>
 		</div>
-		<div id='majorformdelete' class="form"> 
-      <h3>Delete Major</h3>  
-      <form method="post" action="{% url 'deleteMajor' %}">  
-        {% csrf_token %} 
-        <table> {{ ListMajorForm }} </table> 
-        <button type="submit">Delete</button>  
-      </form> 
-    </div>
-		<div id='categoryformadd' class="form">
-      <h3>Add Category</h3>  
-      <form method="post" action="{% url 'addCategory' %}">  
-        {% csrf_token %} 
-        <table> {{ ListCategoryForm }} </table> 
-        <button type="submit">Add</button> 
-      </form> 
-    </div>
-    <div id='categoryformdelete' class="form">     
-      <h3>Delete Category</h3>  
-      <form method="post" action="{% url 'deleteCategory' %}">  
-        {% csrf_token %} 
-        <table> {{ ListCategoryForm }} </table>  
-			  <button type="submit">Delete</button>
-      </form>  
-    </div>
-		<div id='subcategoryformadd'> 
-      <h3>Add Subcategory</h3>  
-      <form method="post" action="{% url 'addSubcategory' %}">  
-        {% csrf_token %} 
-        <table> {{ ListSubCategoryForm }} </table>  
-        <button type="submit">Add</button> 
-      </form>
-    </div>
-    <div id='subcategoryformdelete'>
-      <h3>Delete Subcategory</h3>  
-      <form method="post" action="{% url 'deleteSubcategory' %}">  
-        {% csrf_token %}  
-        <table> {{ ListSubCategoryForm }} </table>   
-        <button type="submit">Delete</button>
-      </form>  
-    </div>
-		<div id='requirementformadd'>      
-      <h3>Add Requirement</h3>  
-      <form method="post" action="{% url 'addRequirement' %}">  
-        {% csrf_token %}
-        <table> {{ ListRequirementForm }} </table> 
-        <button type="submit">Add</button>   
-      </form> 
-    </div>
-		<div id='requirementformdelete'> 
-      <h3>Delete Requirement</h3>  
-      <form method="post" action="{% url 'deleteRequirement' %}">  
-        {% csrf_token %}
-        <table> {{ ListRequirementForm }} </table>  
-        <button type="submit">Delete</button>
-      </form>  
-    </div>
-		<div id='courseformadd'> 
-      <h3>Add Course</h3>  
-      <form method="post" action="{% url 'addCourse' %}">  
-        {% csrf_token %} 
-        <table> {{ ListCourseForm }} </table> 
-        <button type="submit">Add</button>  
-      </form>
-    </div>
-    <div id='courseformdelete'>
-      <h3>Delete Course</h3>  
-      <form method="post" action="{% url 'deleteCourse' %}">  
-        {% csrf_token %} 
-        <table> {{ ListCourseForm }} </table>  
-        <button type="submit">Delete</button>
-      </form>  
-    </div>
-		<div id='prereqformadd'>
-      <h3>Add Prereq</h3>  
-      <form method="post" action="{% url 'addPrereq' %}">  
-        {% csrf_token %} 
-        <table> {{ ListPrereqForm }} </table> 
-        <button type="submit">Add</button>
-      </form>  
-    </div>
-    <div id='prereqformdelete'>
-      <h3>Delete Prereq</h3>  
-      <form method="post" action="{% url 'deletePrereq' %}">  
-        {% csrf_token %} 
-        <table> {{ ListPrereqForm }} </table>  
-        <button type="submit">Delete</button>
-      </form>  
-    </div>
-		<div id='apformadd'>
-      <h3>Add Ap Test</h3>  
-      <form method="post" action="{% url 'addAp' %}">  
-        {% csrf_token %} 
-        <table> {{ ListApForm }} </table> 
-        <button type="submit">Add</button> 
-      </form> 
-    </div>
-    <div id='apformdelete'>
-      <h3>Delete Ap Test</h3>  
-      <form method="post" action="{% url 'deleteAp' %}">  
-        {% csrf_token %} 
-        <table> {{ ListApForm }} </table>  
-        <button type="submit">Delete</button> 
-      </form> 
-    </div>
+<!-- course operation -->
+		<div id='courseforms' style="display: none;">
+      <div class="form">
+        <h3>Add Course</h3>  
+        <form method='post' action="{% url 'addCourse' %}">  
+          {% csrf_token %} 
+          <table> {{ ListCourseForm }} </table> 
+          <button type='submit'>Add</button>  
+        </form>
+      </div>
+      <div class="form">
+        <h3>Delete Course</h3>  
+        <form method='post' action="{% url 'deleteCourse' %}">  
+          {% csrf_token %} 
+          <table> {{ ListCourseForm }} </table>  
+          <button type='submit'>Delete</button>
+        </form>  
+      </div>
+		</div>  
+<!-- prereq operation -->
+		<div id='prereqforms' style="display: none;">
+      <div class="form">
+        <h3>Add Prereq</h3>  
+        <form method='post' action="{% url 'addPrereq' %}">  
+          {% csrf_token %} 
+          <table> {{ ListPrereqForm }} </table> 
+          <button type='submit'>Add</button>
+        </form>  
+      </div>
+      <div class="form">
+        <h3>Delete Prereq</h3>  
+        <form method='post' action="{% url 'deletePrereq' %}">  
+          {% csrf_token %} 
+          <table> {{ ListPrereqForm }} </table>  
+          <button type='submit'>Delete</button>
+        </form>  
+      </div>
+		</div>
+<!-- ap operation -->
+		<div id='apforms' style="display: none;">
+      <div class="form">
+        <h3>Add Ap Test</h3>  
+        <form method='post' action="{% url 'addAp' %}">  
+          {% csrf_token %} 
+          <table> {{ ListApForm }} </table> 
+          <button type='submit'>Add</button> 
+        </form> 
+      </div>
+      <div class="form">
+        <h3>Delete Ap Test</h3>  
+        <form method='post' action="{% url 'deleteAp' %}">  
+          {% csrf_token %} 
+          <table> {{ ListApForm }} </table>  
+          <button type='submit'>Delete</button> 
+        </form> 
+      </div>
+		</div>  
 	</div>
 </div>
 {% endblock %}

@@ -29,5 +29,14 @@ urlpatterns = [
     path("linkRequirementAndCourse/<requirement_pk>/<course_pk>/", linkRequirementAndCourse),
     path("linkCourseAndPrereq/<course_pk>/<prereq_pk>/", linkCourseAndPrereq),
     path("linkCourseAndAp/<course_pk>/<ap_pk>/", linkCourseAndAp),
-   
+    path("majorlist/<username>/", requestMajorList),
+    path("categorylist/<username>/<major_name>/", requestCategoriesList),
+    path("subcategorylist/<username>/<major_name>/<category_name>/", requestSubcategoriesList),
+    path("requirementlist/<username>/<major_name>/<category_name>/<subcategory_name>/", requestRequirementsList),
+    path("courselist/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/", requestCoursesList),
+    path("prereqlist/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/<course_name>/", requestPrereqList),
+    path("aplist/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/<course_name>/", requestApList),
+    path("specificsubcategory/<username>/<major_name>/<category_name>/<subcategory_name>/", requestSubcategoryNote),
+    path("specificrequirement/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/", requestRequirementCredit),
+    path("specificcourse/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/<course_name>/", requestCoursesCredit),
 ]

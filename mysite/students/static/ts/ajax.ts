@@ -1,19 +1,15 @@
 // --- making a request for data ---
-function requestAJAX(url_source:string, data_tag:string, workspace_id:string,
-                     add_data_function:(workspace_id:string, info:string)=> void){
-  let request:XMLHttpRequest = new XMLHttpRequest();
-  request.open('GET', url_source, true);
-  request.onload = () => {
-    let response:Document | null = request.responseXML;
+function requestAJAX(url_source:string, workspace_id:string, 
+                     add_data_function:(workspace_id:string, response:Document)=> void){
+  let my_request:XMLHttpRequest = new XMLHttpRequest();
+  my_request.open('GET', url_source, true);
+  my_request.onload = () => {
+    let response:Document | null = my_request.responseXML;
     if (response != null){
-      let data:any = response.getElementsByTagName(data_tag);
-      for (let data_instance of data) {
-        let info:string = data_instance.innerHTML;
-        add_data_function(workspace_id, info)
-      }
+      add_data_function(workspace_id, response)
     }
   }
-  request.send();
+  my_request.send();
   // cant return value in an asynchronous request
 }
 // --- spaces in url_source ---

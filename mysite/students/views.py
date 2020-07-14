@@ -12,7 +12,7 @@ def main(request):
 
 # --- TESTING --- 
 def test(request):
-    return HttpsResponse('hello')
+    return renderHome(request, "students/main.html")
 
 # --- AUTH OPERATIONS ---
 @csrf_protect
@@ -29,36 +29,10 @@ def signInForm(request):
 def signOut(request):
     return signOutHelper(request)
 
-# --- COURSES XML DATA REQUESTS ---
-def requestMajors(request):
-    return requestMajorsHelper(request)
+# --- COURSES XML DATA REQUEST ---
 
-def requestCategories(request, major_name):
-    return requestCategoriesHelper(request, major_name)
-
-def requestSubCategories(request, category_name):
-    return requestSubCategoriesHelper(request, category_name)
-
-def requestSubCategory(request, category_name, subcategory_name):
-    return requestSubCategoryHelper(request, category_name, subcategory_name)
-
-def requestRequirements(request, subcategory_name):
-    return requestRequirementsHelper(request, subcategory_name)
-
-def requestRequirement(request, subcategory_name, requirement_name):
-    return requestRequirementHelper(request, subcategory_name, requirement_name)
-
-def requestCourses(request, requirement_name):
-    return requestCoursesHelper(request, requirement_name)
-
-def requestCourse(request, requirement_name, course_name):
-    return requestCourseHelper(request, requirement_name, course_name)
-
-def requestPrereqs(request, course_name):
-    return requestPrereqsHelper(request, course_name)
-
-def requestAP(request, course_name):
-    return requestAPHelper(request, course_name)
+def requestCoursesData(request):
+    return requestCoursesDataHelper(request) 
 
 # --- HELPER XML DATA REQUESTS ---
 def requestMyMajors(request):
@@ -75,59 +49,59 @@ def requestMyCourses(request, year, semester):
 
 # --- COURSES OPERATIONS ---
 @csrf_protect
-def addMajor(request):
+def addCoursesMajor(request):
     return listMajorFormAdd(request)
 
 @csrf_protect
-def deleteMajor(request):
+def deleteCoursesMajor(request):
     return listMajorFormDelete(request)
 
 @csrf_protect
-def addCategory(request):
+def addCoursesCategory(request):
     return listCategoryFormAdd(request)
     
 @csrf_protect
-def deleteCategory(request):
+def deleteCoursesCategory(request):
     return listCategoryFormDelete(request)
 
 @csrf_protect
-def addSubCategory(request):
+def addCoursesSubCategory(request):
     return listSubCategoryFormAdd(request)
     
 @csrf_protect
-def deleteSubCategory(request):
+def deleteCoursesSubCategory(request):
     return listSubCategoryFormDelete(request)
 
 @csrf_protect
-def addRequirement(request):
+def addCoursesRequirement(request):
     return listRequirementFormAdd(request)
     
 @csrf_protect
-def deleteRequirement(request):
+def deleteCoursesRequirement(request):
     return listRequirementFormDelete(request)
 
 @csrf_protect
-def addCourse(request):
+def addCoursesCourse(request):
     return listCourseFormAdd(request)
     
 @csrf_protect
-def deleteCourse(request):
+def deleteCoursesCourse(request):
     return listCourseFormDelete(request)
 
 @csrf_protect
-def addPrereq(request):
+def addCoursesPrereq(request):
     return listPrereqFormAdd(request)
     
 @csrf_protect
-def deletePrereq(request):
+def deleteCoursesPrereq(request):
     return listPrereqFormDelete(request)
 
 @csrf_protect
-def addAp(request):
+def addCoursesAp(request):
     return listApFormAdd(request)
     
 @csrf_protect
-def deleteAp(request):
+def deleteCoursesAp(request):
     return listApFormDelete(request)
 
 # --- HELPER OPERATIONS ---

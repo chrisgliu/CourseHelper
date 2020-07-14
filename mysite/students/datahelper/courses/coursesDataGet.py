@@ -4,6 +4,7 @@ from django.conf import settings
 import requests
 from django.http import HttpResponse
 
+
 # --- getting api link ---
 data_sets = {
         'student': 'students','enrolled': 'enrolled','major': 'majors',
@@ -73,20 +74,6 @@ def compileSubDataLinks(request, data_model, parent_model, parent_links):
         for sub_link in sub_data_links:
             all_sub_data_links.append(sub_link)
     return all_sub_data_links
-
-def filterLinks(request, links, parent_reference, parent_name):
-    filtered_links = []
-    parent_model = 'major'
-    if parent_reference != 'major':
-        parent_model = singularVersion(parent_reference)
-    parent_pk = getInstancePK(request, parent_model, parent_name)
-    api_link = getCoursesAPI(request, parent_model)
-    parent_relation = f'{api_link}{parent_pk}/' 
-    for link in links:
-        result = requests.get(link).json()
-        if parent_relation in result.get(parent_reference):
-            filtered_links.append(link)
-    return filtered_links
 
 # --- get operations ---
 # given user data
@@ -215,57 +202,65 @@ def getInstancePK(request, data_model, name):
     return -1
 
 # --- get data list fuctions ---
-# used for AJAX requests for data
-def getInstanceNames(request, data_model, instance_links):
-    names = []
-    for i in instance_links:
-        result = requests.get(i).json()
-        name = result.get(data_model)
-        if data_model == 'test':
-            scoremin = result.get('scoremin')
-            scoremax = result.get('scoremax')
-            name = f'{name}:{scoremin}-{scoremax}'
-        names.append(name)
-    return names
+# reads AJAX requests
 
 def getMajorList(request):
-    links = getMajorLinks(request)
-    data = getInstanceNames(request, 'major', links)
-    return data
-
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/majorlist/{username}/'
+    result = requests.get(url)
+    return result.json().get('data')
 
 def getCategoryList(request, major_name):
-    links = getCategoryLinks(request)
-    filtered_links = filterLinks(request, links, 'major', major_name)
-    data = getInstanceNames(request, 'category', filtered_links)
-    return data
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/categorylist/{username}/{major_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
 
-def getSubCategoryList(request, category_name):
-    links = getSubCategoryLinks(request)
-    filter_links = filterLinks(request, links, 'categories', category_name)
-    data = getInstanceNames(request, 'subcategory', filter_links)
-    return data
+def getSubCategoryList(request, major_name, category_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/subcategorylist/{username}/{major_name}/{category_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
 
-def getRequirementList(request, subcategory_name):
-    links = getRequirementLinks(request)
-    filter_links = filterLinks(request, links, 'subcategories', subcategory_name)
-    data = getInstanceNames(request, 'requirement', filter_links)
-    return data
+def getRequirementList(request, major_name, category_name, subcategory_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/requirementlist/{username}/{major_name}/{category_name}/{subcategory_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
 
-def getCourseList(request, requirement_name):
-    links = getCourseLinks(request)
-    filter_links = filterLinks(request, links, 'requirements', requirement_name)
-    data = getInstanceNames(request, 'course', filter_links)
-    return data
+def getCourseList(request, major_name, category_name, subcategory_name, requirement_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/courselist/{username}/{major_name}/{category_name}/{subcategory_name}/{requirement_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
 
-def getPrereqList(request, course_name):
-    links = getPrereqLinks(request)
-    filter_links = filterLinks(request, links, 'courses', course_name)
-    data = getInstanceNames(request, 'prereq', filter_links)
-    return data
+def getPrereqList(request, major_name, category_name, subcategory_name, requirement_name, course_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/prereqlist/{username}/{major_name}/{category_name}/{subcategory_name}/{requirement_name}/{course_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
 
-def getAPList(request, course_name):
-    links = getApLinks(request)
-    filter_links = filterLinks(request, links, 'courses', course_name)
-    data = getInstanceNames(request, 'test', filter_links)
-    return data
+def getAPList(request, major_name, category_name, subcategory_name, requirement_name, course_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/aplist/{username}/{major_name}/{category_name}/{subcategory_name}/{requirement_name}/{course_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
+
+def getSubCategoryNote(request, major_name, category_name, subcategory_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/specificsubcategory/{username}/{major_name}/{category_name}/{subcategory_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
+
+def getRequirementCredit(request, major_name, category_name, subcategory_name, requirement_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/specificrequirement/{username}/{major_name}/{category_name}/{subcategory_name}/{requirement_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
+
+def getCourseCredit(request, major_name, category_name, subcategory_name, requirement_name, course_name):
+    username = request.user.username
+    url = f'http://{settings.SITE_URL}/courses/specificcourse/{username}/{major_name}/{category_name}/{subcategory_name}/{requirement_name}/{course_name}/'
+    result = requests.get(url)
+    return result.json().get('data')
+

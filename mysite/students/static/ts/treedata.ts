@@ -1,4 +1,3 @@
-///<reference path='ajax.ts' />
 function clearData(ul_id:string){
   let list = document.getElementById(ul_id);
   if (list == null) { return }
@@ -30,4 +29,15 @@ function addSpecificData(ul_id:string, info:string){
   data.innerHTML = info;
   list.appendChild(data);
 }
-
+function getSubListNames(parent_ul_id:string){
+  let names:string[]= [];
+  let parent = document.getElementById(parent_ul_id);
+  if (parent == null) { return}
+  let data = parent.children;
+  for (let index = 0; index < data.length; index++) {
+    let listitem = data[index];
+    let name = listitem.getElementsByTagName('span')[0].innerHTML;
+    names.push(name);
+  }
+  return names;
+}
