@@ -9,6 +9,9 @@
 <body>
     <div id='workspace'>
         <div id='main'>
+            {% if name %}
+                <p> Hello, {{name}}</p>
+            {% endif %}
             {% if messages %}
                 {% for message in messages %}
                     <p>{{message}}</p>

@@ -46,8 +46,7 @@ def signInFormHelper(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            message = f'Hello, {request.user.first_name}'
-            return renderHome(request, 'students/main.html', {"messages": [message]}) 
+            return HttpResponseRedirect(reverse("main"))
         else:
             message = 'Invalid credentials.'
             return renderHome(request, 'students/main.html', {"messages": [message]}) 

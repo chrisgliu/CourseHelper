@@ -25,7 +25,8 @@ def mergeDict(x, y):
 
 # -- HOME MENU LINKS --
 def getLoggedInNav(request):
-    nav = {'signout':True, 'signin':False, 'signup':False}
+    name = f'{request.user.first_name} {request.user.last_name}' 
+    nav = {'signout':True, 'signin':False, 'signup':False, "name":name}
     return mergeDict(nav, all_forms)
 
 def getLoggedOutNav():

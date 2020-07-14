@@ -6,6 +6,7 @@
   <div class='hstack'>
     <!-- coursesdata tree -->
 	  <div class='box'>
+      <h2> Course Data </h2>
  <ul id="myUL">
   <li><span class="caret">Beverages</span>
     <ul class="nested">
@@ -58,7 +59,10 @@
 	  </div>
     <!-- toggle course operations -->    
     <div class='box'>
-      <button class='stack' id='refreshcoursesdata'>refresh</button>    
+      <!-- user data request-->
+      {% if name %}
+        <button class='stack' id='refreshcoursesdata'>refresh</button>    
+      {% endif %}
       <button class='stack' id='majoroperation'>major</button>    
       <button class='stack' id='categoryoperation'>category</button>    
       <button class='stack' id='subcategoryoperation'>subcategory</button>    
