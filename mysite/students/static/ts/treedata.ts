@@ -1,3 +1,5 @@
+/// <reference path='toggle.ts'/>
+
 function clearData(ul_id:string){
   let list = document.getElementById(ul_id);
   if (list == null) { return }
@@ -15,6 +17,11 @@ function addDataList(parent_ul_id:string, name:string){
   let symbol = document.createElement('span');
   symbol.innerHTML = name;
   symbol.className = 'caret';
+  symbol.onclick = ()=> {
+    let data: HTMLElement = symbol.parentElement.querySelector(".nested");
+	  toggleIt(data);
+    symbol.classList.toggle("caret-down");
+  }
   let nested = document.createElement('ul');
   nested.className = 'nested';
   nested.id = name;

@@ -1,86 +1,160 @@
 ///<reference path='ajax.ts'/>
 ///<reference path='treedata.ts'/>
 // courses tree data
-class content {
-  key_a:string; key_b:string; key_c:string;
-  value_a:any; value_b:any; value_c:any;
-  constructor(tag_a:string, tag_b:string, tag_c:string) {
-    this.key_a = tag_a; this.key_b = tag_b; this.key_c = tag_c;
-    this.value_a = this.value_b = this.value_c = null;
-  }
-  set assignValA(value:any) { this.value_a = value;}
-  set assignValB(value:any) { this.value_b = value;}
-  set assignValC(value:any) { this.value_c = value;}
-  valueOf(key:string){
-    if (key==this.key_a) { return this.value_a; }
-    if (key==this.key_b) { return this.value_b; }
-    if (key==this.key_c) { return this.value_c; }
-  }
-}
-function readNodeContent(node_content:NodeList, tag_a:string, tag_b:string, tag_c:string){
-  let output:content = new content(tag_a, tag_b, tag_c);
-  for (const node of node_content) {
-    if (node.nodeType == 1) {
-      if (node.nodeName == tag_a) { output.assignValA = node; }
-      if (node.nodeName == tag_b) { output.assignValB = node; }
-      if (node.nodeName == tag_c) { output.assignValC = node; }
+
+function readMajors(majors:HTMLCollection) {
+  let major_data = [];
+  for (const major of majors) {
+    let major_content = major.childNodes;
+    let major_name = ''; 
+    let categories_node = null;
+    for (const node of major_content) {
+      if (node.nodeName == 'major_name') { major_name = node.textContent;}
+      if (node.nodeName == 'categories' && node.hasChildNodes()) { categories_node = node;}
     }
+    let data = {'major_name':major_name, 'categories':categories_node};
+    major_data.push(data);
   }
-  return output;
+  return major_data;
+}
+function readCategories(categories:NodeList) {
+  let category_data = [];
+  for (const category of categories) {
+    let category_content = category.childNodes;
+    let category_name = '';
+    let subcategories_node = null;
+    for (const node of category_content) {
+      if (node.nodeName == 'category_name') { category_name = node.textContent;}
+      if (node.nodeName == 'subcategories' && node.hasChildNodes()) { subcategories_node = node;}
+    }
+    let data = {'category_name':category_name, 'subcategories':subcategories_node};
+    category_data.push(data);
+  }
+  return category_data;
+}
+function readSubcategories(subcategories:NodeList) {
+  let subcategory_data = [];
+  for (const subcategory of subcategories) {
+    let subcategory_content = subcategory.childNodes;
+    let subcategory_name = '';
+    let requirements_node = null;
+    for (const node of subcategory_content) {
+      if (node.nodeName == 'subcategory_name') { subcategory_name = node.textContent;}
+      if (node.nodeName == 'requirements' && node.hasChildNodes()) { requirements_node = node;}
+    }
+    let data = {'subcategory_name':subcategory_name, 'requirements':requirements_node};
+    subcategory_data.push(data);
+  }
+  return subcategory_data;
+}
+function readRequirements(requirements:NodeList) {
+  let requirement_data = [];
+  for (const requirement of requirements) {
+    let requirement_content = requirement.childNodes;
+    let requirement_name = '';
+    let courses_node = null;
+    for (const node of requirement_content) {
+      if (node.nodeName == 'requirement_name') { requirement_name = node.textContent;}
+      if (node.nodeName == 'courses' && node.hasChildNodes()) { courses_node = node;}
+    }
+    let data = {'requirement_name':requirement_name, 'courses':courses_node};
+    requirement_data.push(data);
+  }
+  return requirement_data;
+}
+function readCourses(courses:NodeList) {
+  let course_data = [];
+  for (const course of  courses) {
+    let course_content = course.childNodes;
+    let course_name = '';
+    let prereqs_node = null;
+    let ap_node = null;
+    for (const node of course_content) {
+      if (node.nodeName == 'course_name') { course_name = node.textContent;}
+      if (node.nodeName == 'prereqs' && node.hasChildNodes()) { prereqs_node = node;}
+      if (node.nodeName == 'ap' && node.hasChildNodes()) { ap_node = node;}
+    }
+    let data = {'course_name':course_name, 'prereqs':prereqs_node, 'ap':ap_node};
+    course_data.push(data);
+  }
+  return course_data;
+}
+function readPrereqs(prereqs:NodeList) {
+  let prereq_data = [];
+  for (const prereq of prereqs) {
+    let prereq_content = prereq.childNodes;
+    let prereq_name = '';
+    for (const node of prereq_content) {
+      if (node.nodeName == 'prereq_name') { prereq_name = node.textContent;}
+    }
+    prereq_data.push(prereq_name);
+  }
+  return prereq_data;
+}
+function readAp(ap:NodeList) {
+  let ap_data = [];
+  for (const ap_test of ap) {
+    let test_content = ap_test.childNodes;
+    let test_name = '';
+    for (const node of test_content) {
+      if (node.nodeName == 'test_name') { test_name = node.textContent;}
+    }
+    ap_data.push(test_name);
+  }
+  return ap_data;
 }
 //Major:test
 function addCoursesData(workspace_id:string, response:Document){
   let majors = response.getElementsByTagName('major');
-  for (const major of majors) {
-    let major_content:content = readNodeContent(major.childNodes, 'major_name', 'categories', null);
-    let major_name = major_content.valueOf('major_name').nodeValue;
-    addDataList(workspace_id, `Major:${major_name}`);
-    let categories_node = major_content.valueOf('categories');
-    let categories = categories_node.childNodes;
-    for (const category of categories) {
-      let category_content:content = readNodeContent(category.childNodes, 'category_name', 'subcategories', null);
-      let category_name = category_content.valueOf('category_name').nodeValue;
-      addDataList(`Major:${major_name}`, `Category:${category_name}`);
-      let subcategories_node = category_content.valueOf('subcategories');
-      let subcategories = subcategories_node.childNodes;
-      for (const subcategory of subcategories) {
-        let subcategory_content:content = readNodeContent(subcategory.childNodes, 'subcategory_name', 'requirements', null);
-        let subcategory_name = subcategory_content.valueOf('subcategory_name').nodeValue;
-        addDataList(`Subcategory:${subcategory_name}`, `Category:${category_name}`)
-        let requirements_node = subcategory_content.valueOf('requirements');
-        let requirements = requirements_node.childNodes;
-        for (const requirement of requirements) {
-          let requirement_content:content = readNodeContent(requirement.childNodes, 'requirement_name', 'courses', null);
-          let requirement_name = requirement_content.valueOf('requirement_name').nodeValue;
-          addDataList(`Subcategory:${subcategory_name}`, `Requirement:${requirement_name}`);
-          let courses_node = requirement_content.valueOf('courses');
-          let courses = courses_node.childNodes;
-          for (const course of  courses) {
-            let course_content:content = readNodeContent(course.childNodes, 'course_name', 'prereqs', 'ap');
-            let course_name = course_content.valueOf('course_name').nodeValue;
-            addDataList(`Requirement:${requirement_name}`, `Course:${course_name}`);
-            let prereqs_node = course_content.valueOf('prereqs');
-            let prereqs = prereqs_node.childNodes;
-            addDataList(`Course:${course_name}`, `Prereq:${course_name}`);
-            for (const prereq of prereqs) {
-              let prereq_content:content = readNodeContent(prereq.childNodes, 'prereq_name', null, null);
-              let prereq_name = prereq_content.valueOf('prereq_name').nodeValue;
-              addSpecificData(`Prereq:${course_name}`, prereq_name);
-            }
-            let ap_node = course_content.valueOf('ap');
-            let ap = ap_node.childNodes;
-            addDataList(`Course:${course_name}`, `Ap:${course_name}`);
-            for (const test of ap) {
-              let test_content:content = readNodeContent(test.childNodes, 'test_name', null, null);
-              let test_name = test_content.valueOf('test_name').nodeValue;
-              addSpecificData(`Ap:${course_name}`, test_name);
+  let major_data = readMajors(majors);
+  for (const major of major_data) {
+    addDataList(workspace_id, `Major:${major.major_name}`);
+    if (major.categories != null) {
+      let categories = major.categories.childNodes;
+      let category_data = readCategories(categories);
+      for (const category of category_data) {
+        addDataList(`Major:${major.major_name}`, `Category:${category.category_name}`);
+        if (category.subcategories != null) {
+          let subcategories = category.subcategories.childNodes;
+          let subcategory_data = readSubcategories(subcategories);
+          for (const subcategory of subcategory_data) {
+            addDataList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`);
+            if (subcategory.requirements != null) {
+              let requirements = subcategory.requirements.childNodes;
+              let requirement_data = readRequirements(requirements);
+              for (const requirement of requirement_data) {
+                addDataList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`);
+                if (requirement.courses != null) {
+                  let courses = requirement.courses.childNodes;
+                  let course_data = readCourses(courses);
+                  for (const course of course_data) {
+                    addDataList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`);
+                    if (course.prereqs != null) {
+                      addDataList(`Course:${course.course_name}`, `Prereq:${course.course_name}`);
+                      let prereqs = course.prereqs.childNodes;
+                      let prereq_data = readPrereqs(prereqs);
+                      for (const prereq of prereq_data) {
+                        addSpecificData(`Prereq:${course.course_name}`, prereq);
+                      }
+                    }
+                    if (course.ap != null) {
+                      addDataList(`Course:${course.course_name}`, `Ap:${course.course_name}`);
+                      let ap = course.ap.childNodes;
+                      let ap_data = readAp(ap);
+                      for (const ap_test of ap_data) {
+                        addSpecificData(`Ap:${course.course_name}`, ap_test);
+                      }
+                    }
+                  }
+                }  
+              }
             }
           }
         }
-      }    
+      }
     }
   }
-}
+}            
 function updateCoursesData(){
   let workspace_id = 'coursesdata';
   clearData(workspace_id);

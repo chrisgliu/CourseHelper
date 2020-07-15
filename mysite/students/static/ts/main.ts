@@ -3,15 +3,6 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {
-// displaying tree data 
-  let treedata = document.getElementsByClassName("caret");
-  for (const toggle of treedata) {
-    toggle.addEventListener("click", function(){
-      let data: HTMLElement = toggle.parentElement.querySelector(".nested")
-	    toggleIt(data)
-      toggle.classList.toggle("caret-down");
-    });
-  }
 // nav buttons
   document.getElementById('creditsneeded').onclick = ()=>{
     showIt('section-b')
@@ -44,9 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // course buttons
   let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
     'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
-
   document.getElementById('refreshcoursesdata').onclick = ()=>{
-    updateCoursesData(); 
+    updateCoursesData();
   }
   document.getElementById('majoroperation').onclick = ()=>{
     for (const item of forms) {
