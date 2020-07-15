@@ -3,8 +3,20 @@ from django.urls import reverse
 from django.shortcuts import render
 from ..dataforms.HelperForms import *
 from ..datahelper.students.studentsDataGet import *
-from ..datahelper.XMLString import *
 from .home import *
+from lxml import etree
+
+def getXMLString(data_list, data_set, data_model):
+    root = etree.Element(data_set)
+    length = etree.Element('length')
+    length.text = str(len(data_list))
+    root.append(length)
+    for instance in data_list:
+        model = etree.Element(data_model)
+        model.text = instance       
+        root.append(model)
+    the_xml_string = etree.tostring(root, xml_declaration=True)
+    return the_xml_string
 
 # --- HELPER DATA ---- 
 def getNames(data_objects, name_attr):

@@ -7,9 +7,10 @@ def processForm(request, model_form, command):
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = model_form(request.POST)
-        if form.is_valid():
-            form.process(request, command)
-    return HttpResponseRedirect(reverse("main"))
+            if form.is_valid():
+                form.process(request, command)
+                return HttpResponse('complete')
+    return HttpResponse('an error occured')
 
 def listStudentFormAdd(request):
     return processForm(request, ListStudentForm, 'add')

@@ -47,20 +47,21 @@ def getCourses(request, year, semester):
 
 # --- specific ---
 def getSpecificMajor(request, major_name):
-    key = getEnrollmentKey(user)
+    key = getEnrollmentKey(request)
     return Major.objects.get(enrolled=key, major=major_name)
 
 
 def getSpecificYear(request, year_name):
-    key = getEnrollmentKey(user)
+    key = getEnrollmentKey(request)
     return Year.objects.get(enrolled=key, year=year_name)
 
 
 def getSpecificSemester(request, year_name, semester_name):
-    year = getSpecificYear(user, year_name)
+    year = getSpecificYear(request, year_name)
     return Semester.objects.get(years=year, semester=semester_name)
 
 
 def getSpecificCourse(request, year_name, semester_name, course_name):
-    semester = getSpecificSemester(user, year_name, semester_name)
+    semester = getSpecificSemester(request, year_name, semester_name)
     return Course.objects.get(semesters=semester, course=course_name)
+
