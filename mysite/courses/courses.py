@@ -9,8 +9,7 @@ def processForm(request, model_form, command):
             form = model_form(request.POST)
             if form.is_valid():
                 form.process(request, command)
-                return HttpResponse('complete')
-    return HttpResponse('an error occured')
+    return HttpResponseRedirect(reverse('main'))
 
 def listStudentFormAdd(request):
     return processForm(request, ListStudentForm, 'add')

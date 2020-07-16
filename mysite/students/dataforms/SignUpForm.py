@@ -8,8 +8,18 @@ from django.utils.http import urlsafe_base64_encode
 from ..tokens import account_activation_token
 from ..datahelper.students.studentsDataAdd import *
 from ..datahelper.students.studentsDataGet import *
-from ..datahelper.courses.coursesDataAdd import *
 from django.conf import settings
+import requests
+
+def addListStudent(request, first_name, last_name, username):
+    data = { "firstname": first_name,"lastname": last_name,"username": username,}
+    url = f'http://{settings.SITE_URL}/courses/createstudent'
+    action = requests.post(url, data=data)
+
+def addListEnrollment(request, username):
+    data = { "username": username,}
+    url = f'http://{settings.SITE_URL}/courses/createenrollkey'
+    action = requests.post(url, data=data)
 
 # --- SIGN UP ---
 class SignUpForm(UserCreationForm):
@@ -21,11 +31,11 @@ class SignUpForm(UserCreationForm):
         first_name = self.cleaned_data.get('first_name')
         last_name = self.cleaned_data.get('last_name')
         addStudent(first_name, last_name, username)
+        addListStudent(request, first_name, last_name, username)
         this_student = getStudentID(user)
         addEnrollment(this_student)
-        addListStudent(request, first_name, last_name, username)
-        user.save()
         addListEnrollment(request, username)
+        user.save()
         return user  # for activation
 
     def sendActivationEmail(self, request, user):

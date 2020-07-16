@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from ..dataforms.CoursesForms import * 
 from ..dataforms.HelperForms import *
+from ..dataforms.CoursesTemplate import *
 # --- HOME PAGES ---
 # home menu reflects if the user is logged in or not
 

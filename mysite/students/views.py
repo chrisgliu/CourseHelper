@@ -47,63 +47,6 @@ def requestMySemesters(request, year):
 def requestMyCourses(request, year, semester):
     return requestMyCoursesHelper(request, year, semester)
 
-# --- COURSES OPERATIONS ---
-@csrf_protect
-def addCoursesMajor(request):
-    return listMajorFormAdd(request)
-
-@csrf_protect
-def deleteCoursesMajor(request):
-    return listMajorFormDelete(request)
-
-@csrf_protect
-def addCoursesCategory(request):
-    return listCategoryFormAdd(request)
-    
-@csrf_protect
-def deleteCoursesCategory(request):
-    return listCategoryFormDelete(request)
-
-@csrf_protect
-def addCoursesSubCategory(request):
-    return listSubCategoryFormAdd(request)
-    
-@csrf_protect
-def deleteCoursesSubCategory(request):
-    return listSubCategoryFormDelete(request)
-
-@csrf_protect
-def addCoursesRequirement(request):
-    return listRequirementFormAdd(request)
-    
-@csrf_protect
-def deleteCoursesRequirement(request):
-    return listRequirementFormDelete(request)
-
-@csrf_protect
-def addCoursesCourse(request):
-    return listCourseFormAdd(request)
-    
-@csrf_protect
-def deleteCoursesCourse(request):
-    return listCourseFormDelete(request)
-
-@csrf_protect
-def addCoursesPrereq(request):
-    return listPrereqFormAdd(request)
-    
-@csrf_protect
-def deleteCoursesPrereq(request):
-    return listPrereqFormDelete(request)
-
-@csrf_protect
-def addCoursesAp(request):
-    return listApFormAdd(request)
-    
-@csrf_protect
-def deleteCoursesAp(request):
-    return listApFormDelete(request)
-
 # --- HELPER OPERATIONS ---
 @csrf_protect
 def addMyMajor(request):

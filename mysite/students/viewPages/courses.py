@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
-from ..dataforms.CoursesForms import *
 from ..datahelper.courses.coursesDataGet import *
 from lxml import etree
 import requests
@@ -81,72 +80,5 @@ def requestCoursesDataHelper(request):
     xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
 
-
-# --- COURSES FORMS ---
-def processForm(request, model_form, command):
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            form = model_form(request.POST)
-            if form.is_valid():
-                form.process(request, command)
-                return HttpResponseRedirect(reverse("main"))
-    message = 'Sign in first'
-    return renderHome(request, 'students/main.html', {"messages": [message]}) 
-
-
-def listMajorFormAdd(request):
-    return processForm(request, ListMajorForm, 'add')
-
-
-def listMajorFormDelete(request):
-    return processForm(request, ListMajorForm, 'delete')
-
-
-def listCategoryFormAdd(request):
-    return processForm(request, ListCategoryForm, 'add')
-
-
-def listCategoryFormDelete(request):
-    return processForm(request, ListCategoryForm, 'delete')
-
-
-def listSubCategoryFormAdd(request):
-    return processForm(request, ListSubCategoryForm, 'add')
-
-
-def listSubCategoryFormDelete(request):
-    return processForm(request, ListSubCategoryForm, 'delete')
-
-
-def listRequirementFormAdd(request):
-    return processForm(request, ListRequirementForm, 'add')
-
-
-def listRequirementFormDelete(request):
-    return processForm(request, ListRequirementForm, 'delete')
-
-
-def listCourseFormAdd(request):
-    return processForm(request, ListCourseForm, 'add')
-
-
-def listCourseFormDelete(request):
-    return processForm(request, ListCourseForm, 'delete')
-
-
-def listPrereqFormAdd(request):
-    return processForm(request, ListPrereqForm, 'add')
-
-
-def listPrereqFormDelete(request):
-    return processForm(request, ListPrereqForm, 'delete')
-
-
-def listApFormAdd(request):
-    return processForm(request, ListApForm, 'add')
-
-
-def listApFormDelete(request):
-    return processForm(request, ListApForm, 'delete')
 
 

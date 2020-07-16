@@ -2,11 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import *
 from .serializers import *
 from .models import *
 from .datahelper.courseslist import *
 from .courses import *
+from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 
@@ -51,71 +51,54 @@ class ApCreditViewSet(viewsets.ModelViewSet):
 @csrf_protect
 def createListStudent(request):
     return listStudentFormAdd(request)
-
 @csrf_protect
 def deleteListStudent(request):
     return listStudentFormDelete;
-
 @csrf_protect
 def createListEnroll(request):
     return listEnrollFormAdd(request);
-
 @csrf_protect
 def deleteListEnroll(request):
     return listEnrollFormDelete(request)
-
 @csrf_protect
 def createListMajor(request):
     return listMajorFormAdd(request)
-
 @csrf_protect
 def deleteListMajor(request):
     return listMajorFormDelete(request)
-
 @csrf_protect
 def createListCategory(request):
     return listCategoryFormAdd(request)
-
 @csrf_protect
 def deleteListCategory(request):
     return listCategoryFormDelete(request)
-
 @csrf_protect
 def createListSubCategory(request):
     return listSubCategoryFormAdd(request)
-
 @csrf_protect
 def deleteListSubCategory(request):
     return listSubCategoryFormDelete(request)
-
 @csrf_protect
 def createListRequirement(request):
     return listRequirementFormAdd(request)
-
 @csrf_protect
 def deleteListRequirement(request):
     return listRequirementFormDelete(request)
-
 @csrf_protect
 def createListCourse(request):
     return listCourseFormAdd(request)
-
 @csrf_protect
 def deleteListCourse(request):
     return listCourseFormDelete(request)
-
 @csrf_protect
 def createListPrereq(request):
     return listPrereqFormAdd(request)
-
 @csrf_protect
 def deleteListPrereq(request):
     return listPrereqFormDelete(request)
-
 @csrf_protect
 def createListAp(request):
     return listApFormAdd(request)
-
 @csrf_protect
 def deleteListAp(request):
     return listApFormDelete(request)

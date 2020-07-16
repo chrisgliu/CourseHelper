@@ -19,20 +19,7 @@ urlpatterns = [
     path('requestmysemesters/<year>/', views.requestMySemesters),
     path('requestmycourses/<year>/<semester>/', views.requestMyCourses),
     # --- COURSES OPERATIONS ---
-    path("addMajor", views.addCoursesMajor, name='addMajor'),
-    path("deleteMajor", views.deleteCoursesMajor, name='deleteMajor'),
-    path("addCategory", views.addCoursesCategory, name='addCategory'),
-    path("deleteCategory", views.deleteCoursesCategory, name='deleteCategory'),
-    path("addSubcategory", views.addCoursesSubCategory, name='addSubcategory'),
-    path("deleteSubcategory", views.deleteCoursesSubCategory, name='deleteSubcategory'),
-    path("addRequirement", views.addCoursesRequirement, name='addRequirement'),
-    path("deleteRequirement", views.deleteCoursesRequirement, name='deleteRequirement'),
-    path("addCourse", views.addCoursesCourse, name='addCourse'),
-    path("deleteCourse", views.deleteCoursesCourse, name='deleteCourse'),
-    path("addPrereq", views.addCoursesPrereq, name='addPrereq'),
-    path("deletePrereq", views.deleteCoursesPrereq, name='deletePrereq'),
-    path("addAp", views.addCoursesAp, name='addAp'),
-    path("deleteAp", views.deleteCoursesAp, name='deleteAp'),
+    # go to courses app
     # --- HELPER OPERATIONS ---
     path("addMyMajor", views.addMyMajor, name='addMyMajor'),
     path("deleteMajor", views.deleteMyMajor, name='deleteMyMajor'),
