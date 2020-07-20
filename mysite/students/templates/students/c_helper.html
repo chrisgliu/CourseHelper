@@ -5,14 +5,25 @@
 
 <div class="vstack">
   <div class="hstack boderbox">
+        <button id="testbuttonterm">test term</button>
+        <button id="testbuttonap">test ap</button>
+        <button id="testbuttontranfer">test tranfer</button>
+        <button id="testbuttonstatus">test status</button>
+  </div>
+  <div class="hstack boderbox">
     <!-- major data -->
     <div class="vstack">
       <h2> Tracker </h2>
       <div class="vstack" id="majorstracked">
       <!-- add hstack items containing major name and progress bar-->
       </div>
-      <button id="mymajorbutton">change</button>
-    </div>
+      <div class="hstack">
+        <button id="mymajorbutton">change</button>
+        {% if name %}
+          <button id='updatehelperdata'>update</button>    
+        {% endif %}
+      </div>
+    </div>    
   </div>
 
   <div class="hstack boderbox">
@@ -49,7 +60,7 @@
             <button id="mycoursesbutton">change courses</button>
           </div>
           {% block termcoursedata %}{% endblock %}
-          <div class="hstack">
+          <div class="hstack" id="mycourseoperation" style="display: none;">
             {% block mycourseoperation %}{% endblock %}
           </div>
         </div>
@@ -61,7 +72,7 @@
             <button id="myapbutton">change ap credit</button>
           </div>
           {% block myapcoursesdata %}{% endblock %}
-          <div class="hstack">
+          <div class="hstack" id="mytestoperation" style="display: none;">
             {% block mytestoperation %}{% endblock %}
           </div>
 

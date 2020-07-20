@@ -162,6 +162,43 @@ function updateCoursesData(){
   requestAJAX(url_source, workspace_id, addCoursesData);
 }
 
+function activateCourseButtons(){
+  let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
+    'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
+  let refresh = document.getElementById('refreshcoursesdata')
+  // refresh button is shown only when user is signed in
+  if (refresh != null) {
+    refresh.onclick = ()=>{ updateCoursesData();}  
+    document.getElementById('majoroperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('majorforms');
+    }
+    document.getElementById('categoryoperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('categoryforms');
+    }
+    document.getElementById('subcategoryoperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('subcategoryforms');
+    }
+    document.getElementById('requirementoperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('requirementforms');
+    }
+    document.getElementById('courseoperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('courseforms');
+    }
+    document.getElementById('prereqoperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('prereqforms');
+    }
+    document.getElementById('apoperation').onclick = ()=>{
+      for (const item of forms) { dontShowIt(item);}
+      showIt('apforms');
+    }
+  }
+}
 
 
 

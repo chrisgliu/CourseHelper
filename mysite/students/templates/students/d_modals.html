@@ -7,12 +7,16 @@
         <h1>Course Helper Sign In</h1>
         {% csrf_token %} 
         <button type="button" id="cancelsignin">Cancel</button>
-        <div class="container">
+        <div class="vstack">
             <hr>
-            <label><b>Username</b></label>
-            <input type="text" placeholder="Enter username" name="username" required>
-            <label><b>Password</b></label>
-            <input type="password" placeholder="Enter password" name="password" required>  
+            <div class="hstack">
+              <label for="username"><b>Username</b></label>
+              <input class="bigfield" type="text" placeholder="Enter username" name="username" required>
+            </div>
+            <div class="hstack">
+              <label for="password"><b>Password</b></label>
+              <input class="bigfield" type="password" placeholder="Enter password" name="password" required>  
+            </div>
             <hr>
             <button type="submit">Login</button>
         </div>
@@ -24,20 +28,32 @@
         <h1>Course Helper Sign Up</h1>
         {% csrf_token %} 
         <button type="button" id="cancelsignup">Cancel</button>
-        <div class="container">
+        <div class="vstack">
             <hr>
-            <label>First Name:</label>  
-            <input type="text" placeholder="Enter first name" name="first_name">  
-            <label>Last Name:</label>  
-            <input type="text" placeholder="Enter last name" name="last_name"> 
-            <label>Username:</label>  
-            <input type="text" placeholder="Enter username" name="username"> 
-            <label>Email:</label>  
-            <input type="email" placeholder="Enter email" name="email"> 
-            <label>Password:</label>  
-            <input type="password" placeholder="Enter password" name="password1">  
-            <label>Confirm Password:</label>  
-            <input type="password" placeholder="Reenter password" name="password2">
+            <div class="hstack">
+              <label for="first_name">First Name:</label>  
+              <input class="bigfield" type="text" placeholder="Enter first name" name="first_name">  
+            </div>
+            <div class="hstack">
+              <label for="last_name">Last Name:</label>  
+              <input class="bigfield" type="text" placeholder="Enter last name" name="last_name"> 
+            </div>
+            <div class="hstack">
+              <label for="username">Username:</label>  
+              <input class="bigfield" type="text" placeholder="Enter username" name="username"> 
+            </div>
+            <div class="hstack">
+              <label for="email">Email:</label>  
+              <input class="bigfield" type="email" placeholder="Enter email" name="email"> 
+            </div>
+            <div class="hstack">
+              <label for="password1">Password:</label>  
+              <input class="bigfield" type="password" placeholder="Enter password" name="password1">  
+            </div>
+            <div class="hstack">
+              <label for="password2">Confirm Password:</label>  
+              <input class="bigfield" type="password" placeholder="Reenter password" name="password2">
+            </div>
             <hr>
             <button type="submit" class="cancelbtn">Create account</button> 
         </div>

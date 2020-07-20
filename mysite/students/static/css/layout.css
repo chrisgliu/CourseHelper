@@ -41,7 +41,7 @@ h1, h2 {
   margin: 10px;
 }
 
-button, input, label {
+button, input, select, label {
   width: 110px;
   background-color: white;
   border: 2px solid black;
@@ -49,8 +49,13 @@ button, input, label {
   padding: 10px;
   margin: 10px;
 }
-button:hover, input:hover, label:hover {
+
+button:hover, input:hover, select:hover {
   border: 2px solid lightblue;
+}
+
+.bigfield {
+  width: 300px;
 }
 
 /*# sourceMappingURL=layout.css.map */

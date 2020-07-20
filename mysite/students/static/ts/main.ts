@@ -1,6 +1,6 @@
 /// <reference path='toggle.ts'/>
 /// <reference path="coursesdata.ts" />
-
+/// <reference path="helperdata.ts" />
 
 document.addEventListener("DOMContentLoaded", () => {
 // nav buttons
@@ -32,54 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('cancelsignup').onclick = ()=>{
   	dontShowIt('signupform')
   }
-// course buttons
-  let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
-    'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
-  document.getElementById('refreshcoursesdata').onclick = ()=>{
-    updateCoursesData();
-  }
-  document.getElementById('majoroperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('majorforms');
-  }
-  document.getElementById('categoryoperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('categoryforms');
-  }
-  document.getElementById('subcategoryoperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('subcategoryforms');
-  }
-  document.getElementById('requirementoperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('requirementforms');
-  }
-  document.getElementById('courseoperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('courseforms');
-  }
-  document.getElementById('prereqoperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('prereqforms');
-  }
-  document.getElementById('apoperation').onclick = ()=>{
-    for (const item of forms) {
-      dontShowIt(item);
-    }
-    showIt('apforms');
-  }
+  // course buttons
+  activateCourseButtons();
+  // helper buttons
+  activateHelperButtons();
+
+  
 });
 
 

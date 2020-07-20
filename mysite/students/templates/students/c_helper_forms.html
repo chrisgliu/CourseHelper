@@ -1,13 +1,17 @@
 {% extends "students/c_helper.html" %}
 
 {% block mymajoroperation %}
- <form method="post">
-   <label>Select Major</label>
-   <select name="major" id="optionsmajors">
-   </select><!-- request data for options -->
-   <button id="addbutton" type="submit" formaction="">Add</button>
-   <button id="deletebutton" type="submit" formaction="">Delete</button>
-  </form>
+   <div class="vstack">
+      <div class="hstack">
+        <label style="width: 200px;">Select Major</label>
+        <select name="major" id="optionsmajors">
+        </select><!-- request data for options -->
+      </div>    
+      <div>
+        <button id="addbutton" type="submit" formaction="">Add</button>
+        <button id="deletebutton" type="submit" formaction="">Delete</button>
+      </div>
+  </div>
 {% endblock %}
 
 {% block majorprogress %}
@@ -17,9 +21,9 @@
 {% endblock %}
 
 {% block createPlannerForm %}
-  <label for="startingyear"> Starting year</label>
+  <label>year one</label>
   <input type="text" name="startingyear" id="startingyear">
-  <label for="termsperyear"> Terms per year</label>
+  <label>term #</label>
   <input type="number" name="termsperyear" id="termsperyear" min="1" >
   <!-- onclick functions-->
   <button id="addbutton" type="submit">Add</button>
@@ -35,13 +39,11 @@
 
 
 {% block mycourseoperation %}
-  <form method="post">
    <label>Select Course</label>
    <select name="course" id="optionscourse">
    </select><!-- request data for options -->
    <button id="addbutton" type="submit" formaction="">Add</button>
    <button id="deletebutton" type="submit" formaction="">Delete</button>
-  </form>
 {% endblock %}
 
 
@@ -54,13 +56,17 @@
 
 
 {% block mytestoperation %}
-  <form method="post">
-   <label>Select Test</label>
-   <select name="test" id="optionstests">
-   </select><!-- request data for options -->
-   <button id="addbutton" type="submit" formaction="">Add</button>
-   <button id="deletebutton" type="submit" formaction="">Delete</button>
-  </form>
+  <div class="vstack">
+    <div class="hstack">
+      <label>Select Test</label>
+      <select name="test" id="optionstests">
+      </select><!-- request data for options -->
+    </div>
+    <div class="hstack">
+      <button id="addbutton" type="submit" formaction="">Add</button>
+      <button id="deletebutton" type="submit" formaction="">Delete</button>
+    </div>
+  </div>
 {% endblock %}
 
 {% block specificapcoursedata %}
