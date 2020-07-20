@@ -17,37 +17,39 @@ section {
   text-align: center;
 }
 section .hstack {
-  border: 1px solid black;
-  padding: 10px;
-  margin: -1px;
   display: inline-flex;
   flex-direction: row;
   overflow: hidden;
   justify-content: space-evenly;
 }
-section .hstack .box {
-  display: inline-flex;
-  flex-direction: column;
-}
-section .hstack .box .stack {
-  display: block;
-  margin-left: 10px;
-}
 section .vstack {
-  border: 2px solid black;
   display: inline-flex;
   flex-direction: column;
   overflow: hidden;
+  justify-content: space-evenly;
+}
+section .stack {
+  display: block;
+  margin-left: 10px;
 }
 
-button {
+.boderbox {
+  border: 2px solid black;
+}
+
+h1, h2 {
+  margin: 10px;
+}
+
+button, input, label {
   width: 110px;
   background-color: white;
   border: 2px solid black;
   border-radius: 20px;
   padding: 10px;
+  margin: 10px;
 }
-button:hover {
+button:hover, input:hover, label:hover {
   border: 2px solid lightblue;
 }
 

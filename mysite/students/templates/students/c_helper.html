@@ -1,77 +1,90 @@
-{% extends "students/b_courses.html" %}
+{% extends "students/b_courses_forms.html" %}
 
 {% block c %}
-   
-<div class="contentbox">
-  <div id='helperdata' class="box">
 
-  </div>
-  
-  <div id='helperforms' class="box">
-    <div id="mymajorformadd" class="form">
-			<h3>Add My Major</h3>
-			<form method="post" action="{% url 'addMyMajor' %}">
-        {% csrf_token %}      
-        <table> {{ MajorForm }} </table>
-        <button type="submit">Add</button>
-      </form>
-		</div>
-		<div id='mymajorformdelete' class="form"> 
-      <h3>Delete My Major</h3>  
-      <form method="post" action="{% url 'deleteMyMajor' %}">  
-        {% csrf_token %} 
-        <table> {{ MajorForm }} </table> 
-        <button type="submit">Delete</button>  
-      </form> 
-    </div>
-    <div id="myyearformadd" class="form">
-			<h3>Add My Year</h3>
-			<form method="post" action="{% url 'addMyYear' %}">
-        {% csrf_token %}      
-        <table> {{ YearForm }} </table>
-        <button type="submit">Add</button>
-      </form>
-		</div>
-		<div id='myyearformdelete' class="form"> 
-      <h3>Delete My Year</h3>  
-      <form method="post" action="{% url 'deleteMyYear' %}">  
-        {% csrf_token %} 
-        <table> {{ YearForm }} </table> 
-        <button type="submit">Delete</button>  
-      </form> 
-    </div>
-    <div id="mysemesterformadd" class="form">
-			<h3>Add My Semester</h3>
-			<form method="post" action="{% url 'addMySemester' %}">
-        {% csrf_token %}      
-        <table> {{ SemesterForm }} </table>
-        <button type="submit">Add</button>
-      </form>
-		</div>
-		<div id='mysemesterformdelete' class="form"> 
-      <h3>Delete My Semester</h3>  
-      <form method="post" action="{% url 'deleteMySemester' %}">  
-        {% csrf_token %} 
-        <table> {{ SemesterForm }} </table> 
-        <button type="submit">Delete</button>  
-      </form> 
-    </div>
-    <div id="mycourseformadd" class="form">
-			<h3>Add My Course</h3>
-			<form method="post" action="{% url 'addMyCourse' %}">
-        {% csrf_token %}      
-        <table> {{ CourseForm }} </table>
-        <button type="submit">Add</button>
-      </form>
-		</div>
-		<div id='mycourseformdelete' class="form"> 
-      <h3>Delete My Course</h3>  
-      <form method="post" action="{% url 'deleteMyCourse' %}">  
-        {% csrf_token %} 
-        <table> {{ CourseForm }} </table> 
-        <button type="submit">Delete</button>  
-      </form> 
+
+<div class="vstack">
+  <div class="hstack boderbox">
+    <!-- major data -->
+    <div class="vstack">
+      <h2> Tracker </h2>
+      <div class="vstack" id="majorstracked">
+      <!-- add hstack items containing major name and progress bar-->
+      </div>
+      <button id="mymajorbutton">change</button>
     </div>
   </div>
+
+  <div class="hstack boderbox">
+    <!-- year/term data tree -->
+    <div class="vstack">
+      <h1> Planner </h1>
+      <ul id="plannerdata">
+      </ul>
+    </div>
+    <!-- defining planner -->
+    <div class="vstack">
+
+      {% block createPlannerForm %}{% endblock %}
+    </div>
+  </div>
+  <div class="hstack boderbox">    
+      <div id="mymajoractions" style="display: none;">
+        <div class="vstack">
+          <div class="hstack">
+            <!--- get the name of the term ---> 
+            <h1> Change Majors Tracked</h1>
+          </div>
+          <div class="hstack">
+            {% block mymajoroperation %}{% endblock %}
+          </div>
+        </div>
+      </div>
+
+      <div id="mytermactions" style="display: none;">
+        <div class="vstack">
+          <div class="hstack">
+            <!--- get the name of the term ---> 
+            <h1 id="thistermname">TERM</h1>
+            <button id="mycoursesbutton">change courses</button>
+          </div>
+          {% block termcoursedata %}{% endblock %}
+          <div class="hstack">
+            {% block mycourseoperation %}{% endblock %}
+          </div>
+        </div>
+      </div>
+      <div id="myapactions" style="display: none;">
+        <div class="vstack">
+          <div class="hstack">
+            <h1> AP CREDIT </h1>
+            <button id="myapbutton">change ap credit</button>
+          </div>
+          {% block myapcoursesdata %}{% endblock %}
+          <div class="hstack">
+            {% block mytestoperation %}{% endblock %}
+          </div>
+
+        </div>
+      </div>
+      <div id="tranfercredit" style="display: none;">
+        <div class="vstack">
+          <div class="hstack">
+            <h1> TRANFER CREDIT </h1>
+          </div>
+          {% block specificapcoursedata %}{% endblock %}
+        </div>
+      </div>
+      <div id="status" style="display: none;">
+        <div class="vstack">
+          <h1> STATUS </h1>
+          <ul id="mystatusdata">
+          </ul>
+        </div>   
+      </div>  
+  </div>
+
+
 </div>
+
 {% endblock %}

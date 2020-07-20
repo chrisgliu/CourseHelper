@@ -9,7 +9,7 @@ def processForm(request, model_form, command):
             form = model_form(request.POST)
             if form.is_valid():
                 form.process(request, command)
-    return HttpResponseRedirect(reverse('main'))
+    return HttpResponseRedirect(reverse('mainCourses'))
 
 def listStudentFormAdd(request):
     return processForm(request, ListStudentForm, 'add')

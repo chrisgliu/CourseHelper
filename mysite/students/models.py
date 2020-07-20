@@ -25,6 +25,10 @@ class Enrolled(models.Model):
     enrolled = models.BooleanField(default=True)
     students = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="enrolled")
 
+    def __str__(self):
+        the_student = Student.objects.get(pk=self.students.pk)
+        return str(the_student)
+
     class Meta:
         verbose_name_plural = "2. Enrolled"
 
@@ -50,16 +54,39 @@ class Year(models.Model):
     year = models.CharField(max_length=5)
     enrolled = models.ManyToManyField(Enrolled, blank=False, related_name="years")
 
+    def __str__(self):
+        return f"{self.year}"
+
     class Meta:
         verbose_name_plural = "4. Years"
+
+# -- AP TRANFER ---
+# holds test name and score number
+class APTranfer(models.Model):
+    test = models.CharField(max_length=64)
+    score = models.IntegerField(blank=False)
+    years = models.ManyToManyField(Year, blank=False, related_name="before")
+    def __str__(self):
+        the_year = Year.objects.get(pk=self.years.first().pk)
+        return f"{self.test}:{self.score}"
+
+    class Meta:
+        verbose_name_plural = "7. AP"
+
+
+
+
 
 
 # --- SEMESTER ---
 # holds the semester ex: autumn
-# enables accessing the year of a semester and accessing the semester of a year
+# enables accessing accessing the semester of a year
 class Semester(models.Model):
     semester = models.CharField(max_length=64)
     years = models.ManyToManyField(Year, blank=False, related_name="semesters")
+    def __str__(self):
+        the_year = Year.objects.get(pk=self.years.first().pk)
+        return f"{the_year.year}:{self.semester}"
 
     class Meta:
         verbose_name_plural = "5. Semesters"
@@ -71,6 +98,9 @@ class Semester(models.Model):
 class Course(models.Model):
     course = models.CharField(max_length=64)
     semesters = models.ManyToManyField(Semester, blank=False, related_name="courses")
+
+    def __str__(self):
+        return f"{self.course}"
 
     class Meta:
         verbose_name_plural = "6. Courses"

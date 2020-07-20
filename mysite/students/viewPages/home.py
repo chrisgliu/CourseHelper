@@ -42,3 +42,20 @@ def renderHome(request, template_path, more_context={}):
     if request.user.is_authenticated:
         loggedInContext = mergeDict(getLoggedInNav(request), more_context)
         return render(request=request, template_name=template_path, context=loggedInContext)
+
+def renderHomeA(request, template_path, more_context={}):
+    home_section = {'showA': True}
+    context = mergeDict(home_section, more_context)
+    return renderHome(request, template_path, context)
+
+def renderHomeB(request, template_path, more_context={}):
+    home_section = {'showB': True}
+    context = mergeDict(home_section, more_context)
+    return renderHome(request, template_path, context)
+
+def renderHomeC(request, template_path, more_context={}):
+    home_section = {'showC': True}
+    context = mergeDict(home_section, more_context)
+    return renderHome(request, template_path, context)
+
+

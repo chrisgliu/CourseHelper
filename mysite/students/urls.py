@@ -4,12 +4,14 @@ from . import views
 urlpatterns = [
     # --- MAIN -----
     path("", views.main, name="main"),
+    path("mycourses", views.mainCourses, name="mainCourses"),
+    path("myhelper", views.mainHelper, name='mainHelper'),
     # --- TESTING --- 
     path("test", views.test, name="test"),
     # --- AUTH OPERATIONS ---
-    path("signUpForm", views.signUpForm, name="signUpForm"),
+    path("account", views.signUpForm, name="signUpForm"),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
-    path("signInForm", views.signInForm, name="signInForm"),
+    path("signIn", views.signInForm, name="signInForm"),
     path("signOut", views.signOut, name="signOut"),
     # --- COURSES XML DATA REQUEST --
     path('requestcoursesdata', views.requestCoursesData, name='courseData'),

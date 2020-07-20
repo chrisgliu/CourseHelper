@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Student, Enrolled, Major, Year, Semester, Course
-
+from .models import *
 
 # Register your models here.
 
@@ -10,17 +9,12 @@ class CourseInline(admin.StackedInline):
     model = Course.semesters.through
 
 
-class SemesterInline(admin.StackedInline):
-    model = Semester.years.through
-
-
 class YearInline(admin.StackedInline):
     model = Year.enrolled.through
 
 
 class MajorInline(admin.StackedInline):
     model = Major.enrolled.through
-
 
 # --- admin register ---
 @admin.register(Course)
@@ -33,10 +27,13 @@ class SemesterAdmin(admin.ModelAdmin):
     inlines = [CourseInline]
     filter_horizontal = ("years",)
 
+@admin.register(APTranfer)
+class APTranferAdmin(admin.ModelAdmin):
+    filter_horizontal = ("years",)
+
 
 @admin.register(Year)
 class YearAdmin(admin.ModelAdmin):
-    inlines = [SemesterInline]
     filter_horizontal = ("enrolled",)
 
 

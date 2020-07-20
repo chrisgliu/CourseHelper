@@ -9,9 +9,6 @@
 <body>
     <div id='workspace'>
         <div id='main'>
-            {% if name %}
-                <p> Hello, {{name}}</p>
-            {% endif %}
             {% if messages %}
                 {% for message in messages %}
                     <p>{{message}}</p>
@@ -27,18 +24,30 @@
                 {% block navbuttons %} {% endblock %}
                 <hr>
             </header>
-            <section id='section-a'>
-                {% block a %} {% endblock %}
-            </section>
-            <section id='section-b' style="display: none;">
-                {% block b %} {% endblock %}
-            </section>
-            <section id='section-c' style="display: none;">
-                {% block c %} {% endblock %}
-            </section>
+            {% if showA %}
+              <section id='section-a'>
+            {% else %}  
+              <section id='section-a' style="display: none;">
+            {% endif %}
+                {% block a %} {% endblock %} 
+              </section>
+            {% if showB %}
+              <section id='section-b'>
+            {% else %}  
+              <section id='section-b' style="display: none;"> 
+            {% endif %}
+                {% block b %} {% endblock %} 
+              </section>
+            {% if showC %}
+              <section id='section-c'> 
+            {% else %}  
+              <section id='section-c' style="display: none;"> 
+            {% endif %}
+                {% block c %} {% endblock %} 
+              </section>
             <footer>
-                <hr>
-                {% block footer %} {% endblock %}
+              <hr>
+              {% block footer %} {% endblock %}
             </footer>
         </div>
     </div>

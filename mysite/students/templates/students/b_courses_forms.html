@@ -1,0 +1,165 @@
+{% extends "students/b_courses.html" %}
+
+<!-- Major -->
+{% block majorFormA %}
+<form method="post">
+    <label>Enter Major name:</label>
+    <input type="text" name="major">
+    <button type="submit" formaction="">Create</button>
+</form>
+{% endblock %}
+{% block majorFormB %}
+<form method="post">
+    <label>Select Major</label>
+    <select name="major" id="optionsmajors">
+    </select><!-- request data for options -->
+    <!-- adding two of the same major doen't make sense-->
+    <button id="deletebutton" type="submit" formaction="">Delete</button>
+</form>
+{% endblock %}
+
+<!-- Category -->
+{% block categoryFormA %}
+<form method="post">
+    <label>Select Major</label>
+    <select name="major" id="optionsmajors">
+    </select><!-- request data for options -->
+    <label>Enter Category name:</label>
+    <input type="text" name="category">
+    <button type="submit" formaction="">Create</button>
+</form>
+{% endblock %}
+{% block categoryFormB %}
+<form method="post">
+    <!-- option ex: major/category-->
+    <label>Select Category</label>
+    <select name="category" id="optionscategories">
+    </select><!-- request data for options -->
+    <!-- GED could be the same for two majors-->
+    <button id="addbutton" type="submit" formaction="">Add</button>
+    <button id="deletebutton" type="submit" formaction="">Delete</button> 
+</form>
+{% endblock %}
+
+<!-- Subacategory -->
+{% block subcategoryFormA %}
+<form method="post">
+    <!-- option ex: major/category-->
+    <label>Select Category</label>
+    <select name="category" id="optionscategories">
+    </select><!-- request data for options -->
+    <label>Enter Subcategory name:</label>
+    <input type="text" name="subcategory">
+    <button type="submit" formaction="">Create</button> 
+</form>
+{% endblock %}
+{% block subcategoryFormB %}
+<form method="post">
+    <!-- option ex: major/category/subcategory-->
+    <label>Select Subcategory</label>
+    <select name="subcategory" id="optionssubcategories">
+    </select><!-- request data for options -->
+    <!---majors could share a section of requirements-->
+    <button id="addbutton" type="submit" formaction="">Add</button>
+    <button id="deletebutton" type="submit" formaction="">Delete</button> 
+</form>
+{% endblock %}
+
+<!-- Requirement -->
+{% block requirementFormA %}
+<form method="post">
+    <!-- option ex: major/category/subcategory-->
+    <label>Select Subcategory</label>
+    <select name="subcategory" id="optionssubcategories">
+    </select><!-- request data for options -->
+    <label>Enter Requirement name:</label>
+    <input type="text" name="requirement"> 
+    <button type="submit" formaction="">Create</button>  
+</form>
+{% endblock %}
+{% block requirementFormB %}
+<form method="post">
+    <!-- option ex: major/category/subcategory/requirement--> 
+    <label>Select Requirement</label>
+    <select name="requirement" id="optionsrequirements">
+    </select><!-- request data for options -->
+    <!-- majors could share a specific requirement -->
+    <button id="addbutton" type="submit" formaction="">Add</button>
+    <button id="deletebutton" type="submit" formaction="">Delete</button>  
+</form>
+{% endblock %}
+
+<!-- Course -->
+{% block courseFormA %}
+<form method="post">
+    <!-- option ex: major/category/subcategory/requirement--> 
+    <label>Select Requirement</label>
+    <select name="requirement" id="optionsrequirements">
+    </select><!-- request data for options -->
+    <label>Enter Course name:</label>
+    <input type="text" name="course">  
+    <button type="submit" formaction="">Create</button>  
+</form>
+{% endblock %}
+{% block courseFormB %}
+<form method="post">
+    <!-- option ex: major/category/subcategory/requirement/course--> 
+    <label>Select Course</label>
+    <select name="course" id="optionscourses">
+    </select><!-- request data for options --> 
+    <!-- majors could share a specific course -->
+    <button id="addbutton" type="submit" formaction="">Add</button>
+    <button id="deletebutton" type="submit" formaction="">Delete</button>  
+</form>
+{% endblock %}
+
+<!-- Prereq -->
+<!-- no need for create form, prereqs should be existing courses -->
+{% block prereqForm %}
+<form method="post">
+    <!-- option ex: major/category/subcategory/requirement/course--> 
+    <label>Select Course</label>
+    <select name="course" id="optionscourses">
+    </select><!-- request data for options --> 
+    <!-- option ex: major/category/subcategory/requirement/course--> 
+    <label>Select Prereq Course</label>
+    <select name="prereq" id="optionsprereqs">
+    </select><!-- request data for options --> 
+    <button id="addbutton" type="submit" formaction="">Add</button>
+    <button id="deletebutton" type="submit" formaction="">Delete</button>  
+</form>
+{% endblock %}
+
+<!-- Ap -->
+{% block apFormA %}
+<form method="post">
+    <label>Enter Test name:</label>
+    <input type="text" name="test">  
+    <label>Enter Min Score:</label>
+    <input type="number" name="scoremin">  
+    <label>Enter Max Score:</label>
+    <input type="number" name="scoremax">  
+    <!-- option ex: major/category/subcategory/requirement/course--> 
+    <label>Select Course</label>
+    <select name="course" id="optionscourses">
+    </select><!-- request data for options -->  
+    <button type="submit" formaction="">Create</button>  
+</form>
+{% endblock %}
+{% block apFormB %}
+<form method="post">
+    <!-- option ex: AP BIO:3-5--> 
+    <label>Select Test</label>
+    <select name="thetest" id="optionstests">
+    </select><!-- request data for options --> 
+    <!-- option ex: major/category/subcategory/requirement/course--> 
+    <label>Select Course</label>
+    <select name="course" id="optionscourses">
+    </select><!-- request data for options --> 
+    <!-- add more than one course as tranfer credit-->
+    <button id="addbutton" type="submit" formaction="">Add</button>
+    <button id="deletebutton" type="submit" formaction="">Delete</button>  
+</form>
+{% endblock %}
+
+

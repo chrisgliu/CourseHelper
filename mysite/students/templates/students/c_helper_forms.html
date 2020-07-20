@@ -1,0 +1,74 @@
+{% extends "students/c_helper.html" %}
+
+{% block mymajoroperation %}
+ <form method="post">
+   <label>Select Major</label>
+   <select name="major" id="optionsmajors">
+   </select><!-- request data for options -->
+   <button id="addbutton" type="submit" formaction="">Add</button>
+   <button id="deletebutton" type="submit" formaction="">Delete</button>
+  </form>
+{% endblock %}
+
+{% block majorprogress %}
+  <div class="vstack" id="majorstracked">
+
+  </div>
+{% endblock %}
+
+{% block createPlannerForm %}
+  <label for="startingyear"> Starting year</label>
+  <input type="text" name="startingyear" id="startingyear">
+  <label for="termsperyear"> Terms per year</label>
+  <input type="number" name="termsperyear" id="termsperyear" min="1" >
+  <!-- onclick functions-->
+  <button id="addbutton" type="submit">Add</button>
+  <button id="deletebutton" type="submit">Delete</button>
+{% endblock %}
+
+{% block termcoursedata %}
+ <!-- add hstack items containing course name and credit-->
+  <div class="vstack" id="coursesinaterm">
+
+  </div>
+{% endblock %}
+
+
+{% block mycourseoperation %}
+  <form method="post">
+   <label>Select Course</label>
+   <select name="course" id="optionscourse">
+   </select><!-- request data for options -->
+   <button id="addbutton" type="submit" formaction="">Add</button>
+   <button id="deletebutton" type="submit" formaction="">Delete</button>
+  </form>
+{% endblock %}
+
+
+{% block myapcoursesdata %}
+ <!-- add hstack items containing test name and score-->
+  <div class="vstack" id="myaptests">
+    
+  </div>
+{% endblock %}
+
+
+{% block mytestoperation %}
+  <form method="post">
+   <label>Select Test</label>
+   <select name="test" id="optionstests">
+   </select><!-- request data for options -->
+   <button id="addbutton" type="submit" formaction="">Add</button>
+   <button id="deletebutton" type="submit" formaction="">Delete</button>
+  </form>
+{% endblock %}
+
+{% block specificapcoursedata %}
+
+ <!-- add hstack items containing course name and credit-->
+  <div class="vstack" id="coursesinaptranfer">
+
+  </div>
+
+{% endblock %}
+

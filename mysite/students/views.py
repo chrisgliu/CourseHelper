@@ -8,7 +8,13 @@ import requests
 
 # --- MAIN -----
 def main(request):
-    return renderHome(request, "students/main.html")
+    return renderHomeA(request, "students/main.html")
+
+def mainCourses(request):
+    return renderHomeB(request, "students/main.html")
+
+def mainHelper(request):
+    return renderHomeC(request, "students/main.html")
 
 # --- TESTING --- 
 def test(request):

@@ -3,15 +3,15 @@
 {% block b %}
 <div class='vstack'>
 
-  <div class='hstack'>
+  <div class='hstack boderbox'>
     <!-- coursesdata tree -->
-	  <div class='box'>
+	  <div class='vstack'>
       <h2> Course Data </h2>
        <ul id='coursesdata'>
       </ul>      		
 	  </div>
     <!-- toggle course operations -->    
-    <div class='box'>
+    <div class='vstack'>
       <!-- user data request-->
       {% if name %}
         <button class='stack' id='refreshcoursesdata'>refresh</button>    
@@ -25,140 +25,62 @@
       <button class='stack' id='apoperation'>ap</button>    
     </div>
   </div>
-
-  <div class='hstack'>
+  <div class='hstack boderbox'>
     <!-- major operation -->
     <div id='majorforms' style="display: none;">
-		  <div class="form box">
-			  <h3>Add Major</h3>
-			  <form method='post' action="{% url 'addMajor' %}">
-          {% csrf_token %}      
-          <table> {{ ListMajorForm }} </table>
-          <button type='submit'>Add</button>
-        </form>
-		  </div>
-		  <div class="form box"> 
-        <h3>Delete Major</h3>  
-        <form method='post' action="{% url 'deleteMajor' %}">  
-          {% csrf_token %} 
-          <table> {{ ListMajorForm }} </table> 
-          <button type='submit'>Delete</button>  
-        </form> 
-      </div>
+      <button id='createmajoroperation'>Create</button>    
+      <button id='addmajoroperation'>Add</button>    
+      <button id='deletemajoroperation'>Delete</button>    
+      {% block majorFormA %}{% endblock %}
+      {% block majorFormB %}{% endblock %}
     </div> 
     <!-- category operation -->
     <div id='categoryforms' style="display: none;">
-		  <div class="form box">
-        <h3>Add Category</h3>  
-        <form method='post' action="{% url 'addCategory' %}">  
-          {% csrf_token %} 
-          <table> {{ ListCategoryForm }} </table> 
-          <button type='submit'>Add</button> 
-        </form> 
-      </div>
-      <div class="form box">     
-        <h3>Delete Category</h3>  
-        <form method='post' action="{% url 'deleteCategory' %}">  
-          {% csrf_token %} 
-          <table> {{ ListCategoryForm }} </table>  
-			    <button type='submit'>Delete</button>
-        </form>  
-      </div>
+		  <button id='createcategoryoperation'>Create</button>    
+      <button id='addcategoryoperation'>Add</button>    
+      <button id='deletecategoryoperation'>Delete</button>    
+      {% block categoryFormA %}{% endblock %}
+      {% block categoryFormB %}{% endblock %}
     </div>
     <!-- subcategory operation -->
     <div id='subcategoryforms' style="display: none;">
-		  <div class="form box"> 
-        <h3>Add Subcategory</h3>  
-        <form method='post' action="{% url 'addSubcategory' %}">  
-          {% csrf_token %} 
-          <table> {{ ListSubCategoryForm }} </table>  
-          <button type='submit'>Add</button> 
-        </form>
-      </div>
-      <div class="form box"> 
-        <h3>Delete Subcategory</h3>  
-        <form method='post' action="{% url 'deleteSubcategory' %}">  
-          {% csrf_token %}  
-          <table> {{ ListSubCategoryForm }} </table>   
-          <button type='submit'>Delete</button>
-        </form>  
-      </div>
+		  <button id='createsubcategoryoperation'>Create</button>    
+      <button id='addsubcategoryoperation'>Add</button>    
+      <button id='deletesubcategoryoperation'>Delete</button>    
+      {% block subcategoryFormA %}{% endblock %}
+      {% block subcategoryFormB %}{% endblock %}
     </div>
     <!-- requirement operation -->
 		<div id='requirementforms' style="display: none;">
-      <div class="form box">
-        <h3>Add Requirement</h3>  
-        <form method='post' action="{% url 'addRequirement' %}">  
-          {% csrf_token %}
-          <table> {{ ListRequirementForm }} </table> 
-          <button type='submit'>Add</button>   
-        </form> 
-      </div>
-      <div class="form box"> 
-        <h3>Delete Requirement</h3>  
-        <form method='post' action="{% url 'deleteRequirement' %}">  
-          {% csrf_token %}
-          <table> {{ ListRequirementForm }} </table>  
-          <button type='submit'>Delete</button>
-        </form>  
-      </div>
+     <button id='createrequirementoperation'>Create</button>    
+      <button id='addrequirementoperation'>Add</button>    
+      <button id='deleterequirementoperation'>Delete</button>    
+      {% block requirementFormA %}{% endblock %}
+      {% block requirementFormB %}{% endblock %}
 		</div>
     <!-- course operation -->
 		<div id='courseforms' style="display: none;">
-      <div class="form box">
-        <h3>Add Course</h3>  
-        <form method='post' action="{% url 'addCourse' %}">  
-          {% csrf_token %} 
-          <table> {{ ListCourseForm }} </table> 
-          <button type='submit'>Add</button>  
-        </form>
-      </div>
-      <div class="form box">
-        <h3>Delete Course</h3>  
-        <form method='post' action="{% url 'deleteCourse' %}">  
-          {% csrf_token %} 
-          <table> {{ ListCourseForm }} </table>  
-          <button type='submit'>Delete</button>
-        </form>  
-      </div>
+      <button id='createcourseoperation'>Create</button>    
+      <button id='addcourseoperation'>Add</button>    
+      <button id='deletecourseoperation'>Delete</button>    
+      {% block courseFormA %}{% endblock %}
+      {% block courseFormB %}{% endblock %}
 		</div>  
     <!-- prereq operation -->
 		<div id='prereqforms' style="display: none;">
-      <div class="form box">
-        <h3>Add Prereq</h3>  
-        <form method='post' action="{% url 'addPrereq' %}">  
-          {% csrf_token %} 
-          <table> {{ ListPrereqForm }} </table> 
-          <button type='submit'>Add</button>
-        </form>  
-      </div>
-      <div class="form box">
-        <h3>Delete Prereq</h3>  
-        <form method='post' action="{% url 'deletePrereq' %}">  
-          {% csrf_token %} 
-          <table> {{ ListPrereqForm }} </table>  
-          <button type='submit'>Delete</button>
-        </form>  
-      </div>
+     <button id='createprereqoperation'>Create</button>    
+      <button id='addprereqoperation'>Add</button>    
+      <button id='deleteprereqoperation'>Delete</button>    
+      {% block prereqFormA %}{% endblock %}
+      {% block prereqFormB %}{% endblock %}
 		</div>
     <!-- ap operation -->
 		<div id='apforms' style="display: none;">
-      <div class="form box">
-        <h3>Add Ap Test</h3>  
-        <form method='post' action="{% url 'addAp' %}">  
-          {% csrf_token %} 
-          <table> {{ ListApForm }} </table> 
-          <button type='submit'>Add</button> 
-        </form> 
-      </div>
-      <div class="form box">
-        <h3>Delete Ap Test</h3>  
-        <form method='post' action="{% url 'deleteAp' %}">  
-          {% csrf_token %} 
-          <table> {{ ListApForm }} </table>  
-          <button type='submit'>Delete</button> 
-        </form> 
-      </div>
+      <button id='createapoperation'>Create</button>    
+      <button id='addapoperation'>Add</button>    
+      <button id='deleteapoperation'>Delete</button>    
+      {% block apFormA %}{% endblock %}
+      {% block apFormB %}{% endblock %}
 		</div>  
 	</div>
 </div>
