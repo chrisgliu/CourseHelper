@@ -120,8 +120,35 @@ function getSubListNames(parent_ul_id) {
     }
     return names;
 }
+function addSessionDataList(data, data_name) {
+    for (let index = 0; index < data.length; index++) {
+        let value = data[index];
+        let key = data_name + "-" + index;
+        window.sessionStorage.setItem(key, value);
+    }
+}
+function addSessionCourses(majors, categories, subcategories, requirements, courses, prereqs, ap) {
+    addSessionDataList(majors, "major");
+    addSessionDataList(categories, "category");
+    addSessionDataList(subcategories, "subcategory");
+    addSessionDataList(requirements, "requirement");
+    addSessionDataList(courses, "course");
+    addSessionDataList(prereqs, "prereq");
+    addSessionDataList(ap, "test");
+}
+function clearSession() {
+    window.sessionStorage.clear();
+}
+function removeSessionData(data_id) {
+    window.sessionStorage.removeItem(data_id);
+}
+function getSessionData(data_id) {
+    let data = window.sessionStorage.getItem(data_id);
+    return data;
+}
 ///<reference path='ajax.ts'/>
 ///<reference path='treedata.ts'/>
+///<reference path='sessiondata.ts'/>
 // courses tree data
 function readMajors(majors) {
     let major_data = [];
@@ -250,46 +277,77 @@ function readAp(ap) {
     }
     return ap_data;
 }
-//Major:test
 function addCoursesData(workspace_id, response) {
+    // -- data tree --
+    // ex major:major_name
+    // -- session catalog ---
+    let session_majors = []; //ex  major
+    let session_categories = []; //ex major/category
+    let session_subcategories = []; //ex major/category/subcategory
+    let session_requirements = []; //ex major/category/subcategory/requirement
+    let session_courses = []; //ex major/category/subcategory/requirement/course
+    let session_prereqs = []; //ex  major/category/subcategory/requirement/course/prereq/course
+    let session_ap = []; //ex  major/category/subcategory/requirement/course/test/testname
+    // ---
     let majors = response.getElementsByTagName('major');
     let major_data = readMajors(majors);
     for (const major of major_data) {
+        // data tree
         addDataList(workspace_id, `Major:${major.major_name}`);
+        // session
+        session_majors.push(major.major_name);
         if (major.categories != null) {
             let categories = major.categories.childNodes;
             let category_data = readCategories(categories);
             for (const category of category_data) {
+                // data tree
                 addDataList(`Major:${major.major_name}`, `Category:${category.category_name}`);
+                // session
+                session_categories.push(`${major.major_name}/${category.category_name}`);
                 if (category.subcategories != null) {
                     let subcategories = category.subcategories.childNodes;
                     let subcategory_data = readSubcategories(subcategories);
                     for (const subcategory of subcategory_data) {
+                        // data tree
                         addDataList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`);
+                        // session
+                        session_subcategories.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`);
                         if (subcategory.requirements != null) {
                             let requirements = subcategory.requirements.childNodes;
                             let requirement_data = readRequirements(requirements);
                             for (const requirement of requirement_data) {
+                                // data tree
                                 addDataList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`);
+                                // session
+                                session_requirements.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`);
                                 if (requirement.courses != null) {
                                     let courses = requirement.courses.childNodes;
                                     let course_data = readCourses(courses);
                                     for (const course of course_data) {
+                                        // data tree
                                         addDataList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`);
+                                        // session
+                                        session_courses.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`);
                                         if (course.prereqs != null) {
+                                            // data tree
                                             addDataList(`Course:${course.course_name}`, `Prereq:${course.course_name}`);
                                             let prereqs = course.prereqs.childNodes;
                                             let prereq_data = readPrereqs(prereqs);
                                             for (const prereq of prereq_data) {
                                                 addSpecificData(`Prereq:${course.course_name}`, prereq);
+                                                // session
+                                                session_prereqs.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/prereq/${prereq}`);
                                             }
                                         }
                                         if (course.ap != null) {
+                                            // data tree
                                             addDataList(`Course:${course.course_name}`, `Ap:${course.course_name}`);
                                             let ap = course.ap.childNodes;
                                             let ap_data = readAp(ap);
                                             for (const ap_test of ap_data) {
                                                 addSpecificData(`Ap:${course.course_name}`, ap_test);
+                                                // session
+                                                session_ap.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/test/${ap_test}`);
                                             }
                                         }
                                     }
@@ -301,6 +359,7 @@ function addCoursesData(workspace_id, response) {
             }
         }
     }
+    addSessionCourses(session_majors, session_categories, session_subcategories, session_requirements, session_courses, session_prereqs, session_ap);
 }
 function updateCoursesData() {
     let workspace_id = 'coursesdata';

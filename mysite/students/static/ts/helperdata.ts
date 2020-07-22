@@ -2,39 +2,18 @@
 ///<reference path='treedata.ts'/>
 //helperdata
 
-function activateHelperButtons() {
-    let actions  = ['mymajoractions', 'mytermactions', 'myapactions',
-    'tranfercredit', 'status',
-    'mycourseoperation'] 
-    document.getElementById('mymajorbutton').onclick = ()=>{
-      for (const item of actions) { dontShowIt(item);}
-      showIt('mymajoractions');
-    }
 
-    //testing
-    document.getElementById('testbuttonterm').onclick = ()=>{
-      for (const item of actions) { dontShowIt(item);}
-      showIt('mytermactions');
-    }
-    document.getElementById('testbuttonap').onclick = ()=>{
-      for (const item of actions) { dontShowIt(item);}
-      showIt('myapactions');
-    }
-    document.getElementById('testbuttontranfer').onclick = ()=>{
-      for (const item of actions) { dontShowIt(item);}
-      showIt('tranfercredit');
-    }
-    document.getElementById('testbuttonstatus').onclick = ()=>{
-      for (const item of actions) { dontShowIt(item);}
-      showIt('status');
-    }
-    ///testing
-    
-    document.getElementById('mycoursesbutton').onclick = ()=>{
-      showIt('mycourseoperation');
-    }
-    document.getElementById('myapbutton').onclick = ()=>{
-      showIt('mytestoperation');
-    } 
+
+function addPlannerData(workspace_id:string, response:Document) {
+
 }
- 
+function updatePlannerData(){
+  let workspace_id = '';
+  clearData(workspace_id);
+  let url_source = '/';
+  requestAJAX(url_source, workspace_id, addPlannerData);
+}
+
+
+
+

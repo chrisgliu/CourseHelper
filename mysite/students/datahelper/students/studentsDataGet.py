@@ -21,6 +21,15 @@ def getMajors(request):
 def getYears(request):
     key = getEnrollmentKey(request)
     return Year.objects.filter(enrolled=key)
+
+def getAP(request):
+    user_years = getYears(request) 
+    year_object = user_years.filter(year="before").first() 
+    ap = []
+    tests = AP.objects.filter(years__in=[year_object.pk])
+    for test in tests:
+        ap.append(test)
+    return ap
         
 
 def getSemesters(request, year):

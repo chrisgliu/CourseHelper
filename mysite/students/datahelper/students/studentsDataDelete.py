@@ -27,3 +27,8 @@ def deleteSemester(request, year_name, semester_name):
 def deleteCourse(request, year_name, semester_name, course_name):
     old_course = getSpecificCourse(request, year_name, semester_name, course_name)
     old_course.delete()
+
+def deleteAP(request, test_name, score):
+    tests = getAP(request)
+    old_test = tests.filter(test=test_name).filter(score=score)
+    old_test.delete()

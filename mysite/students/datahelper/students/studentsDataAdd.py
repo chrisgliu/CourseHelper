@@ -36,7 +36,7 @@ def addYear(request, year_name):
 def addSemester(request, year_name, semester_name):
     year = getSpecificYear(request, year_name)
     new_semester = Semester(semester=semester_name)
-    new_semester.year = year
+    new_semester.years.add(year)
     new_semester.save()
 
 
@@ -44,5 +44,19 @@ def addCourse(request, year_name, semester_name, course_name):
     semester = getSpecificSemester(request, year_name, semester_name)
     new_course = Course(course=course_name)
     new_course.save()
-    new_course.semester.add(semester)
+    new_course.semesters.add(semester)
     new_course.save()
+
+def addAP(request, test_name, score):
+    years = getYears(request)
+    if years.filter(year="before").exists() == False:
+        addYear(request, "before")
+    before = getYears(request).filter(year="before")
+    new_ap = AP(test=test_name, score=score)
+    new_ap.save()
+    new_ap.years.add(before)
+    new_ap.save()
+
+
+
+

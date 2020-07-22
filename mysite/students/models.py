@@ -51,7 +51,7 @@ class Major(models.Model):
 # holds the year ex: 2020
 # enables accessing the students of a Year and accessing the Year of a student
 class Year(models.Model):
-    year = models.CharField(max_length=5)
+    year = models.CharField(max_length=6)
     enrolled = models.ManyToManyField(Enrolled, blank=False, related_name="years")
 
     def __str__(self):
@@ -60,22 +60,17 @@ class Year(models.Model):
     class Meta:
         verbose_name_plural = "4. Years"
 
-# -- AP TRANFER ---
+# -- AP ---
 # holds test name and score number
-class APTranfer(models.Model):
+class AP(models.Model):
     test = models.CharField(max_length=64)
     score = models.IntegerField(blank=False)
-    years = models.ManyToManyField(Year, blank=False, related_name="before")
+    years = models.ManyToManyField(Year, blank=False, related_name="ap")
     def __str__(self):
-        the_year = Year.objects.get(pk=self.years.first().pk)
         return f"{self.test}:{self.score}"
 
     class Meta:
         verbose_name_plural = "7. AP"
-
-
-
-
 
 
 # --- SEMESTER ---

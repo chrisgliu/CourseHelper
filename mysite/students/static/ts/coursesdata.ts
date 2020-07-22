@@ -1,5 +1,6 @@
 ///<reference path='ajax.ts'/>
 ///<reference path='treedata.ts'/>
+///<reference path='sessiondata.ts'/>
 // courses tree data
 
 function readMajors(majors:HTMLCollection) {
@@ -103,46 +104,77 @@ function readAp(ap:NodeList) {
   }
   return ap_data;
 }
-//Major:test
 function addCoursesData(workspace_id:string, response:Document){
+  // -- data tree --
+  // ex major:major_name
+  // -- session catalog ---
+  let session_majors:string[] = []; //ex  major
+  let session_categories:string[] = []; //ex major/category
+  let session_subcategories:string[] = []; //ex major/category/subcategory
+  let session_requirements:string[] = []; //ex major/category/subcategory/requirement
+  let session_courses:string[] = []; //ex major/category/subcategory/requirement/course
+  let session_prereqs:string[] = []; //ex  major/category/subcategory/requirement/course/prereq/course
+  let session_ap:string[] = []; //ex  major/category/subcategory/requirement/course/test/testname
+  // ---
   let majors = response.getElementsByTagName('major');
   let major_data = readMajors(majors);
   for (const major of major_data) {
+    // data tree
     addDataList(workspace_id, `Major:${major.major_name}`);
+    // session
+    session_majors.push(major.major_name)
     if (major.categories != null) {
       let categories = major.categories.childNodes;
       let category_data = readCategories(categories);
       for (const category of category_data) {
+        // data tree
         addDataList(`Major:${major.major_name}`, `Category:${category.category_name}`);
+        // session
+        session_categories.push(`${major.major_name}/${category.category_name}`)
         if (category.subcategories != null) {
           let subcategories = category.subcategories.childNodes;
           let subcategory_data = readSubcategories(subcategories);
           for (const subcategory of subcategory_data) {
+            // data tree
             addDataList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`);
+            // session
+            session_subcategories.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`)
             if (subcategory.requirements != null) {
               let requirements = subcategory.requirements.childNodes;
               let requirement_data = readRequirements(requirements);
               for (const requirement of requirement_data) {
+                // data tree
                 addDataList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`);
+                // session
+                session_requirements.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`)
                 if (requirement.courses != null) {
                   let courses = requirement.courses.childNodes;
                   let course_data = readCourses(courses);
                   for (const course of course_data) {
+                    // data tree
                     addDataList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`);
+                    // session
+                    session_courses.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`)
                     if (course.prereqs != null) {
+                      // data tree
                       addDataList(`Course:${course.course_name}`, `Prereq:${course.course_name}`);
                       let prereqs = course.prereqs.childNodes;
                       let prereq_data = readPrereqs(prereqs);
                       for (const prereq of prereq_data) {
                         addSpecificData(`Prereq:${course.course_name}`, prereq);
+                        // session
+                        session_prereqs.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/prereq/${prereq}`)
                       }
                     }
                     if (course.ap != null) {
+                      // data tree
                       addDataList(`Course:${course.course_name}`, `Ap:${course.course_name}`);
                       let ap = course.ap.childNodes;
                       let ap_data = readAp(ap);
                       for (const ap_test of ap_data) {
                         addSpecificData(`Ap:${course.course_name}`, ap_test);
+                        // session
+                        session_ap.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/test/${ap_test}`)
                       }
                     }
                   }
@@ -154,6 +186,15 @@ function addCoursesData(workspace_id:string, response:Document){
       }
     }
   }
+  addSessionCourses(
+    session_majors,
+    session_categories,
+    session_subcategories,
+    session_requirements,
+    session_courses,
+    session_prereqs,
+    session_ap
+    );
 }            
 function updateCoursesData(){
   let workspace_id = 'coursesdata';
@@ -161,61 +202,4 @@ function updateCoursesData(){
   let url_source = '/requestcoursesdata';
   requestAJAX(url_source, workspace_id, addCoursesData);
 }
-
-function activateCourseButtons(){
-  let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
-    'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
-  let refresh = document.getElementById('refreshcoursesdata')
-  // refresh button is shown only when user is signed in
-  if (refresh != null) {
-    refresh.onclick = ()=>{ updateCoursesData();}  
-    document.getElementById('majoroperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('majorforms');
-    }
-    document.getElementById('categoryoperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('categoryforms');
-    }
-    document.getElementById('subcategoryoperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('subcategoryforms');
-    }
-    document.getElementById('requirementoperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('requirementforms');
-    }
-    document.getElementById('courseoperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('courseforms');
-    }
-    document.getElementById('prereqoperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('prereqforms');
-    }
-    document.getElementById('apoperation').onclick = ()=>{
-      for (const item of forms) { dontShowIt(item);}
-      showIt('apforms');
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

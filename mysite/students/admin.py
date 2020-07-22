@@ -27,8 +27,8 @@ class SemesterAdmin(admin.ModelAdmin):
     inlines = [CourseInline]
     filter_horizontal = ("years",)
 
-@admin.register(APTranfer)
-class APTranferAdmin(admin.ModelAdmin):
+@admin.register(AP)
+class APAdmin(admin.ModelAdmin):
     filter_horizontal = ("years",)
 
 

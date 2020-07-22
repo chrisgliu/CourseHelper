@@ -52,3 +52,15 @@ class CourseForm(forms.Form):
         if add_or_delete == 'delete':
             deleteCourse(request, year, semester, course)
 
+class APForm(forms.Form):
+    test_name = forms.CharField(label='test_name', required=True)
+    score = forms.CharField(label='score', required=True) 
+    def process(self, request, add_or_delete='add'):
+        test_name = self.cleaned_data.get('test_name')
+        score = self.cleaned_data.get('score')
+        if add_or_delete == 'add':
+            addAP(request, test_name, score)
+        if add_or_delete == 'delete':
+            deleteAP(request, test_name, score) 
+
+

@@ -44,14 +44,14 @@ def requestCoursesData(request):
 def requestMyMajors(request):
     return requestMyMajorsHelper(request)
 
-def requestMyYears(request):
-    return requestMyYearsHelper(request)
+def requestMyPlanner(request):
+    return requestMyPlannerHelper(request)
 
-def requestMySemesters(request, year):
-    return requestMySemestersHelper(request, year)
+def requestMySchedule(request):
+    return requestMyScheduleHelper(request)
 
-def requestMyCourses(request, year, semester):
-    return requestMyCoursesHelper(request, year, semester)
+def requestMyTranferCredit(request):
+    return requestMyTranferCreditHelper(request)
 
 # --- HELPER OPERATIONS ---
 @csrf_protect
@@ -69,6 +69,14 @@ def addMyYear(request):
 @csrf_protect
 def deleteMyYear(request):
     return YearFormDelete(request)
+
+@csrf_protect
+def addMyAP(request):
+    return APFormAdd(request)
+
+@csrf_protect
+def deleteMyAP(request):
+    return APFormDelete(request)
 
 @csrf_protect
 def addMySemester(request):

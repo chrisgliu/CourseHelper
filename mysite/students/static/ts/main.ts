@@ -1,6 +1,8 @@
 /// <reference path='toggle.ts'/>
 /// <reference path="coursesdata.ts" />
 /// <reference path="helperdata.ts" />
+/// <reference path="buttons.ts" />
+
 
 document.addEventListener("DOMContentLoaded", () => {
 // nav buttons

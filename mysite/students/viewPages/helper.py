@@ -6,52 +6,82 @@ from ..datahelper.students.studentsDataGet import *
 from .home import *
 from lxml import etree
 
-def getXMLString(data_list, data_set, data_model):
-    root = etree.Element(data_set)
-    length = etree.Element('length')
-    length.text = str(len(data_list))
-    root.append(length)
-    for instance in data_list:
-        model = etree.Element(data_model)
-        model.text = instance       
-        root.append(model)
-    the_xml_string = etree.tostring(root, xml_declaration=True)
-    return the_xml_string
+# majors
+# --- progress calculated from front --0
+# planner, year and semester/term
+# sched, term and courses
+# tranfer, test score and courses
 
 # --- HELPER DATA ---- 
-def getNames(data_objects, name_attr):
-    data = []
-    for instance in data_objects:
-        name = getattr(instance, name_attr)
-        data.append(name)
-    return data
-
-
 def requestMyMajorsHelper(request):
-    data_objects = getMajors(request.user)
-    data = getNames(data_objects, 'major')    
-    xml_response = getXMLString(data, data_set='majors', data_model='major')
+    root = etree.Element('majors')
+    data_objects = getMajors(request)
+    for major in data_objects:
+        major_item = etree.Element('major')
+        major_item.text = str(major)
+        root.append(major_item)
+    xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
 
-
-def requestMyYearsHelper(request):
-    data_objects = getYears(request.user)
-    data = getNames(data_objects, 'year')
-    xml_response = getXMLString(data, data_set='years', data_model='year')
+def requestMyPlannerHelper(request):
+    root = etree.Element('planner')
+    year_data_objects = getYears(request)
+    for year in year_data_objects:
+        year_item = etree.Element('year')
+        year_name = etree.Element('year_name')
+        year_name.text = str(year)
+        year_item.append(year_name)
+        semesters = etree.Element('semesters')
+        semester_data_objects = getSemesters(request, year)
+        for semester in  semester_data_objects:
+            semester_item = etree.Element('semester')
+            semester_name = etree.Element('semester_name')
+            semester_name.text = str(semester)
+            semester_item.append(semester_name)
+            semesters.append(semester_item)
+        if len(semesters):
+            year_item.append(semesters)
+        root.append(year_item)
+    xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
 
-
-def requestMySemestersHelper(request, year):
-    data_objects = getSemesters(request.user, year)
-    data = getNames(data_objects, 'semester')
-    xml_response = getXMLString(data, data_set='semesters', data_model='semester')
+def requestMyScheduleHelper(request):
+    root = etree.Element('schedules')
+    year_data_objects = getYears(request)
+    for year in year_data_objects:
+        semester_data_objects = getSemesters(request, year.year)
+        for semester in semester_data_objects:
+            schedule_item = etree.Element('schedule')
+            schedule_name = etree.Element('schedule_name')
+            schedule_name.text = str(semester)
+            schedule_item.append(schedule_name)
+            courses = etree.Element('courses')
+            course_data_objects = getCourses(request, year.year, semester.semester)
+            for course in course_data_objects:
+                course_item = etree.Element('course')
+                course_name = etree.Element('course_name')
+                course_name.text = str(course)
+                course_item.append(course_name)
+                courses.append(course_item)
+            if len(courses):
+                schedule_item.append(courses)
+        root.append(schedule_item)
+    xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
 
-
-def requestMyCoursesHelper(request, year, semester):
-    data_objects = getCourses(request, year, semester)
-    data = getNames(data_objects, 'course')
-    xml_response = getXMLString(data, data_set='courses', data_model='course')
+def requestMyTranferCreditHelper(request):
+    root = etree.Element('ap')
+    ap_data_objects = getAP(request)
+    for test_object in ap_data_objects:
+        test_item = etree.Element('test')
+        test_name = etree.Element('test_name')
+        test_name.text = test_object.test
+        test_score = etree.Element('test_score')
+        test_score.text = str(test_object.score)
+        test_item.append(test_name)
+        test_item.append(test_score)
+        root.append(test_item)
+    xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
 
 # --- HELPER FORMS ---
@@ -80,6 +110,14 @@ def YearFormAdd(request):
 
 def YearFormDelete(request):
     return processForm(request, YearForm, 'delete')
+
+def APFormAdd(request):
+    return processForm(request, APForm, 'add')
+
+
+def APFormDelete(request):
+    return processForm(request, APForm, 'delete')
+
 
 
 def SemesterFormAdd(request):

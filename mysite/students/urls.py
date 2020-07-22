@@ -17,9 +17,9 @@ urlpatterns = [
     path('requestcoursesdata', views.requestCoursesData, name='courseData'),
     # --- HELPER XML DATA REQUESTS ---
     path('requestmymajors', views.requestMyMajors),
-    path('requestmyyears', views.requestMyYears), 
-    path('requestmysemesters/<year>/', views.requestMySemesters),
-    path('requestmycourses/<year>/<semester>/', views.requestMyCourses),
+    path('requestmyplanner', views.requestMyPlanner), 
+    path('requestmyschedule', views.requestMySchedule),
+    path('requestmytransfercredit', views.requestMyTranferCredit),
     # --- COURSES OPERATIONS ---
     # go to courses app
     # --- HELPER OPERATIONS ---
@@ -31,5 +31,8 @@ urlpatterns = [
     path("deleteMySemester", views.deleteMySemester, name='deleteMySemester'),
     path("addMyCourse", views.addMyCourse, name='addMyCourse'),
     path("deleteMyCourse", views.deleteMyCourse, name='deleteMyCourse'),
+    path("addMyAP", views.addMyAP, name='addMyAP'),
+    path("deleteMyAP", views.deleteMyAP, name='deleteMyAP'),
+
     
 ]
