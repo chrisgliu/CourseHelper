@@ -3,6 +3,7 @@
 ///<reference path='sessiondata.ts'/>
 // courses tree data
 
+// --- helper functions ---
 function readMajors(majors:HTMLCollection) {
   let major_data = [];
   for (const major of majors) {
@@ -104,6 +105,7 @@ function readAp(ap:NodeList) {
   }
   return ap_data;
 }
+
 function addCoursesData(workspace_id:string, response:Document){
   // -- data tree --
   // ex major:major_name
@@ -196,6 +198,8 @@ function addCoursesData(workspace_id:string, response:Document){
     session_ap
     );
 }            
+
+// result:
 function updateCoursesData(){
   let workspace_id = 'coursesdata';
   clearData(workspace_id);

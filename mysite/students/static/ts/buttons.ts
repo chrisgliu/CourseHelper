@@ -1,4 +1,7 @@
 /// <reference path='toggle.ts'/>
+/// <reference path="coursesdata.ts" />
+/// <reference path="helperdata.ts" />
+
 
 //some button functions for toggling
 function activateCourseButtons(){
@@ -43,6 +46,18 @@ function activateHelperButtons() {
     let actions  = ['mymajoractions', 'mytermactions', 'myapactions',
     'tranfercredit', 'status',
     'mycourseoperation'] 
+
+    let update = document.getElementById('updatehelperdata')
+    // update button is shown only when user is signed in
+    if (update != null) {
+      update.onclick = ()=>{ 
+        updateMajorData();
+        updateAPData();
+        updatePlannerData();
+        updateScheduleData();
+      }
+    }
+     
     document.getElementById('mymajorbutton').onclick = ()=>{
       for (const item of actions) { dontShowIt(item);}
       showIt('mymajoractions');
