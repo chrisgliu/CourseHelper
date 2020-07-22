@@ -83,9 +83,9 @@ function addPlannerData(workspace_id:string, response:Document) {
   for (const year of year_data) {
     // data tree
     if (year.year_name == "before") {
-      addDataList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
+      addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
     } else {
-      addDataList(workspace_id, `Year:${year.year_name}`, false, null);
+      addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
     }
     // session
     session_years.push(year.year_name)
@@ -94,7 +94,7 @@ function addPlannerData(workspace_id:string, response:Document) {
       let semester_data = readMySemesters(semesters)
       for (const semester of semester_data) {
         // data tree
-        addDataList(`Year:${year.year_name}`,semester.semester_name, true, "mytermactions");
+        addCaretList(`Year:${year.year_name}`,semester.semester_name, true, "mytermactions");
         // session
         session_semesters.push(`${year.year_name}/${semester.semester_name}`)
       }

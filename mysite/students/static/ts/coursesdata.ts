@@ -71,7 +71,7 @@ function addCoursesData(workspace_id:string, response:Document){
   let major_data = readMajors(majors);
   for (const major of major_data) {
     // data tree
-    addDataList(workspace_id, `Major:${major.major_name}`, false, null);
+    addCaretList(workspace_id, `Major:${major.major_name}`, false, null)
     // session
     session_majors.push(major.major_name)
     if (major.categories != null) {
@@ -79,7 +79,7 @@ function addCoursesData(workspace_id:string, response:Document){
       let category_data = readCategories(categories);
       for (const category of category_data) {
         // data tree
-        addDataList(`Major:${major.major_name}`, `Category:${category.category_name}`, false, null);
+        addCaretList(`Major:${major.major_name}`, `Category:${category.category_name}`, false, null);
         // session
         session_categories.push(`${major.major_name}/${category.category_name}`)
         if (category.subcategories != null) {
@@ -87,7 +87,7 @@ function addCoursesData(workspace_id:string, response:Document){
           let subcategory_data = readSubcategories(subcategories);
           for (const subcategory of subcategory_data) {
             // data tree
-            addDataList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`, false, null);
+            addCaretList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`, false, null);
             // session
             session_subcategories.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`)
             if (subcategory.requirements != null) {
@@ -95,7 +95,7 @@ function addCoursesData(workspace_id:string, response:Document){
               let requirement_data = readRequirements(requirements);
               for (const requirement of requirement_data) {
                 // data tree
-                addDataList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`, false, null);
+                addCaretList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`, false, null);
                 // session
                 session_requirements.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`)
                 if (requirement.courses != null) {
@@ -103,12 +103,12 @@ function addCoursesData(workspace_id:string, response:Document){
                   let course_data = readCourses(courses);
                   for (const course of course_data) {
                     // data tree
-                    addDataList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`, false, null);
+                    addCaretList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`, false, null);
                     // session
                     session_courses.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`)
                     if (course.prereqs != null) {
                       // data tree
-                      addDataList(`Course:${course.course_name}`, `Prereq:${course.course_name}`, false, null);
+                      addCaretList(`Course:${course.course_name}`, `Prereq:${course.course_name}`, false, null);
                       let prereqs = course.prereqs.childNodes;
                       let prereq_data = readPrereqs(prereqs);
                       for (const prereq of prereq_data) {
@@ -119,7 +119,7 @@ function addCoursesData(workspace_id:string, response:Document){
                     }
                     if (course.ap != null) {
                       // data tree
-                      addDataList(`Course:${course.course_name}`, `Ap:${course.course_name}`, false, null);
+                      addCaretList(`Course:${course.course_name}`, `Ap:${course.course_name}`, false, null);
                       let ap = course.ap.childNodes;
                       let ap_data = readAp(ap);
                       for (const ap_test of ap_data) {
