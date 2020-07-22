@@ -21,6 +21,26 @@ ul span {
   transform: rotate(90deg);
 }
 
+.xmark::before {
+  content: "❌";
+  color: black;
+  display: inline-block;
+}
+
+.xmark-down::before {
+  transform: rotate(90deg);
+}
+
+.checkmark::before {
+  content: "✅";
+  color: black;
+  display: inline-block;
+}
+
+.checkmark_down::before {
+  transform: rotate(90deg);
+}
+
 .nested {
   display: none;
 }

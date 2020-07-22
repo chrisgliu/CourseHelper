@@ -53,11 +53,18 @@ function addCaretList(parent_ul_id:string, name:string, is_special:boolean, spec
   addDataList(parent_ul_id, name, 'caret', toggle_function)
 }
 
-function addStatusList(parent_ul_id:string, name:string, status:string){
+function addStatusList(parent_ul_id:string, name:string, status:boolean){
+  let mark = 'xmark';
+  if (status) { mark ='checkmark' }
   let toggle_function = function click(symbol:HTMLElement){
     let data: HTMLElement = symbol.parentElement.querySelector(".nested");
     toggleIt(data);
+    if (status) {
+      symbol.classList.toggle("checkmark_down")
+    } else {
+      symbol.classList.toggle("xmark-down");
+    }
   } 
-  addDataList(parent_ul_id, name, status, toggle_function);
+  addDataList(parent_ul_id, name, mark, toggle_function);
 }
 

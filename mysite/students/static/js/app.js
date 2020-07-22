@@ -123,11 +123,21 @@ function addCaretList(parent_ul_id, name, is_special, special_id) {
     addDataList(parent_ul_id, name, 'caret', toggle_function);
 }
 function addStatusList(parent_ul_id, name, status) {
+    let mark = 'xmark';
+    if (status) {
+        mark = 'checkmark';
+    }
     let toggle_function = function click(symbol) {
         let data = symbol.parentElement.querySelector(".nested");
         toggleIt(data);
+        if (status) {
+            symbol.classList.toggle("checkmark_down");
+        }
+        else {
+            symbol.classList.toggle("xmark-down");
+        }
     };
-    addDataList(parent_ul_id, name, status, toggle_function);
+    addDataList(parent_ul_id, name, mark, toggle_function);
 }
 function clearSession() {
     window.sessionStorage.clear();
@@ -398,7 +408,8 @@ function addPlannerData(workspace_id, response) {
             addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
         }
         else {
-            addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+            // addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+            addStatusList(workspace_id, `Year:${year.year_name}`, true);
         }
         // session
         session_years.push(year.year_name);

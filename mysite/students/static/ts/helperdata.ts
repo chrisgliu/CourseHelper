@@ -85,7 +85,8 @@ function addPlannerData(workspace_id:string, response:Document) {
     if (year.year_name == "before") {
       addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
     } else {
-      addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+      // addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+      addStatusList(workspace_id, `Year:${year.year_name}`, true)
     }
     // session
     session_years.push(year.year_name)
