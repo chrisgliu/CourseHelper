@@ -1,9 +1,11 @@
 ///<reference path='ajax.ts'/>
 ///<reference path='treedata.ts'/>
-/// <reference path="sessiondata.ts" />
-
+/// <reference path='sessiondata.ts' />
+/// <reference path='readXML.ts' />
 //helperdata
 
+// my majors
+// --- major helper functions ---
 function addListedMajors(workspace_id:string, response:Document) {
   let session_mymajors:string[] = []
   let majors = response.getElementsByTagName('major') 
@@ -16,31 +18,23 @@ function addListedMajors(workspace_id:string, response:Document) {
     session_mymajors
   );
 }
-
-// result:
+// ---
+// resulting ajax function
 function updateMajorData(){
   let workspace_id = 'majorstracked';
   clearData(workspace_id);
   let url_source = '/requestmymajors';
   requestAJAX(url_source, workspace_id, addListedMajors);
 }
-
+// my ap
+// --- ap helper functions ---
 function readMyAP(tests:HTMLCollection) {
-  let test_data = [];
-  for (const test of tests) {
-    let test_content = test.childNodes;
-    let test_name = '';
-    let test_score = null;
-    for (const node of test_content) {
-      if (node.nodeName == 'test_name'){ test_name = node.textContent; }
-      if (node.nodeName == 'test_score'){ test_score = node.textContent;}
-    }
-    let data = {'test_name':test_name, 'test_score':test_score};
-    test_data.push(data);
-  }
-  return test_data;
+  return readMainTags(
+    tests,
+    ["test_name", "test_score"],
+    null
+  );
 }
-
 function addListedAp(workspace_id:string, response:Document) {
   let session_myap:string[] = []
   let tests = response.getElementsByTagName('test') 
@@ -55,43 +49,29 @@ function addListedAp(workspace_id:string, response:Document) {
     session_myap
   );
 }
-
-// result:
+// ---
+// resulting ajax function
 function updateAPData(){
   let workspace_id = '';
   clearData(workspace_id);
   let url_source = '/requestmytransfercredit';
   requestAJAX(url_source, workspace_id, addListedAp);
 }
-
+// my planner
 // --- planner helper functions ---
 function readMyYears(years:HTMLCollection) {
-  let year_data = [];
-  for (const year of years) {
-    let year_content = year.childNodes;
-    let year_name = '';
-    let semesters_node = null;
-    for (const node of year_content) {
-      if (node.nodeName == 'year_name'){ year_name = node.textContent; }
-      if (node.nodeName == 'semesters' && node.hasChildNodes()){ semesters_node = node;}
-    }
-    let data = {'year_name':year_name, 'semesters':semesters_node};
-    year_data.push(data);
-  }
-  return year_data;
+  return readMainTags(
+    years,
+    ["year_name",],
+    ["semesters",],
+  );
 }
-
 function readMySemesters(semesters:NodeList) {
-  let semester_data = [];
-  for (const semester of semesters) {
-    let semester_content = semester.childNodes;
-    let semester_name = '';
-    for (const node of semester_content) {
-      if (node.nodeName == 'semester_name'){ semester_name = node.textContent; }
-    }
-    semester_data.push(semester_name);
-  }
-  return semester_data;
+  return readSubNodeList(
+    semesters,
+    ["semester_name",],
+    null
+  );
 }
 function addPlannerData(workspace_id:string, response:Document) {
   // --- session catalog ---
@@ -102,7 +82,11 @@ function addPlannerData(workspace_id:string, response:Document) {
   let year_data = readMyYears(years);
   for (const year of year_data) {
     // data tree
-    addDataList(workspace_id, `Year:${year.year_name}`);
+    if (year.year_name == "before") {
+      addDataList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
+    } else {
+      addDataList(workspace_id, `Year:${year.year_name}`, false, null);
+    }
     // session
     session_years.push(year.year_name)
     if (year.semesters != null) {
@@ -110,9 +94,9 @@ function addPlannerData(workspace_id:string, response:Document) {
       let semester_data = readMySemesters(semesters)
       for (const semester of semester_data) {
         // data tree
-        addSpecificData(`Year:${year.year_name}`,semester);
+        addDataList(`Year:${year.year_name}`,semester.semester_name, true, "mytermactions");
         // session
-        session_semesters.push(`${year.year_name}/${semester}`)
+        session_semesters.push(`${year.year_name}/${semester.semester_name}`)
       }
     }
   }
@@ -121,45 +105,29 @@ function addPlannerData(workspace_id:string, response:Document) {
     session_semesters
   );
 }
-
-// result:
+// resulting ajax function
 function updatePlannerData(){
   let workspace_id = 'plannerdata';
   clearData(workspace_id);
   let url_source = '/requestmyplanner';
   requestAJAX(url_source, workspace_id, addPlannerData);
 }
-
+// my schedule
 // --- schedule helper functions ---
 function readMySchedules(schedules:HTMLCollection) {
-  let schedule_data = [];
-  for (const scedule of schedules) {
-    let schedule_content = scedule.childNodes;
-    let schedule_name = '';
-    let courses_node = null;
-    for (const node of schedule_content) {
-      if (node.nodeName == 'schedule_name'){ schedule_name = node.textContent; }
-      if (node.nodeName == 'courses' && node.hasChildNodes()){ courses_node = node;}
-    }
-    let data = {'schedule_name':schedule_name, 'courses':courses_node};
-    schedule_data.push(data);
-  }
-  return schedule_data;
+  return readMainTags(
+    schedules,
+    ["schedule_name",],
+    ["courses",]
+  );
 }
-
 function readMyCourses(courses:NodeList) {
-  let course_data = [];
-  for (const course of courses) {
-    let course_content = course.childNodes;
-    let course_name = '';
-    for (const node of course_content) {
-      if (node.nodeName == 'course_name'){ course_name = node.textContent; }
-    }
-    course_data.push(course_name);
-  }
-  return course_data;
+  return readSubNodeList(
+    courses,
+    ["course_name",],
+    null
+  );
 }
-
 function addScheduleData(workspace_id:string, response:Document) {
   // --- session catalog ---
   let session_schedules:string[] = [] // ex sched (semester)
@@ -174,7 +142,7 @@ function addScheduleData(workspace_id:string, response:Document) {
     let course_data = readMyCourses(courses)
     for (const course of course_data) {
       // session
-      session_courses.push(course)
+      session_courses.push(`${schedule.schedule_name}/${course.course_name}`)
     }
   }
   addSessionSchedule(
@@ -182,8 +150,7 @@ function addScheduleData(workspace_id:string, response:Document) {
     session_courses,
   );
 }
-
-// result:
+// resulting ajax function
 function updateScheduleData(){
   let workspace_id = '';
   clearData(workspace_id);

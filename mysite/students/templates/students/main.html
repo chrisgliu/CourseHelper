@@ -25,15 +25,15 @@
 {% endblock %}
 
 {% block navbuttons %}
-    <button id='creditsneeded'>Credits Needed</button>
-    <button id='creditswanted'>Credits Wanted</button> 
-    {% if signin %}
-    <button id='signin'>Sign In</button>
-    {% endif %}
-    {% if signup %}
-    <button id='signup'>Sign Up</button>
-    {% endif %}
-    {% if signout %}
-    <button id='signout'>Sign Out</button>
-    {% endif %}
+        <button class="thick" id='creditsneeded'>Course</button>
+        <button class="thick" id='creditswanted'>Helper</button> 
+        {% if signin %}
+        <button class="thick" id='signin'>Sign In</button>
+        {% endif %}
+        {% if signup %}
+        <button class="thick" id='signup'>Sign Up</button>
+        {% endif %}
+        {% if signout %}
+        <button class="thick" id='signout'>Sign Out</button>
+        {% endif %}
 {% endblock %}

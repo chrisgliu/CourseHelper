@@ -20,16 +20,6 @@
   </div>
 {% endblock %}
 
-{% block createPlannerForm %}
-  <label>year one</label>
-  <input type="text" name="startingyear" id="startingyear">
-  <label>term #</label>
-  <input type="number" name="termsperyear" id="termsperyear" min="1" >
-  <!-- onclick functions-->
-  <button id="addbutton" type="submit">Add</button>
-  <button id="deletebutton" type="submit">Delete</button>
-{% endblock %}
-
 {% block termcoursedata %}
  <!-- add hstack items containing course name and credit-->
   <div class="vstack" id="coursesinaterm">

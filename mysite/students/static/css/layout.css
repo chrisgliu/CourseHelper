@@ -42,12 +42,20 @@ h1, h2 {
 }
 
 button, input, select, label {
+  display: inline-block;
+  font-size: 15px;
+  text-align: center;
   width: 110px;
   background-color: white;
   border: 2px solid black;
   border-radius: 20px;
   padding: 10px;
   margin: 10px;
+}
+button.thick, input.thick, select.thick, label.thick {
+  height: 60px;
+  padding: 0px 10px 0px 10px;
+  top: 0px;
 }
 
 button:hover, input:hover, select:hover {

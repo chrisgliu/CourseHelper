@@ -10,7 +10,11 @@ function clearData(ul_id:string){
     }
   }
 }
-function addDataList(parent_ul_id:string, name:string){
+function addDataList(parent_ul_id:string, name:string, special:boolean, special_id:string){
+  let special_actions = ['mymajoractions', 'mytermactions', 'myapactions',
+  'tranfercredit', 'status',
+  'mycourseoperation'] 
+  
   let parent = document.getElementById(parent_ul_id);
   if (parent == null) { return}
   let toggle = document.createElement('li');
@@ -19,7 +23,12 @@ function addDataList(parent_ul_id:string, name:string){
   symbol.className = 'caret';
   symbol.onclick = ()=> {
     let data: HTMLElement = symbol.parentElement.querySelector(".nested");
-	  toggleIt(data);
+    toggleIt(data);
+    if (special) {
+      let element:HTMLElement = document.getElementById(special_id)
+      for (const item of special_actions) { dontShowIt(item);}
+      toggleIt(element);
+    }
     symbol.classList.toggle("caret-down");
   }
   let nested = document.createElement('ul');
