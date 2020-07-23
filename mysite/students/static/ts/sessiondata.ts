@@ -63,5 +63,6 @@ function readMySessionString(data_string:string) {
         output.push(data);
         data_content = data_content.substring(data_content.indexOf("/")+1);
     }
-    return output.reverse();
+    output.push(data_content); 
+    return output;
 }

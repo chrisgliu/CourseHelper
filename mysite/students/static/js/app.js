@@ -107,6 +107,17 @@ function getSessionData(data_id) {
     let data = window.sessionStorage.getItem(data_id);
     return JSON.parse(data);
 }
+function readMySessionString(data_string) {
+    let data_content = data_string;
+    let output = [];
+    while (data_content.indexOf("/") != -1) {
+        let data = data_content.substring(0, data_content.indexOf("/"));
+        output.push(data);
+        data_content = data_content.substring(data_content.indexOf("/") + 1);
+    }
+    output.push(data_content);
+    return output;
+}
 // reading xml response
 function readXMLNodes(tags, subdatatags, subparenttags) {
     let tag_data = [];
@@ -360,7 +371,9 @@ function showTermCourses(term_name) {
     }
     for (const term_course of term_courses) {
         if (term_course != null) {
-            let course_name = term_course.substring(term_course.indexOf("/") + 1);
+            let term_course_content = readMySessionString(term_course);
+            alert(term_course_content);
+            let course_name = term_course_content[2];
             let credit_num = getCourseCredit(course_name);
             let credit = `${credit_num}`;
             createCourseBlock("coursesinaterm", course_name, credit);
@@ -376,8 +389,9 @@ function showTranferCourses(test_name) {
     let myscore = "";
     for (const test of mytests) {
         if (test != null) {
-            if (test.indexOf(test_name) != -1) {
-                myscore = test.substring(test.indexOf("/") + 1);
+            let test_content = readMySessionString(test);
+            if (test_content[0] == test_name) {
+                myscore = test_content[1];
             }
         }
     }
@@ -388,14 +402,14 @@ function showTranferCourses(test_name) {
     let coursesap = [];
     for (const ap_test of ap_data) {
         if (ap_test != null) {
-            let ap_name = ap_test.substring(ap_test.lastIndexOf("/") + 1, ap_test.indexOf(":"));
+            let ap_content = readMySessionString(ap_test);
+            let ap_name = ap_content[ap_content.length - 3];
             if (ap_name == test_name) {
-                let score_min = parseInt(ap_test.substring(ap_test.indexOf(":") + 1, ap_test.indexOf("-")));
-                let score_max = parseInt(ap_test.substring(ap_test.indexOf("-") + 1));
+                let score_min = parseInt(ap_content[ap_content.length - 2]);
+                let score_max = parseInt(ap_content[ap_content.length - 1]);
                 let score = parseInt(myscore);
                 if (score_min <= score && score <= score_max) {
-                    let other_data = ap_test.substring(0, ap_test.lastIndexOf("/"));
-                    let course_name = other_data.substring(other_data.lastIndexOf("/") + 1);
+                    let course_name = ap_content[ap_content.length - 4];
                     let credit_num = getCourseCredit(course_name);
                     let credit = `${credit_num}`;
                     coursesap.push(course_name);
@@ -470,8 +484,9 @@ function showAPTransfer() {
     }
     for (const test of ap_data) {
         if (test != null) {
-            let test_name = test.substring(0, test.indexOf("/"));
-            let score = test.substring(test.indexOf("/") + 1);
+            let test_content = readMySessionString(test);
+            let test_name = test_content[0];
+            let score = test_content[1];
             createAPTracker("myaptests", test_name, score);
         }
     }
@@ -869,6 +884,34 @@ function activateCourseButtons() {
             showIt("apFormB");
         };
     }
+}
+function activateMajorFormA() {
+}
+function activateMajorFormB() {
+}
+function activateCategoryFormA() {
+}
+function activateCategoryFormB() {
+}
+function activateSubcategoryFormA() {
+}
+function activateSubcategoryFormB() {
+}
+function activateRequirementFormA() {
+}
+function activateRequirementFormB() {
+}
+function activateCourseFormA() {
+}
+function activateCourseFormB() {
+}
+function activateAPFormA() {
+}
+function activateAPFormB() {
+}
+function activateCourseForms() {
+}
+function activateHelperForms() {
 }
 /// <reference path='toggle.ts'/>
 /// <reference path='coursesData.ts' />

@@ -28,8 +28,9 @@ function showAPTransfer(){
     if (ap_data == null) { return}
     for (const test of ap_data) {
         if (test != null) {
-            let test_name = test.substring(0, test.indexOf("/"));
-            let score = test.substring(test.indexOf("/")+1);
+            let test_content = readMySessionString(test);
+            let test_name = test_content[0];
+            let score = test_content[1];
             createAPTracker("myaptests", test_name, score);
         } 
     }

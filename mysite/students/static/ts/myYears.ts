@@ -45,7 +45,9 @@ function showTermCourses(term_name:string){
     }
     for (const term_course of term_courses) {
         if (term_course != null) {
-            let course_name = term_course.substring(term_course.indexOf("/")+1);
+            let term_course_content = readMySessionString(term_course);
+            alert(term_course_content)
+            let course_name = term_course_content[2];
             let credit_num = getCourseCredit(course_name);
             let credit = `${credit_num}`;
             createCourseBlock("coursesinaterm", course_name, credit);
@@ -72,15 +74,13 @@ function showTranferCourses(test_name:string){
     for (const ap_test of ap_data) {
         if (ap_test != null) {
             let ap_content = readMySessionString(ap_test);
-            let ap_name = ap_test.substring(ap_test.lastIndexOf("/")+1, ap_test.indexOf(":"));
+            let ap_name = ap_content[ap_content.length - 3];
             if (ap_name == test_name) {
-
-                let score_min = parseInt(ap_test.substring(ap_test.indexOf(":")+1, ap_test.indexOf("-"))); 
-                let score_max = parseInt(ap_test.substring(ap_test.indexOf("-")+1));
+                let score_min = parseInt(ap_content[ap_content.length - 2]);
+                let score_max = parseInt(ap_content[ap_content.length - 1]);
                 let score = parseInt(myscore);
                 if (score_min <= score && score <= score_max) {
-                    let other_data = ap_test.substring(0, ap_test.lastIndexOf("/"))
-                    let course_name = other_data.substring(other_data.lastIndexOf("/")+1)
+                    let course_name = ap_content[ap_content.length - 4];
                     let credit_num = getCourseCredit(course_name);
                     let credit = `${credit_num}`;
                     coursesap.push(course_name);
