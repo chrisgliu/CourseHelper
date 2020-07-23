@@ -1,3 +1,4 @@
+// reading xml response
 
 function readXMLNodes(tags:any, subdatatags:string[], subparenttags:string[]){
     let tag_data = [];

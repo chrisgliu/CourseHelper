@@ -8,15 +8,18 @@
   <div class="hstack boderbox">
     <!-- major data -->
     <div class="vstack">
-      <h2> Tracker </h2>
+      <div class="hstack">
+        <h1 style="margin-right:50px;"> My Status </h1>
+        <div class="hstack">
+          <button id="mymajorbutton">majors</button>
+          {% if name %}
+            <button id='updatehelperdata'>update</button>    
+          {% endif %}
+        </div> 
+      </div>
       <div class="vstack" id="majorstracked">
       <!-- add hstack items containing major name and progress bar-->
-      </div>
-      <div class="hstack">
-        <button id="mymajorbutton">change</button>
-        {% if name %}
-          <button id='updatehelperdata'>update</button>    
-        {% endif %}
+        
       </div>
     </div>    
   </div>
@@ -24,7 +27,7 @@
   <div class="hstack boderbox">
     <!-- year/term data tree -->
     <div class="vstack">
-      <h1> Planner </h1>
+      <h1> My Planner </h1>
       <ul id="plannerdata">
       </ul>
     </div>
@@ -45,8 +48,9 @@
           </div>
         </div>
   </div>
-  <div class="hstack boderbox">    
-      <div id="mymajoractions" style="display: none;">
+
+  <div class="vstack">    
+      <div id="mymajoractions" class="boderbox" style="display: none;">
         <div class="vstack">
           <div class="hstack">
             <!--- get the name of the term ---> 
@@ -58,41 +62,51 @@
         </div>
       </div>
 
-      <div id="mytermactions" style="display: none;">
+      <div id="mytermactions" class="boderbox" " style="display: none;">
         <div class="vstack">
           <div class="hstack">
             <!--- get the name of the term ---> 
             <h1 id="thistermname">TERM</h1>
-            <button id="mycoursesbutton">change courses</button>
+            <button id="mycoursesbutton">courses</button>
           </div>
-          {% block termcoursedata %}{% endblock %}
+          <!-- add hstack items containing course name and credit-->
+          <div class="vstack" id="coursesinaterm">
+
+          </div>
           <div class="hstack" id="mycourseoperation" style="display: none;">
             {% block mycourseoperation %}{% endblock %}
           </div>
         </div>
       </div>
-      <div id="myapactions" style="display: none;">
+      <div id="myapactions" class="boderbox"  style="display: none;">
         <div class="vstack">
           <div class="hstack">
             <h1> AP CREDIT </h1>
-            <button id="myapbutton">change ap credit</button>
+            <button id="myapbutton">credit</button>
           </div>
-          {% block myapcoursesdata %}{% endblock %}
-          <div class="hstack" id="mytestoperation" style="display: none;">
-            {% block mytestoperation %}{% endblock %}
-          </div>
-
+            <div class="hstack">
+              <!-- add hstack items containing test name and score-->
+            <div class="vstack" id="myaptests">
+      
+            </div>
+            <div id="mytestoperation" style="display: none;">
+              {% block mytestoperation %}{% endblock %}
+            </div>
+          </div>  
         </div>
       </div>
-      <div id="tranfercredit" style="display: none;">
+      <div id="tranfercredit" class="boderbox"  style="display: none;">
         <div class="vstack">
           <div class="hstack">
             <h1> TRANFER CREDIT </h1>
           </div>
-          {% block specificapcoursedata %}{% endblock %}
+           <!-- add hstack items containing course name and credit-->
+          <div class="vstack" id="coursesinaptranfer">
+
+          </div>
         </div>
       </div>
-      <div id="status" style="display: none;">
+      <div id="status" class="boderbox"  style="display: none;">
         <div class="vstack">
           <h1> STATUS </h1>
           <ul id="mystatusdata">

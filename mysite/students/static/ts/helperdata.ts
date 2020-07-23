@@ -1,6 +1,6 @@
 ///<reference path='ajax.ts'/>
-///<reference path='treedata.ts'/>
-/// <reference path='sessiondata.ts' />
+///<reference path='dataTree.ts'/>
+/// <reference path='sessionData.ts' />
 /// <reference path='readXML.ts' />
 //helperdata
 
@@ -85,8 +85,7 @@ function addPlannerData(workspace_id:string, response:Document) {
     if (year.year_name == "before") {
       addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
     } else {
-      // addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
-      addStatusList(workspace_id, `Year:${year.year_name}`, true)
+      addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
     }
     // session
     session_years.push(year.year_name)

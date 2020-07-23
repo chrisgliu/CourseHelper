@@ -1,4 +1,5 @@
 /// <reference path='toggle.ts'/>
+/// <reference path="myAP.ts" />
 
 function clearData(ul_id:string){
   let list = document.getElementById(ul_id);
@@ -35,9 +36,7 @@ function addDataList(parent_ul_id:string, name:string, symbol_type:string, toggl
   parent.appendChild(toggle);
 }
 
-let special_actions = ['mymajoractions', 'mytermactions', 'myapactions',
-  'tranfercredit', 'status',
-  'mycourseoperation'] 
+ 
 
 function addCaretList(parent_ul_id:string, name:string, is_special:boolean, special_id:string){
   let toggle_function = function click(symbol:HTMLElement){
@@ -45,8 +44,10 @@ function addCaretList(parent_ul_id:string, name:string, is_special:boolean, spec
     toggleIt(data);
     symbol.classList.toggle("caret-down");
     if (is_special) {
+      if (parent_ul_id == `Year:before`){
+        showAPTransfer();
+      }
       let element:HTMLElement = document.getElementById(special_id)
-      for (const item of special_actions) { dontShowIt(item);}
       toggleIt(element);
     }
   }

@@ -1,3 +1,5 @@
+// show and don't show operations
+
 function showIt(id: string){
     let element = document.getElementById(id);
     if (element == null){ return}

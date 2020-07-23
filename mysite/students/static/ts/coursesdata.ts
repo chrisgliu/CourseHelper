@@ -1,6 +1,6 @@
 ///<reference path='ajax.ts'/>
-///<reference path='treedata.ts'/>
-///<reference path='sessiondata.ts'/>
+///<reference path='dataTree.ts'/>
+///<reference path='sessionData.ts'/>
 /// <reference path="readXML.ts" />
 
 // courses tree data

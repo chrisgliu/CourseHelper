@@ -2,164 +2,260 @@
 
 <!-- Major -->
 {% block majorFormA %}
-<form method="post">
-    <label>Enter Major name:</label>
-    <input type="text" name="major">
-    <button type="submit" formaction="">Create</button>
-</form>
+<div id="majorFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <label>Enter Major name</label>
+            <input type="text" name="major">
+        </div>
+        <div class="hstack">
+            <button id="majorcreatebutton">Create it</button> 
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block majorFormB %}
-<form method="post">
-    <label>Select Major</label>
-    <select name="major" id="optionsmajors">
-    </select><!-- request data for options -->
-    <!-- adding two of the same major doen't make sense-->
-    <button id="deletebutton" type="submit" formaction="">Delete</button>
-</form>
+<div id="majorFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <label>Select Major</label>
+            <select name="major" id="optionsmajors">
+            </select><!-- request data for options -->
+            <!-- adding two of the same major doen't make sense-->
+        </div>
+        <div class="hstack">
+            <button id="majordeletebutton">Delete it</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 <!-- Category -->
 {% block categoryFormA %}
-<form method="post">
-    <label>Select Major</label>
-    <select name="major" id="optionsmajors">
-    </select><!-- request data for options -->
-    <label>Enter Category name:</label>
-    <input type="text" name="category">
-    <button type="submit" formaction="">Create</button>
-</form>
+<div id="categoryFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <label>Select Major</label>
+            <select name="major" id="optionsmajors">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <label>Enter Category name:</label>
+            <input type="text" name="category">
+        </div>
+        <div class="hstack">
+            <button id="categorycreatebutton">Create it</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block categoryFormB %}
-<form method="post">
-    <!-- option ex: major/category-->
-    <label>Select Category</label>
-    <select name="category" id="optionscategories">
-    </select><!-- request data for options -->
-    <!-- GED could be the same for two majors-->
-    <button id="addbutton" type="submit" formaction="">Add</button>
-    <button id="deletebutton" type="submit" formaction="">Delete</button> 
-</form>
+<div id="categoryFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category-->
+            <label>Select Category</label>
+            <select name="category" id="optionscategories">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- GED could be the same for two majors-->
+            <button id="categoryaddbutton">Add it</button>
+            <button id="categorydeletebutton">Delete it</button> 
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 <!-- Subacategory -->
 {% block subcategoryFormA %}
-<form method="post">
-    <!-- option ex: major/category-->
-    <label>Select Category</label>
-    <select name="category" id="optionscategories">
-    </select><!-- request data for options -->
-    <label>Enter Subcategory name:</label>
-    <input type="text" name="subcategory">
-    <button type="submit" formaction="">Create</button> 
-</form>
+<div id="subcategoryFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category-->
+            <label>Select Category</label>
+            <select name="category" id="optionscategories">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <label>Enter Subcategory name</label>
+            <input type="text" name="subcategory">
+        </div>
+        <div class="hstack">
+            <button id="subcategorycreatebutton">Create it</button> 
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block subcategoryFormB %}
-<form method="post">
-    <!-- option ex: major/category/subcategory-->
-    <label>Select Subcategory</label>
-    <select name="subcategory" id="optionssubcategories">
-    </select><!-- request data for options -->
-    <!---majors could share a section of requirements-->
-    <button id="addbutton" type="submit" formaction="">Add</button>
-    <button id="deletebutton" type="submit" formaction="">Delete</button> 
-</form>
+<div id="subcategoryFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory-->
+            <label>Select Subcategory</label>
+            <select name="subcategory" id="optionssubcategories">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!---majors could share a section of requirements-->
+            <button id="subcategoryaddbutton">Add it</button>
+            <button id="subcategorydeletebutton">Delete it</button> 
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 <!-- Requirement -->
 {% block requirementFormA %}
-<form method="post">
-    <!-- option ex: major/category/subcategory-->
-    <label>Select Subcategory</label>
-    <select name="subcategory" id="optionssubcategories">
-    </select><!-- request data for options -->
-    <label>Enter Requirement name:</label>
-    <input type="text" name="requirement"> 
-    <button type="submit" formaction="">Create</button>  
-</form>
+<div id="requirementFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory-->
+            <label>Select Subcategory</label>
+            <select name="subcategory" id="optionssubcategories">
+            </select><!-- request data for options -->
+        </div>  
+        <div class="hstack">
+            <label>Enter Requirement name</label>
+            <input type="text" name="requirement"> 
+        </div>
+        <div class="hstack">
+            <button id="requirementcreatebutton">Create it</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block requirementFormB %}
-<form method="post">
-    <!-- option ex: major/category/subcategory/requirement--> 
-    <label>Select Requirement</label>
-    <select name="requirement" id="optionsrequirements">
-    </select><!-- request data for options -->
-    <!-- majors could share a specific requirement -->
-    <button id="addbutton" type="submit" formaction="">Add</button>
-    <button id="deletebutton" type="submit" formaction="">Delete</button>  
-</form>
+<div id="requirementFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement--> 
+            <label>Select Requirement</label>
+            <select name="requirement" id="optionsrequirements">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- majors could share a specific requirement -->
+            <button id="requirementaddbutton">Add it</button>
+            <button id="requirementdeletebutton">Delete it</button>  
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 <!-- Course -->
 {% block courseFormA %}
-<form method="post">
-    <!-- option ex: major/category/subcategory/requirement--> 
-    <label>Select Requirement</label>
-    <select name="requirement" id="optionsrequirements">
-    </select><!-- request data for options -->
-    <label>Enter Course name:</label>
-    <input type="text" name="course">  
-    <button type="submit" formaction="">Create</button>  
-</form>
+<div id="courseFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement--> 
+            <label>Select Requirement</label>
+            <select name="requirement" id="optionsrequirements">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <label>Enter Course name</label>
+            <input type="text" name="course">  
+        </div>
+        <div class="hstack">
+            <button id="coursecreatebutton">Create it</button>  
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block courseFormB %}
-<form method="post">
-    <!-- option ex: major/category/subcategory/requirement/course--> 
-    <label>Select Course</label>
-    <select name="course" id="optionscourses">
-    </select><!-- request data for options --> 
-    <!-- majors could share a specific course -->
-    <button id="addbutton" type="submit" formaction="">Add</button>
-    <button id="deletebutton" type="submit" formaction="">Delete</button>  
-</form>
+<div id="courseFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement/course--> 
+            <label>Select Course</label>
+            <select name="course" id="optionscourses">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- majors could share a specific course -->
+            <button id="courseaddbutton">Add it</button>
+            <button id="coursedeletebutton">Delete it</button> 
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 <!-- Prereq -->
 <!-- no need for create form, prereqs should be existing courses -->
-{% block prereqForm %}
-<form method="post">
-    <!-- option ex: major/category/subcategory/requirement/course--> 
-    <label>Select Course</label>
-    <select name="course" id="optionscourses">
-    </select><!-- request data for options --> 
-    <!-- option ex: major/category/subcategory/requirement/course--> 
-    <label>Select Prereq Course</label>
-    <select name="prereq" id="optionsprereqs">
-    </select><!-- request data for options --> 
-    <button id="addbutton" type="submit" formaction="">Add</button>
-    <button id="deletebutton" type="submit" formaction="">Delete</button>  
-</form>
+{% block prereqFormA %}
+<div id="prereqFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement/course--> 
+            <label>Select Course</label>
+            <select name="course" id="optionscourses">
+            </select><!-- request data for options -->  
+        </div>
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement/course--> 
+            <label>Select Prereq Course</label>
+            <select name="prereq" id="optionsprereqs">
+            </select><!-- request data for options -->  
+        </div>
+        <div class="hstack">
+            <button id="prereqaddbutton">Add it</button>
+            <button id="prereqdeletebutton">Delete it</button>  
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 <!-- Ap -->
 {% block apFormA %}
-<form method="post">
-    <label>Enter Test name:</label>
-    <input type="text" name="test">  
-    <label>Enter Min Score:</label>
-    <input type="number" name="scoremin">  
-    <label>Enter Max Score:</label>
-    <input type="number" name="scoremax">  
-    <!-- option ex: major/category/subcategory/requirement/course--> 
-    <label>Select Course</label>
-    <select name="course" id="optionscourses">
-    </select><!-- request data for options -->  
-    <button type="submit" formaction="">Create</button>  
-</form>
+<div id="apFormA" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <label>Enter Test name</label>
+            <input type="text" name="test">  
+        </div>
+        <div class="hstack">
+            <label>Enter Min Score</label>
+            <input type="number" name="scoremin">  
+        </div>
+        <div class="hstack">
+            <label>Enter Max Score</label>
+            <input type="number" name="scoremax">  
+        </div>
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement/course--> 
+            <label>Select Course</label>
+            <select name="course" id="optionscourses">
+            </select><!-- request data for options --> 
+        </div>
+        <div class="hstack">
+            <button id="apcreatebutton">Create it</button>  
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block apFormB %}
-<form method="post">
-    <!-- option ex: AP BIO:3-5--> 
-    <label>Select Test</label>
-    <select name="thetest" id="optionstests">
-    </select><!-- request data for options --> 
-    <!-- option ex: major/category/subcategory/requirement/course--> 
-    <label>Select Course</label>
-    <select name="course" id="optionscourses">
-    </select><!-- request data for options --> 
-    <!-- add more than one course as tranfer credit-->
-    <button id="addbutton" type="submit" formaction="">Add</button>
-    <button id="deletebutton" type="submit" formaction="">Delete</button>  
-</form>
+<div id="apFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+        <!-- option ex: AP BIO:3-5--> 
+            <label>Select Test</label>
+            <select name="thetest" id="optionstests">
+            </select><!-- request data for options --> 
+        </div>
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement/course--> 
+            <label>Select Course</label>
+            <select name="course" id="optionscourses">
+            </select><!-- request data for options --> 
+        </div>
+        <div class="hstack">
+            <!-- add more than one course as tranfer credit-->
+            <button id="apaddbutton">Add it</button>
+            <button id="apdeletebutton">Delete it</button>  
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 

@@ -34,6 +34,7 @@ function substituteURLSpace(message) {
     }
     return edited_message;
 }
+// show and don't show operations
 function showIt(id) {
     let element = document.getElementById(id);
     if (element == null) {
@@ -63,7 +64,337 @@ function toggleShow(id) {
     let element = document.getElementById(id);
     toggleIt(element);
 }
+// adding session data
+// --- helper 
+function addSessionDataList(data, data_name) {
+    for (let index = 0; index < data.length; index++) {
+        let value = data[index];
+        let key = data_name + "-" + index;
+        window.sessionStorage.setItem(key, value);
+    }
+}
+// ---
+function addSessionCourses(majors, categories, subcategories, requirements, courses, prereqs, ap) {
+    addSessionDataList(majors, "major");
+    addSessionDataList(categories, "category");
+    addSessionDataList(subcategories, "subcategory");
+    addSessionDataList(requirements, "requirement");
+    addSessionDataList(courses, "course");
+    addSessionDataList(prereqs, "prereq");
+    addSessionDataList(ap, "test");
+}
+function addSessionMajors(majors) {
+    addSessionDataList(majors, "mymajor");
+}
+function addSessionAP(ap) {
+    addSessionDataList(ap, "myap");
+}
+function addSessionPlanner(years, semesters) {
+    addSessionDataList(years, "myyear");
+    addSessionDataList(semesters, "mysemester");
+}
+function addSessionSchedule(schedules, courses) {
+    addSessionDataList(schedules, "myschedule");
+    addSessionDataList(courses, "mycourse");
+}
+// interacting with session data
+function clearSession() {
+    window.sessionStorage.clear();
+}
+function removeSessionData(data_id) {
+    window.sessionStorage.removeItem(data_id);
+}
+function getSessionData(data_id) {
+    let data = window.sessionStorage.getItem(data_id);
+    return data;
+}
+function readSessionDataList(data_name, del) {
+    let values = [];
+    let index = 0;
+    let key = data_name + "-" + index;
+    let data = getSessionData(key);
+    if (del) {
+        removeSessionData(key);
+    }
+    while (data != null) {
+        values.push(data);
+        index += 1;
+        key = data_name + "-" + index;
+        data = getSessionData(key);
+        if (del) {
+            removeSessionData(key);
+        }
+        ;
+    }
+    return values;
+}
+function getSessionDataList(data_name) {
+    return readSessionDataList(data_name, false);
+}
+function removeSessionDataList(data_name) {
+    return readSessionDataList(data_name, true);
+}
+// reading xml response
+function readXMLNodes(tags, subdatatags, subparenttags) {
+    let tag_data = [];
+    for (const tag of tags) {
+        let tag_content = tag.childNodes;
+        let subtag_data = {};
+        for (const node of tag_content) {
+            for (const subtag of subdatatags) {
+                if (node.nodeName == subtag) {
+                    subtag_data[subtag] = node.textContent;
+                }
+            }
+            if (subparenttags != null) {
+                for (const subtag of subparenttags) {
+                    if (node.nodeName == subtag) {
+                        subtag_data[subtag] = node;
+                    }
+                }
+            }
+        }
+        tag_data.push(subtag_data);
+    }
+    return tag_data;
+}
+function readMainTags(tags, subdatatags, subparenttags) {
+    return readXMLNodes(tags, subdatatags, subparenttags);
+}
+function readSubNodeList(list, subdatatags, subparenttags) {
+    return readXMLNodes(list, subdatatags, subparenttags);
+}
+///<reference path='ajax.ts'/>
+///<reference path='dataTree.ts'/>
+/// <reference path='sessionData.ts' />
+/// <reference path='readXML.ts' />
+//helperdata
+// my majors
+// --- major helper functions ---
+function addListedMajors(workspace_id, response) {
+    let session_mymajors = [];
+    let majors = response.getElementsByTagName('major');
+    for (const major of majors) {
+        session_mymajors.push(major.innerHTML);
+    }
+    //display majors in tracker
+    //add session data
+    addSessionMajors(session_mymajors);
+}
+// ---
+// resulting ajax function
+function updateMajorData() {
+    let workspace_id = 'majorstracked';
+    clearData(workspace_id);
+    let url_source = '/requestmymajors';
+    requestAJAX(url_source, workspace_id, addListedMajors);
+}
+// my ap
+// --- ap helper functions ---
+function readMyAP(tests) {
+    return readMainTags(tests, ["test_name", "test_score"], null);
+}
+function addListedAp(workspace_id, response) {
+    let session_myap = [];
+    let tests = response.getElementsByTagName('test');
+    let test_data = readMyAP(tests);
+    for (const test of test_data) {
+        let info = `${test.test_name}/${test.test_score}`;
+        session_myap.push(info);
+    }
+    //display majors in tracker
+    //add session data
+    addSessionAP(session_myap);
+}
+// ---
+// resulting ajax function
+function updateAPData() {
+    let workspace_id = '';
+    clearData(workspace_id);
+    let url_source = '/requestmytransfercredit';
+    requestAJAX(url_source, workspace_id, addListedAp);
+}
+// my planner
+// --- planner helper functions ---
+function readMyYears(years) {
+    return readMainTags(years, ["year_name",], ["semesters",]);
+}
+function readMySemesters(semesters) {
+    return readSubNodeList(semesters, ["semester_name",], null);
+}
+function addPlannerData(workspace_id, response) {
+    // --- session catalog ---
+    let session_years = []; // ex year
+    let session_semesters = []; // ex year/semester
+    // ---
+    let years = response.getElementsByTagName('year');
+    let year_data = readMyYears(years);
+    for (const year of year_data) {
+        // data tree
+        if (year.year_name == "before") {
+            addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
+        }
+        else {
+            addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+        }
+        // session
+        session_years.push(year.year_name);
+        if (year.semesters != null) {
+            let semesters = year.semesters.childNodes;
+            let semester_data = readMySemesters(semesters);
+            for (const semester of semester_data) {
+                // data tree
+                addCaretList(`Year:${year.year_name}`, semester.semester_name, true, "mytermactions");
+                // session
+                session_semesters.push(`${year.year_name}/${semester.semester_name}`);
+            }
+        }
+    }
+    addSessionPlanner(session_years, session_semesters);
+}
+// resulting ajax function
+function updatePlannerData() {
+    let workspace_id = 'plannerdata';
+    clearData(workspace_id);
+    let url_source = '/requestmyplanner';
+    requestAJAX(url_source, workspace_id, addPlannerData);
+}
+// my schedule
+// --- schedule helper functions ---
+function readMySchedules(schedules) {
+    return readMainTags(schedules, ["schedule_name",], ["courses",]);
+}
+function readMyCourses(courses) {
+    return readSubNodeList(courses, ["course_name",], null);
+}
+function addScheduleData(workspace_id, response) {
+    // --- session catalog ---
+    let session_schedules = []; // ex sched (semester)
+    let session_courses = []; // ex sched/course
+    // ---
+    let schedules = response.getElementsByTagName('schedule');
+    let schedule_data = readMySchedules(schedules);
+    for (const schedule of schedule_data) {
+        // session
+        session_schedules.push(schedule.schedule_name);
+        let courses = schedule.courses.childNodes;
+        let course_data = readMyCourses(courses);
+        for (const course of course_data) {
+            // session
+            session_courses.push(`${schedule.schedule_name}/${course.course_name}`);
+        }
+    }
+    addSessionSchedule(session_schedules, session_courses);
+}
+// resulting ajax function
+function updateScheduleData() {
+    let workspace_id = '';
+    clearData(workspace_id);
+    let url_source = '/requestmyschedule';
+    requestAJAX(url_source, workspace_id, addScheduleData);
+}
+/// <reference path="dataTree.ts" />
+/// <reference path="sessionData.ts" />
+/// <reference path="helperButtons.ts" />
+function createMajorTracker(workspace_id, major_name) {
+    let workspace = document.getElementById(workspace_id);
+    if (workspace == null) {
+        return;
+    }
+    let tracker = document.createElement("div");
+    tracker.className = "hstack tracker";
+    let name = document.createElement("label");
+    name.innerHTML = major_name;
+    let progress = document.createElement("button");
+    progress.onclick = () => {
+        for (const item of actions) {
+            dontShowIt(item);
+        }
+        showIt('status');
+    };
+    progress.className = "bigfield progresscontainer";
+    let background = document.createElement("div");
+    background.className = "progress";
+    let bar = document.createElement("div");
+    bar.className = "bar";
+    bar.id = `${major_name}-bar`;
+    bar.innerHTML = "progress";
+    background.appendChild(bar);
+    progress.appendChild(background);
+    tracker.appendChild(name);
+    tracker.appendChild(progress);
+    workspace.appendChild(tracker);
+}
+function showTrackedMajors() {
+    clearData("majorstracked");
+    let majors = getSessionDataList("mymajor");
+    for (const major of majors) {
+        createMajorTracker("majorstracked", major);
+    }
+}
 /// <reference path='toggle.ts'/>
+/// <reference path='helperData.ts' />
+/// <reference path="myMajors.ts" />
+/// <reference path="myAP.ts" />
+let actions = ['mymajoractions', 'mytermactions', 'myapactions',
+    'tranfercredit', 'status',
+    'mycourseoperation'];
+function activateHelperButtons() {
+    let update = document.getElementById('updatehelperdata');
+    // update button is shown only when user is signed in
+    if (update != null) {
+        update.onclick = () => {
+            updateMajorData();
+            updateAPData();
+            updatePlannerData();
+            updateScheduleData();
+            showTrackedMajors();
+            showAPTransfer();
+        };
+    }
+    document.getElementById('mymajorbutton').onclick = () => {
+        toggleShow('mymajoractions');
+        showTrackedMajors();
+    };
+    document.getElementById('mycoursesbutton').onclick = () => {
+        toggleShow('mycourseoperation');
+    };
+    document.getElementById('myapbutton').onclick = () => {
+        toggleShow('mytestoperation');
+    };
+}
+/// <reference path="dataTree.ts" />
+/// <reference path="sessionData.ts" />
+/// <reference path="helperButtons.ts" />
+function createAPTracker(workspace_id, test_name, score) {
+    let workspace = document.getElementById(workspace_id);
+    if (workspace == null) {
+        return;
+    }
+    let ap = document.createElement("div");
+    ap.className = "hstack";
+    let test = document.createElement("label");
+    test.innerHTML = test_name;
+    let credit = document.createElement("button");
+    credit.innerHTML = score;
+    credit.onclick = () => {
+        toggleShow('tranfercredit');
+    };
+    ap.appendChild(test);
+    ap.appendChild(credit);
+    workspace.appendChild(ap);
+}
+function showAPTransfer() {
+    clearData("myaptests");
+    let ap_data = getSessionDataList("myap");
+    for (const test of ap_data) {
+        let test_name = test.substring(0, test.indexOf("/"));
+        let score = test.substring(test.indexOf("/") + 1);
+        createAPTracker("myaptests", test_name, score);
+    }
+}
+/// <reference path='toggle.ts'/>
+/// <reference path="myAP.ts" />
 function clearData(ul_id) {
     let list = document.getElementById(ul_id);
     if (list == null) {
@@ -104,19 +435,16 @@ function addDataList(parent_ul_id, name, symbol_type, toggle_function) {
     toggle.appendChild(nested);
     parent.appendChild(toggle);
 }
-let special_actions = ['mymajoractions', 'mytermactions', 'myapactions',
-    'tranfercredit', 'status',
-    'mycourseoperation'];
 function addCaretList(parent_ul_id, name, is_special, special_id) {
     let toggle_function = function click(symbol) {
         let data = symbol.parentElement.querySelector(".nested");
         toggleIt(data);
         symbol.classList.toggle("caret-down");
         if (is_special) {
-            let element = document.getElementById(special_id);
-            for (const item of special_actions) {
-                dontShowIt(item);
+            if (parent_ul_id == `Year:before`) {
+                showAPTransfer();
             }
+            let element = document.getElementById(special_id);
             toggleIt(element);
         }
     };
@@ -139,89 +467,9 @@ function addStatusList(parent_ul_id, name, status) {
     };
     addDataList(parent_ul_id, name, mark, toggle_function);
 }
-function clearSession() {
-    window.sessionStorage.clear();
-}
-function removeSessionData(data_id) {
-    window.sessionStorage.removeItem(data_id);
-}
-function getSessionData(data_id) {
-    let data = window.sessionStorage.getItem(data_id);
-    return data;
-}
-function addSessionDataList(data, data_name) {
-    for (let index = 0; index < data.length; index++) {
-        let value = data[index];
-        let key = data_name + "-" + index;
-        window.sessionStorage.setItem(key, value);
-    }
-}
-function clearSessionDataList(data_name) {
-    let index = 0;
-    let key = data_name + "-" + index;
-    let data = window.sessionStorage.getItem(key);
-    while (data != null) {
-        window.sessionStorage.removeItem(key);
-        index += 1;
-        key = data_name + "-" + index;
-        data = window.sessionStorage.getItem(key);
-    }
-}
-function addSessionCourses(majors, categories, subcategories, requirements, courses, prereqs, ap) {
-    addSessionDataList(majors, "major");
-    addSessionDataList(categories, "category");
-    addSessionDataList(subcategories, "subcategory");
-    addSessionDataList(requirements, "requirement");
-    addSessionDataList(courses, "course");
-    addSessionDataList(prereqs, "prereq");
-    addSessionDataList(ap, "test");
-}
-function addSessionMajors(majors) {
-    addSessionDataList(majors, "mymajor");
-}
-function addSessionAP(ap) {
-    addSessionDataList(ap, "myap");
-}
-function addSessionPlanner(years, semesters) {
-    addSessionDataList(years, "myyear");
-    addSessionDataList(semesters, "mysemester");
-}
-function addSessionSchedule(schedules, courses) {
-    addSessionDataList(schedules, "myschedule");
-    addSessionDataList(courses, "mycourse");
-}
-function readXMLNodes(tags, subdatatags, subparenttags) {
-    let tag_data = [];
-    for (const tag of tags) {
-        let tag_content = tag.childNodes;
-        let subtag_data = {};
-        for (const node of tag_content) {
-            for (const subtag of subdatatags) {
-                if (node.nodeName == subtag) {
-                    subtag_data[subtag] = node.textContent;
-                }
-            }
-            if (subparenttags != null) {
-                for (const subtag of subparenttags) {
-                    if (node.nodeName == subtag) {
-                        subtag_data[subtag] = node;
-                    }
-                }
-            }
-        }
-        tag_data.push(subtag_data);
-    }
-    return tag_data;
-}
-function readMainTags(tags, subdatatags, subparenttags) {
-    return readXMLNodes(tags, subdatatags, subparenttags);
-}
-function readSubNodeList(list, subdatatags, subparenttags) {
-    return readXMLNodes(list, subdatatags, subparenttags);
-}
 ///<reference path='ajax.ts'/>
-///<reference path='treedata.ts'/>
-///<reference path='sessiondata.ts'/>
+///<reference path='dataTree.ts'/>
+///<reference path='sessionData.ts'/>
 /// <reference path="readXML.ts" />
 // courses tree data
 // --- courses data helper functions ---
@@ -337,143 +585,12 @@ function updateCoursesData() {
     let url_source = '/requestcoursesdata';
     requestAJAX(url_source, workspace_id, addCoursesData);
 }
-///<reference path='ajax.ts'/>
-///<reference path='treedata.ts'/>
-/// <reference path='sessiondata.ts' />
-/// <reference path='readXML.ts' />
-//helperdata
-// my majors
-// --- major helper functions ---
-function addListedMajors(workspace_id, response) {
-    let session_mymajors = [];
-    let majors = response.getElementsByTagName('major');
-    for (const major of majors) {
-        session_mymajors.push(major.innerHTML);
-    }
-    //display majors in tracker
-    //add session data
-    addSessionMajors(session_mymajors);
-}
-// ---
-// resulting ajax function
-function updateMajorData() {
-    let workspace_id = 'majorstracked';
-    clearData(workspace_id);
-    let url_source = '/requestmymajors';
-    requestAJAX(url_source, workspace_id, addListedMajors);
-}
-// my ap
-// --- ap helper functions ---
-function readMyAP(tests) {
-    return readMainTags(tests, ["test_name", "test_score"], null);
-}
-function addListedAp(workspace_id, response) {
-    let session_myap = [];
-    let tests = response.getElementsByTagName('test');
-    let test_data = readMyAP(tests);
-    for (const test of test_data) {
-        let info = `${test.test_name}/${test.test_score}`;
-        session_myap.push(info);
-    }
-    //display majors in tracker
-    //add session data
-    addSessionAP(session_myap);
-}
-// ---
-// resulting ajax function
-function updateAPData() {
-    let workspace_id = '';
-    clearData(workspace_id);
-    let url_source = '/requestmytransfercredit';
-    requestAJAX(url_source, workspace_id, addListedAp);
-}
-// my planner
-// --- planner helper functions ---
-function readMyYears(years) {
-    return readMainTags(years, ["year_name",], ["semesters",]);
-}
-function readMySemesters(semesters) {
-    return readSubNodeList(semesters, ["semester_name",], null);
-}
-function addPlannerData(workspace_id, response) {
-    // --- session catalog ---
-    let session_years = []; // ex year
-    let session_semesters = []; // ex year/semester
-    // ---
-    let years = response.getElementsByTagName('year');
-    let year_data = readMyYears(years);
-    for (const year of year_data) {
-        // data tree
-        if (year.year_name == "before") {
-            addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
-        }
-        else {
-            // addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
-            addStatusList(workspace_id, `Year:${year.year_name}`, true);
-        }
-        // session
-        session_years.push(year.year_name);
-        if (year.semesters != null) {
-            let semesters = year.semesters.childNodes;
-            let semester_data = readMySemesters(semesters);
-            for (const semester of semester_data) {
-                // data tree
-                addCaretList(`Year:${year.year_name}`, semester.semester_name, true, "mytermactions");
-                // session
-                session_semesters.push(`${year.year_name}/${semester.semester_name}`);
-            }
-        }
-    }
-    addSessionPlanner(session_years, session_semesters);
-}
-// resulting ajax function
-function updatePlannerData() {
-    let workspace_id = 'plannerdata';
-    clearData(workspace_id);
-    let url_source = '/requestmyplanner';
-    requestAJAX(url_source, workspace_id, addPlannerData);
-}
-// my schedule
-// --- schedule helper functions ---
-function readMySchedules(schedules) {
-    return readMainTags(schedules, ["schedule_name",], ["courses",]);
-}
-function readMyCourses(courses) {
-    return readSubNodeList(courses, ["course_name",], null);
-}
-function addScheduleData(workspace_id, response) {
-    // --- session catalog ---
-    let session_schedules = []; // ex sched (semester)
-    let session_courses = []; // ex sched/course
-    // ---
-    let schedules = response.getElementsByTagName('schedule');
-    let schedule_data = readMySchedules(schedules);
-    for (const schedule of schedule_data) {
-        // session
-        session_schedules.push(schedule.schedule_name);
-        let courses = schedule.courses.childNodes;
-        let course_data = readMyCourses(courses);
-        for (const course of course_data) {
-            // session
-            session_courses.push(`${schedule.schedule_name}/${course.course_name}`);
-        }
-    }
-    addSessionSchedule(session_schedules, session_courses);
-}
-// resulting ajax function
-function updateScheduleData() {
-    let workspace_id = '';
-    clearData(workspace_id);
-    let url_source = '/requestmyschedule';
-    requestAJAX(url_source, workspace_id, addScheduleData);
-}
 /// <reference path='toggle.ts'/>
-/// <reference path="coursesdata.ts" />
-/// <reference path="helperdata.ts" />
+/// <reference path='coursesData.ts' />
+let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
+    'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
 //some button functions for toggling
 function activateCourseButtons() {
-    let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
-        'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
     let refresh = document.getElementById('refreshcoursesdata');
     // refresh button is shown only when user is signed in
     if (refresh != null) {
@@ -521,64 +638,148 @@ function activateCourseButtons() {
             showIt('apforms');
         };
     }
-}
-function activateHelperButtons() {
-    let actions = ['mymajoractions', 'mytermactions', 'myapactions',
-        'tranfercredit', 'status',
-        'mycourseoperation'];
-    let update = document.getElementById('updatehelperdata');
-    // update button is shown only when user is signed in
-    if (update != null) {
-        update.onclick = () => {
-            updateMajorData();
-            updateAPData();
-            updatePlannerData();
-            updateScheduleData();
+    let operations = [
+        "majorFormA", "majorFormB",
+        "categoryFormA", "categoryFormB",
+        "subcategoryFormA", "subcategoryFormB",
+        "requirementFormA", "requirementFormB",
+        "courseFormA", "courseFormB",
+        "prereqFormA", "apFormA", "apFormB"
+    ];
+    if (document.getElementById('majorforms') != null) {
+        document.getElementById('createmajoroperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("majorFormA");
+        };
+        document.getElementById('deletemajoroperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("majorFormB");
         };
     }
-    document.getElementById('mymajorbutton').onclick = () => {
-        for (const item of actions) {
-            dontShowIt(item);
-        }
-        showIt('mymajoractions');
-    };
-    //testing
-    document.getElementById('testbuttonterm').onclick = () => {
-        for (const item of actions) {
-            dontShowIt(item);
-        }
-        showIt('mytermactions');
-    };
-    document.getElementById('testbuttonap').onclick = () => {
-        for (const item of actions) {
-            dontShowIt(item);
-        }
-        showIt('myapactions');
-    };
-    document.getElementById('testbuttontranfer').onclick = () => {
-        for (const item of actions) {
-            dontShowIt(item);
-        }
-        showIt('tranfercredit');
-    };
-    document.getElementById('testbuttonstatus').onclick = () => {
-        for (const item of actions) {
-            dontShowIt(item);
-        }
-        showIt('status');
-    };
-    ///testing
-    document.getElementById('mycoursesbutton').onclick = () => {
-        showIt('mycourseoperation');
-    };
-    document.getElementById('myapbutton').onclick = () => {
-        showIt('mytestoperation');
-    };
+    if (document.getElementById('categoryforms') != null) {
+        document.getElementById('createcategoryoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("categoryFormA");
+        };
+        document.getElementById('addcategoryoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("categoryFormB");
+        };
+        document.getElementById('deletecategoryoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("categoryFormB");
+        };
+    }
+    if (document.getElementById('subcategoryforms') != null) {
+        document.getElementById('createsubcategoryoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("subcategoryFormA");
+        };
+        document.getElementById('addsubcategoryoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("subcategoryFormB");
+        };
+        document.getElementById('deletesubcategoryoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("subcategoryFormB");
+        };
+    }
+    if (document.getElementById('requirementforms') != null) {
+        document.getElementById('createrequirementoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("requirementFormA");
+        };
+        document.getElementById('addrequirementoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("requirementFormB");
+        };
+        document.getElementById('deleterequirementoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("requirementFormB");
+        };
+    }
+    if (document.getElementById('courseforms') != null) {
+        document.getElementById('createcourseoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("courseFormA");
+        };
+        document.getElementById('addcourseoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("courseFormB");
+        };
+        document.getElementById('deletecourseoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("courseFormB");
+        };
+    }
+    if (document.getElementById('prereqforms') != null) {
+        document.getElementById('addprereqoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("prereqFormA");
+        };
+        document.getElementById('deleteprereqoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("prereqFormA");
+        };
+    }
+    if (document.getElementById('apforms') != null) {
+        document.getElementById('createapoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("apFormA");
+        };
+        document.getElementById('addapoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("apFormB");
+        };
+        document.getElementById('deleteapoperation').onclick = () => {
+            for (const operation of operations) {
+                dontShowIt(operation);
+            }
+            showIt("apFormB");
+        };
+    }
 }
 /// <reference path='toggle.ts'/>
-/// <reference path="coursesdata.ts" />
-/// <reference path="helperdata.ts" />
-/// <reference path="buttons.ts" />
+/// <reference path='coursesData.ts' />
+/// <reference path='helperData.ts' />
+/// <reference path='coursesButtons.ts' />
+/// <reference path='helperButtons.ts' />
 document.addEventListener("DOMContentLoaded", () => {
     // nav buttons
     document.getElementById('creditsneeded').onclick = () => {

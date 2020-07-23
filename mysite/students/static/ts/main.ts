@@ -1,7 +1,8 @@
 /// <reference path='toggle.ts'/>
-/// <reference path="coursesdata.ts" />
-/// <reference path="helperdata.ts" />
-/// <reference path="buttons.ts" />
+/// <reference path='coursesData.ts' />
+/// <reference path='helperData.ts' />
+/// <reference path='coursesButtons.ts' />
+/// <reference path='helperButtons.ts' />
 
 
 document.addEventListener("DOMContentLoaded", () => {
