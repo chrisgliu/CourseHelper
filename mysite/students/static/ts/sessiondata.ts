@@ -41,6 +41,9 @@ function addSessionSchedule(
     addSessionDataList(schedules, "myschedule");
     addSessionDataList(courses, "mycourse");
 }
+function addAPTranferSessionData(courses:string[], ap_test:string){
+    addSessionDataList(courses, `mycourseap-${ap_test}`)
+}
 // interacting with session data
 function clearSession(){
     window.sessionStorage.clear();
@@ -51,4 +54,14 @@ function removeSessionData(data_id:string) {
 function getSessionData(data_id:string) {
     let data = window.sessionStorage.getItem(data_id);
     return JSON.parse(data);
+}
+function readMySessionString(data_string:string) {
+    let data_content = data_string;
+    let output:string[] = [];
+    while (data_content.indexOf("/") != -1) {
+        let data = data_content.substring(0, data_content.indexOf("/")); 
+        output.push(data);
+        data_content = data_content.substring(data_content.indexOf("/")+1);
+    }
+    return output.reverse();
 }

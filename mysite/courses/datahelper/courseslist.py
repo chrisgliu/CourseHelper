@@ -137,7 +137,7 @@ def requestApListHelper(request, username, major_name, category_name, subcategor
         test_name = test_object.test
         test_min = test_object.scoremin
         test_max = test_object.scoremax 
-        test_id = f"{test_name}:{test_min}-{test_max}"
+        test_id = f"{test_name}/{test_min}/{test_max}"
         ap_list.append(test_id)
     return JsonResponse({'data':ap_list})
 

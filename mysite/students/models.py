@@ -14,7 +14,7 @@ class Student(models.Model):
         return f"{self.firstname} {self.lastname}"
 
     class Meta:
-        verbose_name_plural = "1. Students"
+        verbose_name_plural = "1. Course Students"
 
 
 # --- ENROLLED ---
@@ -30,7 +30,7 @@ class Enrolled(models.Model):
         return str(the_student)
 
     class Meta:
-        verbose_name_plural = "2. Enrolled"
+        verbose_name_plural = "2. Course Enrolled"
 
 
 # --- MAJOR ---
@@ -44,7 +44,7 @@ class Major(models.Model):
         return f"{self.major}"
 
     class Meta:
-        verbose_name_plural = "3. Majors"
+        verbose_name_plural = "3. Course Majors"
 
 
 # --- YEAR ---
@@ -58,7 +58,7 @@ class Year(models.Model):
         return f"{self.year}"
 
     class Meta:
-        verbose_name_plural = "4. Years"
+        verbose_name_plural = "4. Course Years"
 
 # -- AP ---
 # holds test name and score number
@@ -67,10 +67,10 @@ class AP(models.Model):
     score = models.IntegerField(blank=False)
     years = models.ManyToManyField(Year, blank=False, related_name="ap")
     def __str__(self):
-        return f"{self.test}:{self.score}"
+        return f"{self.test}/{self.score}"
 
     class Meta:
-        verbose_name_plural = "7. AP"
+        verbose_name_plural = "7. Course AP"
 
 
 # --- SEMESTER ---
@@ -81,10 +81,10 @@ class Semester(models.Model):
     years = models.ManyToManyField(Year, blank=False, related_name="semesters")
     def __str__(self):
         the_year = Year.objects.get(pk=self.years.first().pk)
-        return f"{the_year.year}:{self.semester}"
+        return f"{the_year.year}/{self.semester}"
 
     class Meta:
-        verbose_name_plural = "5. Semesters"
+        verbose_name_plural = "5. Course Semesters"
 
 
 # --- COURSE ---
@@ -98,4 +98,4 @@ class Course(models.Model):
         return f"{self.course}"
 
     class Meta:
-        verbose_name_plural = "6. Courses"
+        verbose_name_plural = "6. Course Courses"

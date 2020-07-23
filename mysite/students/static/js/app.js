@@ -93,6 +93,9 @@ function addSessionSchedule(schedules, courses) {
     addSessionDataList(schedules, "myschedule");
     addSessionDataList(courses, "mycourse");
 }
+function addAPTranferSessionData(courses, ap_test) {
+    addSessionDataList(courses, `mycourseap-${ap_test}`);
+}
 // interacting with session data
 function clearSession() {
     window.sessionStorage.clear();
@@ -382,6 +385,7 @@ function showTranferCourses(test_name) {
     if (ap_data == null) {
         return;
     }
+    let coursesap = [];
     for (const ap_test of ap_data) {
         if (ap_test != null) {
             let ap_name = ap_test.substring(ap_test.lastIndexOf("/") + 1, ap_test.indexOf(":"));
@@ -394,11 +398,13 @@ function showTranferCourses(test_name) {
                     let course_name = other_data.substring(other_data.lastIndexOf("/") + 1);
                     let credit_num = getCourseCredit(course_name);
                     let credit = `${credit_num}`;
+                    coursesap.push(course_name);
                     createCourseBlock("coursesinaptranfer", course_name, credit);
                 }
             }
         }
     }
+    addAPTranferSessionData(coursesap, test_name);
 }
 /// <reference path='toggle.ts'/>
 /// <reference path='helperData.ts' />

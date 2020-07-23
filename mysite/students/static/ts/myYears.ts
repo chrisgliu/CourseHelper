@@ -60,17 +60,21 @@ function showTranferCourses(test_name:string){
     let myscore = "";
     for (const test of mytests) {
         if (test != null){
-            if (test.indexOf(test_name) != -1){
-                myscore = test.substring(test.indexOf("/")+1);
+            let test_content = readMySessionString(test);
+            if (test_content[0] == test_name){
+                myscore = test_content[1];
             }
         }
     }
     let ap_data = getSessionData("test");
     if (ap_data == null){ return}
+    let coursesap:string[] = [];
     for (const ap_test of ap_data) {
         if (ap_test != null) {
+            let ap_content = readMySessionString(ap_test);
             let ap_name = ap_test.substring(ap_test.lastIndexOf("/")+1, ap_test.indexOf(":"));
             if (ap_name == test_name) {
+
                 let score_min = parseInt(ap_test.substring(ap_test.indexOf(":")+1, ap_test.indexOf("-"))); 
                 let score_max = parseInt(ap_test.substring(ap_test.indexOf("-")+1));
                 let score = parseInt(myscore);
@@ -79,9 +83,11 @@ function showTranferCourses(test_name:string){
                     let course_name = other_data.substring(other_data.lastIndexOf("/")+1)
                     let credit_num = getCourseCredit(course_name);
                     let credit = `${credit_num}`;
+                    coursesap.push(course_name);
                     createCourseBlock("coursesinaptranfer", course_name, credit); 
                 }
             }
         }
     }
+    addAPTranferSessionData(coursesap, test_name);
 }
