@@ -1,7 +1,7 @@
 ///<reference path='ajax.ts'/>
 ///<reference path='dataTree.ts'/>
 ///<reference path='sessionData.ts'/>
-/// <reference path="readXML.ts" />
+///<reference path="readXML.ts" />
 
 // courses tree data
 
@@ -23,21 +23,21 @@ function readCategories(categories:NodeList) {
 function readSubcategories(subcategories:NodeList) {
   return readSubNodeList(
     subcategories,
-    ["subcategory_name",],
+    ["subcategory_name", "subcategory_data"],
     ["requirements",],
   );
 }
 function readRequirements(requirements:NodeList) {
   return readSubNodeList(
     requirements,
-    ["requirement_name",],
+    ["requirement_name", "requirement_data"],
     ["courses",],
   );
 }
 function readCourses(courses:NodeList) {
   return readSubNodeList(
     courses,
-    ["course_name",],
+    ["course_name", "course_data"],
     ["prereqs", "ap"]
   );
 }
@@ -61,9 +61,9 @@ function addCoursesData(workspace_id:string, response:Document){
   // -- session catalog ---
   let session_majors:string[] = []; //ex  major
   let session_categories:string[] = []; //ex major/category
-  let session_subcategories:string[] = []; //ex major/category/subcategory
-  let session_requirements:string[] = []; //ex major/category/subcategory/requirement
-  let session_courses:string[] = []; //ex major/category/subcategory/requirement/course
+  let session_subcategories:string[][]= []; //ex major/category/subcategory //ex subcategory/note
+  let session_requirements:any[] = []; //ex major/category/subcategory/requirement //ex requirement/credit
+  let session_courses:any[] = []; //ex major/category/subcategory/requirement/course //ex course/credit
   let session_prereqs:string[] = []; //ex  major/category/subcategory/requirement/course/prereq/course
   let session_ap:string[] = []; //ex  major/category/subcategory/requirement/course/test/testname
   // ---
@@ -81,7 +81,7 @@ function addCoursesData(workspace_id:string, response:Document){
         // data tree
         addCaretList(`Major:${major.major_name}`, `Category:${category.category_name}`, false, null);
         // session
-        session_categories.push(`${major.major_name}/${category.category_name}`)
+        session_categories.push(`${major.major_name}/${category.category_name}`);
         if (category.subcategories != null) {
           let subcategories = category.subcategories.childNodes;
           let subcategory_data = readSubcategories(subcategories);
@@ -89,7 +89,10 @@ function addCoursesData(workspace_id:string, response:Document){
             // data tree
             addCaretList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`, false, null);
             // session
-            session_subcategories.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`)
+            let session_subcategories_data:string[] = [];
+            session_subcategories_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`);
+            session_subcategories_data.push(`${subcategory.subcategory_data}`);
+            session_subcategories.push(session_subcategories_data);
             if (subcategory.requirements != null) {
               let requirements = subcategory.requirements.childNodes;
               let requirement_data = readRequirements(requirements);
@@ -97,7 +100,10 @@ function addCoursesData(workspace_id:string, response:Document){
                 // data tree
                 addCaretList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`, false, null);
                 // session
-                session_requirements.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`)
+                let session_requirements_data:string[] = [];
+                session_requirements_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`);
+                session_requirements_data.push(`${requirement.requirement_data}`);
+                session_requirements.push(session_requirements_data);
                 if (requirement.courses != null) {
                   let courses = requirement.courses.childNodes;
                   let course_data = readCourses(courses);
@@ -105,7 +111,10 @@ function addCoursesData(workspace_id:string, response:Document){
                     // data tree
                     addCaretList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`, false, null);
                     // session
-                    session_courses.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`)
+                    let session_courses_data:string[] = [];
+                    session_courses_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`);
+                    session_courses_data.push(`${course.course_data}`);
+                    session_courses.push(session_courses_data);
                     if (course.prereqs != null) {
                       // data tree
                       addCaretList(`Course:${course.course_name}`, `Prereq:${course.course_name}`, false, null);
@@ -114,7 +123,7 @@ function addCoursesData(workspace_id:string, response:Document){
                       for (const prereq of prereq_data) {
                         addSpecificData(`Prereq:${course.course_name}`, prereq.prereq_name);
                         // session
-                        session_prereqs.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/prereq/${prereq.prereq_name}`)
+                        session_prereqs.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/prereq/${prereq.prereq_name}`);
                       }
                     }
                     if (course.ap != null) {
@@ -125,7 +134,7 @@ function addCoursesData(workspace_id:string, response:Document){
                       for (const ap_test of ap_data) {
                         addSpecificData(`Ap:${course.course_name}`, ap_test.test_name);
                         // session
-                        session_ap.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/test/${ap_test.test_name}`)
+                        session_ap.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/test/${ap_test.test_name}`);
                       }
                     }
                   }

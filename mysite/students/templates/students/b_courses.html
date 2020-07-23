@@ -29,6 +29,8 @@
   <div class='hstack boderbox'>
     <!-- major operation -->
     <div id='majorforms' style="display: none;">
+      <h1>Major</h1>
+      <hr>
       <button id='createmajoroperation'>Create</button>    
       <button id='deletemajoroperation'>Delete</button>    
       <hr>
@@ -37,6 +39,8 @@
     </div> 
     <!-- category operation -->
     <div id='categoryforms' style="display: none;">
+      <h1>Category</h1>
+      <hr>
 		  <button id='createcategoryoperation'>Create</button>    
       <button id='addcategoryoperation'>Add</button>    
       <button id='deletecategoryoperation'>Delete</button>    
@@ -46,6 +50,8 @@
     </div>
     <!-- subcategory operation -->
     <div id='subcategoryforms' style="display: none;">
+      <h1>Subcategory</h1>
+      <hr>
 		  <button id='createsubcategoryoperation'>Create</button>    
       <button id='addsubcategoryoperation'>Add</button>    
       <button id='deletesubcategoryoperation'>Delete</button>    
@@ -54,8 +60,10 @@
       {% block subcategoryFormB %}{% endblock %}
     </div>
     <!-- requirement operation -->
-		<div id='requirementforms' style="display: none;">
-     <button id='createrequirementoperation'>Create</button>    
+    <div id='requirementforms' style="display: none;">
+      <h1>Requirement</h1>
+      <hr> 
+      <button id='createrequirementoperation'>Create</button>    
       <button id='addrequirementoperation'>Add</button>    
       <button id='deleterequirementoperation'>Delete</button>    
       <hr>
@@ -63,7 +71,9 @@
       {% block requirementFormB %}{% endblock %}
 		</div>
     <!-- course operation -->
-		<div id='courseforms' style="display: none;">
+    <div id='courseforms' style="display: none;">
+      <h1>Course</h1>
+      <hr> 
       <button id='createcourseoperation'>Create</button>    
       <button id='addcourseoperation'>Add</button>    
       <button id='deletecourseoperation'>Delete</button>    
@@ -72,14 +82,18 @@
       {% block courseFormB %}{% endblock %}
 		</div>  
     <!-- prereq operation -->
-		<div id='prereqforms' style="display: none;">
+    <div id='prereqforms' style="display: none;">
+      <h1>Prereq</h1>
+      <hr> 
       <button id='addprereqoperation'>Add</button>    
       <button id='deleteprereqoperation'>Delete</button>    
       <hr>
       {% block prereqFormA %}{% endblock %}
 		</div>
     <!-- ap operation -->
-		<div id='apforms' style="display: none;">
+    <div id='apforms' style="display: none;">
+      <h1>AP</h1>
+      <hr> 
       <button id='createapoperation'>Create</button>    
       <button id='addapoperation'>Add</button>    
       <button id='deleteapoperation'>Delete</button>    

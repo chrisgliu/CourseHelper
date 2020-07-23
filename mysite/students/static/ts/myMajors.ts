@@ -30,8 +30,11 @@ function createMajorTracker(workspace_id:string, major_name:string){
 }
 function showTrackedMajors(){
     clearData("majorstracked");
-    let majors = getSessionDataList("mymajor");
+    let majors = getSessionData("mymajor");
+    if (majors == null ){ return}
     for (const major of majors) {
-        createMajorTracker("majorstracked", major);
+        if (major != null) {
+            createMajorTracker("majorstracked", major);
+        }
     }
 }

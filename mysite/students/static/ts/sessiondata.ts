@@ -1,19 +1,15 @@
 // adding session data
 // --- helper 
 function addSessionDataList(data:string[], data_name:string) {
-    for (let index = 0; index < data.length; index++) {
-        let value = data[index];
-        let key = data_name+"-"+index; 
-        window.sessionStorage.setItem(key, value)
-    }
+    window.sessionStorage.setItem(data_name, JSON.stringify(data));
 }
 // ---
 function addSessionCourses(
     majors:string[],
     categories:string[],
-    subcategories:string[],
-    requirements:string[],
-    courses:string[],
+    subcategories:any[],
+    requirements:any[],
+    courses:any[],
     prereqs:string[],
     ap:string[]
     ) {
@@ -54,26 +50,5 @@ function removeSessionData(data_id:string) {
 }
 function getSessionData(data_id:string) {
     let data = window.sessionStorage.getItem(data_id);
-    return data;
-}
-function readSessionDataList(data_name:string, del:boolean){
-    let values:string[] = [];
-    let index = 0;
-    let key = data_name+"-"+index
-    let data = getSessionData(key);
-    if (del) { removeSessionData(key); }
-    while (data != null) {
-        values.push(data);
-        index += 1;
-        key = data_name+"-"+index;
-        data = getSessionData(key);
-        if (del) { removeSessionData(key); };
-    }
-    return values;
-}
-function getSessionDataList(data_name:string){
-     return readSessionDataList(data_name, false);
-}
-function removeSessionDataList(data_name:string){
-    return readSessionDataList(data_name, true);
+    return JSON.parse(data);
 }

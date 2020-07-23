@@ -16,5 +16,72 @@ function createCourseBlock(workspace_id:string, course_name:string, credit:strin
     workspace.appendChild(course);
 }
 
-function showTermCourses(){}
-function showTranferCourses(){}
+function getCourseCredit(course_name:string){
+    let courses = getSessionData("course");
+    if (courses == null){ return}
+    for (const course of courses) {
+        if (course != null) {
+            let name = course[0].substring(course[0].lastIndexOf("/")+1);
+            let credit = course[1];
+            if (name == course_name) {
+                return credit;
+            }
+        }
+    }
+    return "not found" 
+}
+
+function showTermCourses(term_name:string){
+    clearData("coursesinaterm");
+    let mycourses = getSessionData("mycourse");
+    if (mycourses == null){ return}
+    let term_courses = [];
+    for (const course of mycourses) {
+        if ( course != null) {
+            if (course.indexOf(term_name)!=-1) {
+                term_courses.push(course);
+            }
+        }
+    }
+    for (const term_course of term_courses) {
+        if (term_course != null) {
+            let course_name = term_course.substring(term_course.indexOf("/")+1);
+            let credit_num = getCourseCredit(course_name);
+            let credit = `${credit_num}`;
+            createCourseBlock("coursesinaterm", course_name, credit);
+        } 
+    }
+}
+
+function showTranferCourses(test_name:string){
+    clearData("coursesinaptranfer");
+    let mytests = getSessionData("myap");
+    if (mytests == null){ return}
+    let myscore = "";
+    for (const test of mytests) {
+        if (test != null){
+            if (test.indexOf(test_name) != -1){
+                myscore = test.substring(test.indexOf("/")+1);
+            }
+        }
+    }
+    let ap_data = getSessionData("test");
+    if (ap_data == null){ return}
+    for (const ap_test of ap_data) {
+        if (ap_test != null) {
+            let ap_name = ap_test.substring(ap_test.lastIndexOf("/")+1, ap_test.indexOf(":"));
+            if (ap_name == test_name) {
+                let score_min = parseInt(ap_test.substring(ap_test.indexOf(":")+1, ap_test.indexOf("-"))); 
+                let score_max = parseInt(ap_test.substring(ap_test.indexOf("-")+1));
+                let score = parseInt(myscore);
+                if (score_min <= score && score <= score_max) {
+                    let other_data = ap_test.substring(0, ap_test.lastIndexOf("/"))
+                    let course_name = other_data.substring(other_data.lastIndexOf("/")+1)
+                    let credit_num = getCourseCredit(course_name);
+                    let credit = `${credit_num}`;
+                    createCourseBlock("coursesinaptranfer", course_name, credit); 
+                }
+            }
+        }
+    }
+}

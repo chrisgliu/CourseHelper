@@ -2,7 +2,7 @@
 /// <reference path='helperData.ts' />
 /// <reference path="myMajors.ts" />
 /// <reference path="myAP.ts" />
-
+/// <reference path="myYears.ts" />
 
 
 let actions  = ['mymajoractions', 'mytermactions', 'myapactions',
@@ -20,6 +20,7 @@ function activateHelperButtons() {
         updateScheduleData();
         showTrackedMajors();
         showAPTransfer();
+        showTranferCourses("test");
       }
     }
      

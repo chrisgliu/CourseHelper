@@ -46,7 +46,10 @@ function addCaretList(parent_ul_id:string, name:string, is_special:boolean, spec
     if (is_special) {
       if (parent_ul_id == `Year:before`){
         showAPTransfer();
+      } else if (parent_ul_id.indexOf("Year:") != -1){
+        showTermCourses(parent_ul_id.substring(parent_ul_id.indexOf(":")+1));
       }
+
       let element:HTMLElement = document.getElementById(special_id)
       toggleIt(element);
     }

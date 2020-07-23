@@ -67,11 +67,7 @@ function toggleShow(id) {
 // adding session data
 // --- helper 
 function addSessionDataList(data, data_name) {
-    for (let index = 0; index < data.length; index++) {
-        let value = data[index];
-        let key = data_name + "-" + index;
-        window.sessionStorage.setItem(key, value);
-    }
+    window.sessionStorage.setItem(data_name, JSON.stringify(data));
 }
 // ---
 function addSessionCourses(majors, categories, subcategories, requirements, courses, prereqs, ap) {
@@ -106,33 +102,7 @@ function removeSessionData(data_id) {
 }
 function getSessionData(data_id) {
     let data = window.sessionStorage.getItem(data_id);
-    return data;
-}
-function readSessionDataList(data_name, del) {
-    let values = [];
-    let index = 0;
-    let key = data_name + "-" + index;
-    let data = getSessionData(key);
-    if (del) {
-        removeSessionData(key);
-    }
-    while (data != null) {
-        values.push(data);
-        index += 1;
-        key = data_name + "-" + index;
-        data = getSessionData(key);
-        if (del) {
-            removeSessionData(key);
-        }
-        ;
-    }
-    return values;
-}
-function getSessionDataList(data_name) {
-    return readSessionDataList(data_name, false);
-}
-function removeSessionDataList(data_name) {
-    return readSessionDataList(data_name, true);
+    return JSON.parse(data);
 }
 // reading xml response
 function readXMLNodes(tags, subdatatags, subparenttags) {
@@ -327,15 +297,114 @@ function createMajorTracker(workspace_id, major_name) {
 }
 function showTrackedMajors() {
     clearData("majorstracked");
-    let majors = getSessionDataList("mymajor");
+    let majors = getSessionData("mymajor");
+    if (majors == null) {
+        return;
+    }
     for (const major of majors) {
-        createMajorTracker("majorstracked", major);
+        if (major != null) {
+            createMajorTracker("majorstracked", major);
+        }
+    }
+}
+/// <reference path="dataTree.ts" />
+/// <reference path="sessionData.ts" />
+/// <reference path="helperButtons.ts" />
+function createCourseBlock(workspace_id, course_name, credit) {
+    let workspace = document.getElementById(workspace_id);
+    if (workspace == null) {
+        return;
+    }
+    let course = document.createElement("div");
+    course.className = "hstack";
+    let name = document.createElement("label");
+    name.innerHTML = course_name;
+    let value = document.createElement("button");
+    value.innerHTML = credit;
+    course.appendChild(name);
+    course.appendChild(value);
+    workspace.appendChild(course);
+}
+function getCourseCredit(course_name) {
+    let courses = getSessionData("course");
+    if (courses == null) {
+        return;
+    }
+    for (const course of courses) {
+        if (course != null) {
+            let name = course[0].substring(course[0].lastIndexOf("/") + 1);
+            let credit = course[1];
+            if (name == course_name) {
+                return credit;
+            }
+        }
+    }
+    return "not found";
+}
+function showTermCourses(term_name) {
+    clearData("coursesinaterm");
+    let mycourses = getSessionData("mycourse");
+    if (mycourses == null) {
+        return;
+    }
+    let term_courses = [];
+    for (const course of mycourses) {
+        if (course != null) {
+            if (course.indexOf(term_name) != -1) {
+                term_courses.push(course);
+            }
+        }
+    }
+    for (const term_course of term_courses) {
+        if (term_course != null) {
+            let course_name = term_course.substring(term_course.indexOf("/") + 1);
+            let credit_num = getCourseCredit(course_name);
+            let credit = `${credit_num}`;
+            createCourseBlock("coursesinaterm", course_name, credit);
+        }
+    }
+}
+function showTranferCourses(test_name) {
+    clearData("coursesinaptranfer");
+    let mytests = getSessionData("myap");
+    if (mytests == null) {
+        return;
+    }
+    let myscore = "";
+    for (const test of mytests) {
+        if (test != null) {
+            if (test.indexOf(test_name) != -1) {
+                myscore = test.substring(test.indexOf("/") + 1);
+            }
+        }
+    }
+    let ap_data = getSessionData("test");
+    if (ap_data == null) {
+        return;
+    }
+    for (const ap_test of ap_data) {
+        if (ap_test != null) {
+            let ap_name = ap_test.substring(ap_test.lastIndexOf("/") + 1, ap_test.indexOf(":"));
+            if (ap_name == test_name) {
+                let score_min = parseInt(ap_test.substring(ap_test.indexOf(":") + 1, ap_test.indexOf("-")));
+                let score_max = parseInt(ap_test.substring(ap_test.indexOf("-") + 1));
+                let score = parseInt(myscore);
+                if (score_min <= score && score <= score_max) {
+                    let other_data = ap_test.substring(0, ap_test.lastIndexOf("/"));
+                    let course_name = other_data.substring(other_data.lastIndexOf("/") + 1);
+                    let credit_num = getCourseCredit(course_name);
+                    let credit = `${credit_num}`;
+                    createCourseBlock("coursesinaptranfer", course_name, credit);
+                }
+            }
+        }
     }
 }
 /// <reference path='toggle.ts'/>
 /// <reference path='helperData.ts' />
 /// <reference path="myMajors.ts" />
 /// <reference path="myAP.ts" />
+/// <reference path="myYears.ts" />
 let actions = ['mymajoractions', 'mytermactions', 'myapactions',
     'tranfercredit', 'status',
     'mycourseoperation'];
@@ -350,6 +419,7 @@ function activateHelperButtons() {
             updateScheduleData();
             showTrackedMajors();
             showAPTransfer();
+            showTranferCourses("test");
         };
     }
     document.getElementById('mymajorbutton').onclick = () => {
@@ -366,6 +436,7 @@ function activateHelperButtons() {
 /// <reference path="dataTree.ts" />
 /// <reference path="sessionData.ts" />
 /// <reference path="helperButtons.ts" />
+/// <reference path="myYears.ts" />
 function createAPTracker(workspace_id, test_name, score) {
     let workspace = document.getElementById(workspace_id);
     if (workspace == null) {
@@ -379,6 +450,7 @@ function createAPTracker(workspace_id, test_name, score) {
     credit.innerHTML = score;
     credit.onclick = () => {
         toggleShow('tranfercredit');
+        showTranferCourses(test_name);
     };
     ap.appendChild(test);
     ap.appendChild(credit);
@@ -386,11 +458,16 @@ function createAPTracker(workspace_id, test_name, score) {
 }
 function showAPTransfer() {
     clearData("myaptests");
-    let ap_data = getSessionDataList("myap");
+    let ap_data = getSessionData("myap");
+    if (ap_data == null) {
+        return;
+    }
     for (const test of ap_data) {
-        let test_name = test.substring(0, test.indexOf("/"));
-        let score = test.substring(test.indexOf("/") + 1);
-        createAPTracker("myaptests", test_name, score);
+        if (test != null) {
+            let test_name = test.substring(0, test.indexOf("/"));
+            let score = test.substring(test.indexOf("/") + 1);
+            createAPTracker("myaptests", test_name, score);
+        }
     }
 }
 /// <reference path='toggle.ts'/>
@@ -444,6 +521,9 @@ function addCaretList(parent_ul_id, name, is_special, special_id) {
             if (parent_ul_id == `Year:before`) {
                 showAPTransfer();
             }
+            else if (parent_ul_id.indexOf("Year:") != -1) {
+                showTermCourses(parent_ul_id.substring(parent_ul_id.indexOf(":") + 1));
+            }
             let element = document.getElementById(special_id);
             toggleIt(element);
         }
@@ -470,7 +550,7 @@ function addStatusList(parent_ul_id, name, status) {
 ///<reference path='ajax.ts'/>
 ///<reference path='dataTree.ts'/>
 ///<reference path='sessionData.ts'/>
-/// <reference path="readXML.ts" />
+///<reference path="readXML.ts" />
 // courses tree data
 // --- courses data helper functions ---
 function readMajors(majors) {
@@ -480,13 +560,13 @@ function readCategories(categories) {
     return readSubNodeList(categories, ["category_name",], ["subcategories",]);
 }
 function readSubcategories(subcategories) {
-    return readSubNodeList(subcategories, ["subcategory_name",], ["requirements",]);
+    return readSubNodeList(subcategories, ["subcategory_name", "subcategory_data"], ["requirements",]);
 }
 function readRequirements(requirements) {
-    return readSubNodeList(requirements, ["requirement_name",], ["courses",]);
+    return readSubNodeList(requirements, ["requirement_name", "requirement_data"], ["courses",]);
 }
 function readCourses(courses) {
-    return readSubNodeList(courses, ["course_name",], ["prereqs", "ap"]);
+    return readSubNodeList(courses, ["course_name", "course_data"], ["prereqs", "ap"]);
 }
 function readPrereqs(prereqs) {
     return readSubNodeList(prereqs, ["prereq_name",], null);
@@ -500,9 +580,9 @@ function addCoursesData(workspace_id, response) {
     // -- session catalog ---
     let session_majors = []; //ex  major
     let session_categories = []; //ex major/category
-    let session_subcategories = []; //ex major/category/subcategory
-    let session_requirements = []; //ex major/category/subcategory/requirement
-    let session_courses = []; //ex major/category/subcategory/requirement/course
+    let session_subcategories = []; //ex major/category/subcategory //ex subcategory/note
+    let session_requirements = []; //ex major/category/subcategory/requirement //ex requirement/credit
+    let session_courses = []; //ex major/category/subcategory/requirement/course //ex course/credit
     let session_prereqs = []; //ex  major/category/subcategory/requirement/course/prereq/course
     let session_ap = []; //ex  major/category/subcategory/requirement/course/test/testname
     // ---
@@ -528,7 +608,10 @@ function addCoursesData(workspace_id, response) {
                         // data tree
                         addCaretList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`, false, null);
                         // session
-                        session_subcategories.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`);
+                        let session_subcategories_data = [];
+                        session_subcategories_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`);
+                        session_subcategories_data.push(`${subcategory.subcategory_data}`);
+                        session_subcategories.push(session_subcategories_data);
                         if (subcategory.requirements != null) {
                             let requirements = subcategory.requirements.childNodes;
                             let requirement_data = readRequirements(requirements);
@@ -536,7 +619,10 @@ function addCoursesData(workspace_id, response) {
                                 // data tree
                                 addCaretList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`, false, null);
                                 // session
-                                session_requirements.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`);
+                                let session_requirements_data = [];
+                                session_requirements_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`);
+                                session_requirements_data.push(`${requirement.requirement_data}`);
+                                session_requirements.push(session_requirements_data);
                                 if (requirement.courses != null) {
                                     let courses = requirement.courses.childNodes;
                                     let course_data = readCourses(courses);
@@ -544,7 +630,10 @@ function addCoursesData(workspace_id, response) {
                                         // data tree
                                         addCaretList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`, false, null);
                                         // session
-                                        session_courses.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`);
+                                        let session_courses_data = [];
+                                        session_courses_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`);
+                                        session_courses_data.push(`${course.course_data}`);
+                                        session_courses.push(session_courses_data);
                                         if (course.prereqs != null) {
                                             // data tree
                                             addCaretList(`Course:${course.course_name}`, `Prereq:${course.course_name}`, false, null);
