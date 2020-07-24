@@ -2,6 +2,7 @@
 
 <!-- Major -->
 {% block majorFormA %}
+<!-- create -->
 <div id="majorFormA" style="display: none;">    
     <div class="vstack">
         <div class="hstack">
@@ -14,6 +15,7 @@
     </div>
 </div>
 {% endblock %}
+<!-- delete -->
 {% block majorFormB %}
 <div id="majorFormB" style="display: none;">
     <div class="vstack">
@@ -31,7 +33,8 @@
 {% endblock %}
 
 <!-- Category -->
-{% block categoryFormA %}
+{% block categoryFormA %} 
+<!-- create -->
 <div id="categoryFormA" style="display: none;">
     <div class="vstack">
         <div class="hstack">
@@ -50,6 +53,7 @@
 </div>
 {% endblock %}
 {% block categoryFormB %}
+<!-- delete -->
 <div id="categoryFormB" style="display: none;">
     <div class="vstack">
         <div class="hstack">
@@ -60,15 +64,38 @@
         </div>
         <div class="hstack">
             <!-- GED could be the same for two majors-->
-            <button id="categoryaddbutton">Add it</button>
             <button id="categorydeletebutton">Delete it</button> 
         </div>
     </div>
 </div>
 {% endblock %}
+{% block categoryFormC %}
+<!-- add -->
+<div id="categoryFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <label>Select Major</label>
+            <select name="major" id="categoryFormCoptionsmajors">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- option ex: major/category-->
+            <label>Select Category</label>
+            <select name="category" id="categoryFormCoptionscategories">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- GED could be the same for two majors-->
+            <button id="categoryaddbutton">Add it</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 
 <!-- Subacategory -->
 {% block subcategoryFormA %}
+<!-- create -->
 <div id="subcategoryFormA" style="display: none;">
     <div class="vstack">
         <div class="hstack">
@@ -92,6 +119,7 @@
 </div>
 {% endblock %}
 {% block subcategoryFormB %}
+<!-- delete -->
 <div id="subcategoryFormB" style="display: none;">
     <div class="vstack">
         <div class="hstack">
@@ -102,12 +130,35 @@
         </div>
         <div class="hstack">
             <!---majors could share a section of requirements-->
-            <button id="subcategoryaddbutton">Add it</button>
             <button id="subcategorydeletebutton">Delete it</button> 
         </div>
     </div>
 </div>
 {% endblock %}
+{% block subcategoryFormC %}
+<!-- add -->
+<div id="subcategoryFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory-->
+            <label>Select Subcategory</label>
+            <select name="subcategory" id="subcategoryFormCoptionssubcategories">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- option ex: major/category-->
+            <label>Select Category</label>
+            <select name="category" id="categoryFormCoptionscategories">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!---majors could share a section of requirements-->
+            <button id="subcategoryaddbutton">Add it</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 
 <!-- Requirement -->
 {% block requirementFormA %}
@@ -144,8 +195,29 @@
         </div>
         <div class="hstack">
             <!-- majors could share a specific requirement -->
-            <button id="requirementaddbutton">Add it</button>
             <button id="requirementdeletebutton">Delete it</button>  
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block requirementFormC %}
+<div id="requirementFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory-->
+            <label>Select Subcategory</label>
+            <select name="subcategory" id="requirementFormCoptionssubcategories">
+            </select><!-- request data for options -->
+        </div> 
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement--> 
+            <label>Select Requirement</label>
+            <select name="requirement" id="requirementFormBoptionsrequirements">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- majors could share a specific requirement -->
+            <button id="requirementaddbutton">Add it</button>
         </div>
     </div>
 </div>
@@ -186,8 +258,29 @@
         </div>
         <div class="hstack">
             <!-- majors could share a specific course -->
-            <button id="courseaddbutton">Add it</button>
             <button id="coursedeletebutton">Delete it</button> 
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block courseFormC %}
+<div id="courseFormB" style="display: none;">
+    <div class="vstack">
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement--> 
+            <label>Select Requirement</label>
+            <select name="requirement" id="courseFormCoptionsrequirements">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- option ex: major/category/subcategory/requirement/course--> 
+            <label>Select Course</label>
+            <select name="course" id="courseFormCoptionscourses">
+            </select><!-- request data for options -->
+        </div>
+        <div class="hstack">
+            <!-- majors could share a specific course -->
+            <button id="courseaddbutton">Add it</button>
         </div>
     </div>
 </div>
@@ -269,8 +362,3 @@
     </div>
 </div>
 {% endblock %}
-
-
-
-
-

@@ -83,16 +83,12 @@ function activateCourseButtons(){
       }
       document.getElementById('addcategoryoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
-        showIt("categoryFormB"); 
-        showIt("categoryaddbutton");
-        dontShowIt("categorydeletebutton");
-        activateCategoryFormB();
+        showIt("categoryFormC"); 
+        activateCategoryFormC();
       }
       document.getElementById('deletecategoryoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
         showIt("categoryFormB"); 
-        showIt("categorydeletebutton");
-        dontShowIt("categoryaddbutton")
         activateCategoryFormB();
       }
     }
@@ -104,16 +100,12 @@ function activateCourseButtons(){
       }
       document.getElementById('addsubcategoryoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
-        showIt("subcategoryFormB"); 
-        showIt("subcategoryaddbutton");
-        dontShowIt("subcategorydeletebutton"); 
-        activateSubcategoryFormB();
+        showIt("subcategoryFormC"); 
+        activateSubcategoryFormC();
       }
       document.getElementById('deletesubcategoryoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
         showIt("subcategoryFormB");
-        showIt("subcategorydeletebutton");
-        dontShowIt("subcategoryaddbutton"); 
         activateSubcategoryFormB();
       }
     }
@@ -125,16 +117,12 @@ function activateCourseButtons(){
       }
       document.getElementById('addrequirementoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
-        showIt("requirementFormB");
-        showIt("requirementdeletebutton");
-        dontShowIt("requirementaddbutton");  
-        activateRequirementFormB();
+        showIt("requirementFormC");
+        activateRequirementFormC();
       }
       document.getElementById('deleterequirementoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
         showIt("requirementFormB"); 
-        showIt("requirementdeletebutton");
-        dontShowIt("requirementaddbutton"); 
         activateRequirementFormB();
       }
     }
@@ -146,16 +134,12 @@ function activateCourseButtons(){
       }
       document.getElementById('addcourseoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
-        showIt("courseFormB"); 
-        showIt("coursedeletebutton");
-        dontShowIt("coursetaddbutton"); 
-        activateCourseFormB();
+        showIt("courseFormC"); 
+        activateCourseFormC();
       }
       document.getElementById('deletecourseoperation').onclick = () => {
         for (const operation of operations) { dontShowIt(operation); } 
         showIt("courseFormB"); 
-        showIt("courseaddbutton"); 
-        dontShowIt("coursedeletebutton");
         activateCourseFormB();
       }
     } 
