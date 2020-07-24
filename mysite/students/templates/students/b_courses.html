@@ -30,7 +30,6 @@
     <!-- major operation -->
     <div id='majorforms' style="display: none;">
       <h1>Major</h1>
-      <hr>
       <button id='createmajoroperation'>Create</button>    
       <button id='deletemajoroperation'>Delete</button>    
       <hr>
@@ -40,7 +39,6 @@
     <!-- category operation -->
     <div id='categoryforms' style="display: none;">
       <h1>Category</h1>
-      <hr>
 		  <button id='createcategoryoperation'>Create</button>    
       <button id='addcategoryoperation'>Add</button>    
       <button id='deletecategoryoperation'>Delete</button>    
@@ -51,7 +49,6 @@
     <!-- subcategory operation -->
     <div id='subcategoryforms' style="display: none;">
       <h1>Subcategory</h1>
-      <hr>
 		  <button id='createsubcategoryoperation'>Create</button>    
       <button id='addsubcategoryoperation'>Add</button>    
       <button id='deletesubcategoryoperation'>Delete</button>    
@@ -62,7 +59,6 @@
     <!-- requirement operation -->
     <div id='requirementforms' style="display: none;">
       <h1>Requirement</h1>
-      <hr> 
       <button id='createrequirementoperation'>Create</button>    
       <button id='addrequirementoperation'>Add</button>    
       <button id='deleterequirementoperation'>Delete</button>    
@@ -102,5 +98,8 @@
       {% block apFormB %}{% endblock %}
 		</div>  
 	</div>
+</div>
+<div id="hiddenforms" style="display: none;">
+  {% block hiddencourses %}{% endblock %}
 </div>
 {% endblock %}

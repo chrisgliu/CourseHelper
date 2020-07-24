@@ -2,11 +2,11 @@
 
 <!-- Major -->
 {% block majorFormA %}
-<div id="majorFormA" style="display: none;">
+<div id="majorFormA" style="display: none;">    
     <div class="vstack">
         <div class="hstack">
             <label>Enter Major name</label>
-            <input type="text" name="major">
+            <input id="majorFormAmajor" type="text" name="major">
         </div>
         <div class="hstack">
             <button id="majorcreatebutton">Create it</button> 
@@ -19,7 +19,7 @@
     <div class="vstack">
         <div class="hstack">
             <label>Select Major</label>
-            <select name="major" id="optionsmajors">
+            <select name="major" id="majorFormBoptionsmajors">
             </select><!-- request data for options -->
             <!-- adding two of the same major doen't make sense-->
         </div>
@@ -36,12 +36,12 @@
     <div class="vstack">
         <div class="hstack">
             <label>Select Major</label>
-            <select name="major" id="optionsmajors">
+            <select name="major" id="categoryFormAoptionsmajors">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
             <label>Enter Category name:</label>
-            <input type="text" name="category">
+            <input id="categoryFormAcategory"type="text" name="category">
         </div>
         <div class="hstack">
             <button id="categorycreatebutton">Create it</button>
@@ -55,7 +55,7 @@
         <div class="hstack">
             <!-- option ex: major/category-->
             <label>Select Category</label>
-            <select name="category" id="optionscategories">
+            <select name="category" id="categoryFormBoptionscategories">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
@@ -74,12 +74,16 @@
         <div class="hstack">
             <!-- option ex: major/category-->
             <label>Select Category</label>
-            <select name="category" id="optionscategories">
+            <select name="category" id="subcategoryFormAoptionscategories">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
             <label>Enter Subcategory name</label>
-            <input type="text" name="subcategory">
+            <input type="text" id="subcategoryFormAsubcategory" name="subcategory">
+        </div>
+        <div class="hstack">
+            <label>Enter Note</label>
+            <input type="text" id="subcategoryFormAnote" name="note">
         </div>
         <div class="hstack">
             <button id="subcategorycreatebutton">Create it</button> 
@@ -93,7 +97,7 @@
         <div class="hstack">
             <!-- option ex: major/category/subcategory-->
             <label>Select Subcategory</label>
-            <select name="subcategory" id="optionssubcategories">
+            <select name="subcategory" id="subcategoryFormBoptionssubcategories">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
@@ -112,12 +116,16 @@
         <div class="hstack">
             <!-- option ex: major/category/subcategory-->
             <label>Select Subcategory</label>
-            <select name="subcategory" id="optionssubcategories">
+            <select name="subcategory" id="requirementFormAoptionssubcategories">
             </select><!-- request data for options -->
         </div>  
         <div class="hstack">
             <label>Enter Requirement name</label>
-            <input type="text" name="requirement"> 
+            <input type="text" id="requirementFormArequirement" name="requirement"> 
+        </div>
+        <div class="hstack">
+            <label>Enter Credit</label>
+            <input type="number" id="requirementFormAcredit" name="credit"> 
         </div>
         <div class="hstack">
             <button id="requirementcreatebutton">Create it</button>
@@ -131,7 +139,7 @@
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement--> 
             <label>Select Requirement</label>
-            <select name="requirement" id="optionsrequirements">
+            <select name="requirement" id="requirementFormBoptionsrequirements">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
@@ -150,12 +158,16 @@
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement--> 
             <label>Select Requirement</label>
-            <select name="requirement" id="optionsrequirements">
+            <select name="requirement" id="courseFormAoptionsrequirements">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
             <label>Enter Course name</label>
-            <input type="text" name="course">  
+            <input type="text" id="courseFormAcourse" name="course">  
+        </div>
+        <div class="hstack">
+            <label>Enter Credit</label>
+            <input type="number" id="courseFormAcredit" name="credit"> 
         </div>
         <div class="hstack">
             <button id="coursecreatebutton">Create it</button>  
@@ -169,7 +181,7 @@
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement/course--> 
             <label>Select Course</label>
-            <select name="course" id="optionscourses">
+            <select name="course" id="courseFormBoptionscourses">
             </select><!-- request data for options -->
         </div>
         <div class="hstack">
@@ -189,13 +201,13 @@
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement/course--> 
             <label>Select Course</label>
-            <select name="course" id="optionscourses">
+            <select name="course" id="prereqFormAoptionscourses">
             </select><!-- request data for options -->  
         </div>
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement/course--> 
             <label>Select Prereq Course</label>
-            <select name="prereq" id="optionsprereqs">
+            <select name="prereq" id="prereqFormAoptionsprereqs">
             </select><!-- request data for options -->  
         </div>
         <div class="hstack">
@@ -212,20 +224,20 @@
     <div class="vstack">
         <div class="hstack">
             <label>Enter Test name</label>
-            <input type="text" name="test">  
+            <input type="text" id="apFormAtest" name="test">  
         </div>
         <div class="hstack">
             <label>Enter Min Score</label>
-            <input type="number" name="scoremin">  
+            <input type="number" id="apFormAmin" name="scoremin">  
         </div>
         <div class="hstack">
             <label>Enter Max Score</label>
-            <input type="number" name="scoremax">  
+            <input type="number" id="apFormAmax" name="scoremax">  
         </div>
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement/course--> 
             <label>Select Course</label>
-            <select name="course" id="optionscourses">
+            <select name="course" id="apFormAoptionscourses">
             </select><!-- request data for options --> 
         </div>
         <div class="hstack">
@@ -238,15 +250,15 @@
 <div id="apFormB" style="display: none;">
     <div class="vstack">
         <div class="hstack">
-        <!-- option ex: AP BIO:3-5--> 
+        <!-- option ex: AP BIO/3/5--> 
             <label>Select Test</label>
-            <select name="thetest" id="optionstests">
+            <select name="thetest" id="apFormBoptionstests">
             </select><!-- request data for options --> 
         </div>
         <div class="hstack">
             <!-- option ex: major/category/subcategory/requirement/course--> 
             <label>Select Course</label>
-            <select name="course" id="optionscourses">
+            <select name="course" id="apFormBoptionscourses">
             </select><!-- request data for options --> 
         </div>
         <div class="hstack">
@@ -257,5 +269,8 @@
     </div>
 </div>
 {% endblock %}
+
+
+
 
 

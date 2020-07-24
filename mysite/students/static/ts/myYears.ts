@@ -46,7 +46,6 @@ function showTermCourses(term_name:string){
     for (const term_course of term_courses) {
         if (term_course != null) {
             let term_course_content = readMySessionString(term_course);
-            alert(term_course_content)
             let course_name = term_course_content[2];
             let credit_num = getCourseCredit(course_name);
             let credit = `${credit_num}`;

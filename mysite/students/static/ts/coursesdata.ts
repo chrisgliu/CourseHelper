@@ -9,29 +9,29 @@
 function readMajors(majors:HTMLCollection) {
   return readMainTags(
     majors,
-    ["major_name",],
-    ["categories",],
+    ["major_name"],
+    ["categories"],
   );
 }
 function readCategories(categories:NodeList) {
   return readSubNodeList(
     categories,
-    ["category_name",],
-    ["subcategories",],
+    ["category_name"],
+    ["subcategories"],
   );
 }
 function readSubcategories(subcategories:NodeList) {
   return readSubNodeList(
     subcategories,
     ["subcategory_name", "subcategory_data"],
-    ["requirements",],
+    ["requirements"],
   );
 }
 function readRequirements(requirements:NodeList) {
   return readSubNodeList(
     requirements,
     ["requirement_name", "requirement_data"],
-    ["courses",],
+    ["courses"],
   );
 }
 function readCourses(courses:NodeList) {
@@ -44,14 +44,14 @@ function readCourses(courses:NodeList) {
 function readPrereqs(prereqs:NodeList) {
   return readSubNodeList(
     prereqs,
-    ["prereq_name",],
+    ["prereq_name"],
     null
   );
 }
 function readAp(ap:NodeList) {
   return readSubNodeList(
     ap,
-    ["test_name",],
+    ["test_name"],
     null
   );
 }

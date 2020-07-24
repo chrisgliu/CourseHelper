@@ -71,4 +71,24 @@ function addStatusList(parent_ul_id:string, name:string, status:boolean){
   } 
   addDataList(parent_ul_id, name, mark, toggle_function);
 }
+function addSelectionOptions(selection_id:string, values:string[]){
+  clearData(selection_id);
+  let selector = document.getElementById(selection_id);
+  if (selector == null) { return}
+  for (const value of values) {
+    let option = document.createElement('option');
+    option.value = value;
+    option.innerHTML = value;
+    selector.append(option);
+  }
+}
+function getSelectionValue(selection_id:string){
+  let selector = (<HTMLSelectElement>document.getElementById(selection_id));
+  let option = selector.options[selector.selectedIndex].value;
+  return option;
+}
+function getInputValue(input_id:string){
+  let input_value = (<HTMLInputElement>document.getElementById(input_id)).value;
+  return input_value;
+}
 

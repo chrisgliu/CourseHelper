@@ -34,6 +34,40 @@ function substituteURLSpace(message) {
     }
     return edited_message;
 }
+function darkit(thing) {
+    thing.style.background = "black";
+    thing.style.color = "white";
+    thing.style.borderColor = "white";
+}
+function undarkit(thing) {
+    thing.style.background = "transparent";
+    thing.style.color = "black";
+    thing.style.borderColor = "black";
+}
+function toggledark(tag) {
+    let things = document.getElementsByTagName(tag);
+    for (let thing of things) {
+        let thingy = thing;
+        if (thingy.style.background != "black") {
+            darkit(thingy);
+        }
+        else {
+            undarkit(thingy);
+        }
+    }
+}
+function darkmode() {
+    toggledark("body");
+    toggledark("div");
+    toggledark("input");
+    toggledark("select");
+    toggledark("label");
+    toggledark("button");
+    toggledark("form");
+    toggledark("section");
+    toggledark("ul");
+    toggledark("li");
+}
 // show and don't show operations
 function showIt(id) {
     let element = document.getElementById(id);
@@ -201,10 +235,10 @@ function updateAPData() {
 // my planner
 // --- planner helper functions ---
 function readMyYears(years) {
-    return readMainTags(years, ["year_name",], ["semesters",]);
+    return readMainTags(years, ["year_name"], ["semesters"]);
 }
 function readMySemesters(semesters) {
-    return readSubNodeList(semesters, ["semester_name",], null);
+    return readSubNodeList(semesters, ["semester_name"], null);
 }
 function addPlannerData(workspace_id, response) {
     // --- session catalog ---
@@ -246,10 +280,10 @@ function updatePlannerData() {
 // my schedule
 // --- schedule helper functions ---
 function readMySchedules(schedules) {
-    return readMainTags(schedules, ["schedule_name",], ["courses",]);
+    return readMainTags(schedules, ["schedule_name"], ["courses"]);
 }
 function readMyCourses(courses) {
-    return readSubNodeList(courses, ["course_name",], null);
+    return readSubNodeList(courses, ["course_name"], null);
 }
 function addScheduleData(workspace_id, response) {
     // --- session catalog ---
@@ -280,6 +314,7 @@ function updateScheduleData() {
 /// <reference path="dataTree.ts" />
 /// <reference path="sessionData.ts" />
 /// <reference path="helperButtons.ts" />
+/// <reference path="betterDark.ts" />
 function createMajorTracker(workspace_id, major_name) {
     let workspace = document.getElementById(workspace_id);
     if (workspace == null) {
@@ -308,6 +343,14 @@ function createMajorTracker(workspace_id, major_name) {
     tracker.appendChild(name);
     tracker.appendChild(progress);
     workspace.appendChild(tracker);
+    //dark
+    if (workspace.style.backgroundColor == "black") {
+        darkit(bar);
+        darkit(background);
+        darkit(progress);
+        darkit(name);
+        darkit(tracker);
+    }
 }
 function showTrackedMajors() {
     clearData("majorstracked");
@@ -372,7 +415,6 @@ function showTermCourses(term_name) {
     for (const term_course of term_courses) {
         if (term_course != null) {
             let term_course_content = readMySessionString(term_course);
-            alert(term_course_content);
             let course_name = term_course_content[2];
             let credit_num = getCourseCredit(course_name);
             let credit = `${credit_num}`;
@@ -425,6 +467,7 @@ function showTranferCourses(test_name) {
 /// <reference path="myMajors.ts" />
 /// <reference path="myAP.ts" />
 /// <reference path="myYears.ts" />
+/// <reference path="betterDark.ts" />
 let actions = ['mymajoractions', 'mytermactions', 'myapactions',
     'tranfercredit', 'status',
     'mycourseoperation'];
@@ -568,6 +611,28 @@ function addStatusList(parent_ul_id, name, status) {
     };
     addDataList(parent_ul_id, name, mark, toggle_function);
 }
+function addSelectionOptions(selection_id, values) {
+    clearData(selection_id);
+    let selector = document.getElementById(selection_id);
+    if (selector == null) {
+        return;
+    }
+    for (const value of values) {
+        let option = document.createElement('option');
+        option.value = value;
+        option.innerHTML = value;
+        selector.append(option);
+    }
+}
+function getSelectionValue(selection_id) {
+    let selector = document.getElementById(selection_id);
+    let option = selector.options[selector.selectedIndex].value;
+    return option;
+}
+function getInputValue(input_id) {
+    let input_value = document.getElementById(input_id).value;
+    return input_value;
+}
 ///<reference path='ajax.ts'/>
 ///<reference path='dataTree.ts'/>
 ///<reference path='sessionData.ts'/>
@@ -575,25 +640,25 @@ function addStatusList(parent_ul_id, name, status) {
 // courses tree data
 // --- courses data helper functions ---
 function readMajors(majors) {
-    return readMainTags(majors, ["major_name",], ["categories",]);
+    return readMainTags(majors, ["major_name"], ["categories"]);
 }
 function readCategories(categories) {
-    return readSubNodeList(categories, ["category_name",], ["subcategories",]);
+    return readSubNodeList(categories, ["category_name"], ["subcategories"]);
 }
 function readSubcategories(subcategories) {
-    return readSubNodeList(subcategories, ["subcategory_name", "subcategory_data"], ["requirements",]);
+    return readSubNodeList(subcategories, ["subcategory_name", "subcategory_data"], ["requirements"]);
 }
 function readRequirements(requirements) {
-    return readSubNodeList(requirements, ["requirement_name", "requirement_data"], ["courses",]);
+    return readSubNodeList(requirements, ["requirement_name", "requirement_data"], ["courses"]);
 }
 function readCourses(courses) {
     return readSubNodeList(courses, ["course_name", "course_data"], ["prereqs", "ap"]);
 }
 function readPrereqs(prereqs) {
-    return readSubNodeList(prereqs, ["prereq_name",], null);
+    return readSubNodeList(prereqs, ["prereq_name"], null);
 }
 function readAp(ap) {
-    return readSubNodeList(ap, ["test_name",], null);
+    return readSubNodeList(ap, ["test_name"], null);
 }
 function addCoursesData(workspace_id, response) {
     // -- data tree --
@@ -704,48 +769,63 @@ function activateCourseButtons() {
     let refresh = document.getElementById('refreshcoursesdata');
     // refresh button is shown only when user is signed in
     if (refresh != null) {
-        refresh.onclick = () => { updateCoursesData(); };
+        refresh.onclick = () => {
+            updateCoursesData();
+        };
         document.getElementById('majoroperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('majorforms');
+            activateMajorFormA();
+            activateMajorFormB();
         };
         document.getElementById('categoryoperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('categoryforms');
+            activateCategoryFormA();
+            activateCategoryFormB();
         };
         document.getElementById('subcategoryoperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('subcategoryforms');
+            activateSubcategoryFormA();
+            activateSubcategoryFormB();
         };
         document.getElementById('requirementoperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('requirementforms');
+            activateRequirementFormA();
+            activateRequirementFormB();
         };
         document.getElementById('courseoperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('courseforms');
+            activateCourseFormA();
+            activateCourseFormB();
         };
         document.getElementById('prereqoperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('prereqforms');
+            activatePrereqForms();
         };
         document.getElementById('apoperation').onclick = () => {
             for (const item of forms) {
                 dontShowIt(item);
             }
             showIt('apforms');
+            activateAPFormA();
+            activateAPFormB();
         };
     }
     let operations = [
@@ -782,12 +862,16 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("categoryFormB");
+            showIt("categoryaddbutton");
+            dontShowIt("categorydeletebutton");
         };
         document.getElementById('deletecategoryoperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("categoryFormB");
+            showIt("categorydeletebutton");
+            dontShowIt("categoryaddbutton");
         };
     }
     if (document.getElementById('subcategoryforms') != null) {
@@ -802,12 +886,16 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("subcategoryFormB");
+            showIt("subcategoryaddbutton");
+            dontShowIt("subcategorydeletebutton");
         };
         document.getElementById('deletesubcategoryoperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("subcategoryFormB");
+            showIt("subcategorydeletebutton");
+            dontShowIt("subcategoryaddbutton");
         };
     }
     if (document.getElementById('requirementforms') != null) {
@@ -822,12 +910,16 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("requirementFormB");
+            showIt("requirementdeletebutton");
+            dontShowIt("requirementaddbutton");
         };
         document.getElementById('deleterequirementoperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("requirementFormB");
+            showIt("requirementdeletebutton");
+            dontShowIt("requirementaddbutton");
         };
     }
     if (document.getElementById('courseforms') != null) {
@@ -842,12 +934,16 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("courseFormB");
+            showIt("coursedeletebutton");
+            dontShowIt("coursetaddbutton");
         };
         document.getElementById('deletecourseoperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("courseFormB");
+            showIt("courseaddbutton");
+            dontShowIt("coursedeletebutton");
         };
     }
     if (document.getElementById('prereqforms') != null) {
@@ -856,12 +952,16 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("prereqFormA");
+            showIt("prereqaddbutton");
+            dontShowIt("prereqdeletebutton");
         };
         document.getElementById('deleteprereqoperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("prereqFormA");
+            showIt("prereqdeletebutton");
+            dontShowIt("prereqaddbutton");
         };
     }
     if (document.getElementById('apforms') != null) {
@@ -876,40 +976,170 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("apFormB");
+            showIt("apaddbutton");
+            dontShowIt("apdeletebutton");
         };
         document.getElementById('deleteapoperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("apFormB");
+            showIt("apdeletebutton");
+            dontShowIt("apaddbutton");
         };
     }
 }
+/// <reference path="dataTree.ts" />
+/// <reference path="sessionData.ts" />
+function performForm(hidden_form_id, data) {
+    let form = document.getElementById(hidden_form_id);
+    if (form == null) {
+        return;
+    }
+    for (const key in data) {
+        const value = data[key];
+        let id = `${hidden_form_id}${key}`;
+        document.getElementById(id).value = value;
+    }
+    let id = `${hidden_form_id}${"submit"}`;
+    document.getElementById(id).click;
+}
+function activateForm(submit_button_id, hidden_form_id, inputs, input_breakdown, options, option_breakdown) {
+    document.getElementById(submit_button_id).onclick = () => {
+        let data = {};
+        if (options != null) {
+            for (let index = 0; index < options.length; index++) {
+                const selector = options[index];
+                const selector_breakdown = option_breakdown[index];
+                let values = getSelectionValue(selector);
+                let value_list = readMySessionString(values);
+                for (let v_index = 0; v_index < value_list.length; v_index++) {
+                    const value = value_list[v_index];
+                    const tag = selector_breakdown[v_index];
+                    data[tag] = value;
+                }
+            }
+        }
+        if (inputs != null) {
+            for (let index = 0; index < inputs.length; index++) {
+                const input = inputs[index];
+                let value = getInputValue(input);
+                let tag = input_breakdown[index];
+                data[tag] = value;
+            }
+        }
+        performForm(hidden_form_id, data);
+    };
+}
 function activateMajorFormA() {
+    activateForm("majorcreatebutton", "hiddenmajorcreate", ["majorFormAmajor"], ["major"], null, null);
 }
 function activateMajorFormB() {
+    let majors = getSessionData("major");
+    addSelectionOptions("majorFormBoptionsmajors", majors);
+    activateForm("majordeletebutton", "hiddenmajordelete", null, null, ["majorFormBoptionsmajors"], [["major"]]);
 }
 function activateCategoryFormA() {
+    let majors = getSessionData("major");
+    addSelectionOptions("categoryFormAoptionsmajors", majors);
+    activateForm("categorycreatebutton", "/courses/createcategory", ["categoryFormAcategory"], ["category"], ["categoryFormAoptionsmajors"], [["major"]]);
 }
 function activateCategoryFormB() {
+    let categories = getSessionData("category");
+    addSelectionOptions("categoryFormBoptionscategories", categories);
+    activateForm("categoryaddbutton", "/courses/createcategory", null, null, ["categoryFormBoptionscategories"], [["major", "category"]]);
+    activateForm("categorydeletebutton", "/courses/deletecategory", null, null, ["categoryFormBoptionscategories"], [["major", "category"]]);
 }
 function activateSubcategoryFormA() {
+    let categories = getSessionData("category");
+    addSelectionOptions("subcategoryFormAoptionscategories", categories);
+    activateForm("subcategorycreatebutton", "/courses/createsubcategory", ["subcategoryFormAsubcategory", "subcategoryFormAnote"], ["subcategory", "note"], ["subcategoryFormAoptionscategories"], [["major", "category"]]);
 }
 function activateSubcategoryFormB() {
+    let subcategories_data = getSessionData("subcategory");
+    let subcategories = [];
+    for (const subcategory of subcategories_data) {
+        subcategories.push(subcategory[0]);
+    }
+    addSelectionOptions("subcategoryFormBoptionssubcategories", subcategories);
+    activateForm("subcategoryaddbutton", "/courses/createsubcategory", null, null, ["subcategoryFormBoptionssubcategories"], [["major", "category", "subcategory"]]);
+    activateForm("subcategorydeletebutton", "/courses/deletesubcategory", null, null, ["subcategoryFormBoptionssubcategories"], [["major", "category", "subcategory"]]);
 }
 function activateRequirementFormA() {
+    let subcategories_data = getSessionData("subcategory");
+    let subcategories = [];
+    for (const subcategory of subcategories_data) {
+        subcategories.push(subcategory[0]);
+    }
+    addSelectionOptions("requirementFormAoptionssubcategories", subcategories);
+    activateForm("requirementaddbutton", "/courses/createrequirement", ["requirementFormArequirement", "requirementFormAcredit"], ["requirement", "credit"], ["requirementFormAoptionssubcategories"], [["major", "category", "subcategory"]]);
 }
 function activateRequirementFormB() {
+    let requirements_data = getSessionData("requirement");
+    let requirements = [];
+    for (const requirement of requirements_data) {
+        requirements.push(requirement[0]);
+    }
+    addSelectionOptions("requirementFormBoptionsrequirements", requirements);
+    activateForm("requirementaddbutton", "/courses/createrequirement", null, null, ["requirementFormBoptionsrequirements"], [["major", "category", "subcategory", "requirement"]]);
+    activateForm("requirementdeletebutton", "/courses/deleterequirement", null, null, ["requirementFormBoptionsrequirements"], [["major", "category", "subcategory", "requirement"]]);
 }
 function activateCourseFormA() {
+    let requirements_data = getSessionData("requirement");
+    let requirements = [];
+    for (const requirement of requirements_data) {
+        requirements.push(requirement[0]);
+    }
+    addSelectionOptions("courseFormAoptionsrequirements", requirements);
+    activateForm("coursecreatebutton", "/courses/createcourse", ["courseFormAcourse", "courseFormAcredit"], ["course", "credit"], ["courseFormAoptionsrequirements"], [["major", "category", "subcategory", "requirement"]]);
 }
 function activateCourseFormB() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    addSelectionOptions("courseFormBoptionscourses", courses);
+    activateForm("courseaddbutton", "/courses/createcourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]]);
+    activateForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]]);
+}
+function activatePrereqForms() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    addSelectionOptions("prereqFormAoptionscourses", courses);
+    addSelectionOptions("prereqFormAoptionsprereqs", courses);
+    // cant be the same course
+    activateForm("prereqaddbutton", "/courses/createprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
+        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]]);
+    activateForm("prereqdeletebutton", "/courses/deleteprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
+        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]]);
 }
 function activateAPFormA() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    ;
+    addSelectionOptions("apFormAoptionscourses", courses);
+    activateForm("apcreatebutton", "/courses/createap", ["apFormAtest", "apFormAmin", "apFormAmax"], ["test", "scoremin", "scoremax"], ["apFormAoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]]);
 }
 function activateAPFormB() {
-}
-function activateCourseForms() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    addSelectionOptions("apFormBoptionscourses", courses);
+    let tests = getSessionData("test");
+    addSelectionOptions("apFormBoptionstests", tests);
+    activateForm("apaddbutton", "/courses/createap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"],
+        ["major", "category", "subcategory", "requirement", "course"]]);
+    activateForm("apdeletebutton", "/courses/deleteap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"],
+        ["major", "category", "subcategory", "requirement", "course"]]);
 }
 function activateHelperForms() {
 }
@@ -918,6 +1148,7 @@ function activateHelperForms() {
 /// <reference path='helperData.ts' />
 /// <reference path='coursesButtons.ts' />
 /// <reference path='helperButtons.ts' />
+/// <reference path='betterDark.ts' />
 document.addEventListener("DOMContentLoaded", () => {
     // nav buttons
     document.getElementById('creditsneeded').onclick = () => {
@@ -952,4 +1183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     activateCourseButtons();
     // helper buttons
     activateHelperButtons();
+    document.getElementById("darkmode").onclick = () => {
+        darkmode();
+    };
 });

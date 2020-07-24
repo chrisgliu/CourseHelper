@@ -3,6 +3,8 @@
 /// <reference path="myMajors.ts" />
 /// <reference path="myAP.ts" />
 /// <reference path="myYears.ts" />
+/// <reference path="betterDark.ts" />
+
 
 
 let actions  = ['mymajoractions', 'mytermactions', 'myapactions',

@@ -38,7 +38,12 @@ class ListMajorForm(forms.Form):
         username = request.user.username
 
         if add_or_delete == 'add':
-            major_pk = createMajor(major)
+            major_ckeck = getMajor(username, major)
+            major_pk = 0
+            if major_check == null:
+                major_pk = createMajor(major)
+            else:
+                major_pk = major_check.pk
             enroll_pk = getEnrollKey(username).pk
             linkEnrollmentAndMajorHelper(enroll_pk, major_pk)
         if add_or_delete == 'delete':
@@ -55,7 +60,12 @@ class ListCategoryForm(forms.Form):
         username = request.user.username
 
         if add_or_delete == 'add':
-            category_pk = createCategory(category)
+            category_ckeck = getCategory(username, major, category)
+            category_pk = 0
+            if category_check == null:
+                category_pk = createCategory(category)
+            else:
+                category_pk = category_ckeck.pk
             major_pk = getMajor(username, major).pk 
             linkMajorAndCategoryHelper(major_pk, category_pk)
         if add_or_delete == 'delete':
@@ -76,7 +86,12 @@ class ListSubCategoryForm(forms.Form):
         username = request.user.username
 
         if add_or_delete == 'add':
-            subcategory_pk = createSubcategory(subcategory, note)
+            subcategory_ckeck = getSubCategory(username, major, category, subcategory)
+            subcategory_pk = 0
+            if subcategory_check == null:
+                subcategory_pk = createSubcategory(subcategory, note)
+            else:
+                subcategory_pk = subcategory_ckeck.pk
             category_pk = getCategory(username, major, category).pk
             linkCategoryAndSubcategoryHelper(category_pk, subcategory_pk)
         if add_or_delete == 'delete':
@@ -99,7 +114,12 @@ class ListRequirementForm(forms.Form):
         username = request.user.username
 
         if add_or_delete == 'add':
-            requirement_pk = createRequirement(requirement, credit)
+            requirement_ckeck = getRequirement(username, major, category, subcategory, requirement)
+            requirement_pk = 0
+            if requirement_check == null:
+                requirement_pk = createRequirement(requirement, credit)
+            else:
+                requirement_pk = requirement_ckeck.pk
             subcategory_pk = getSubCategory(username, major, category, subcategory).pk
             linkSubcategoryAndRequirementHelper(subcategory_pk, requirement_pk)
         if add_or_delete == 'delete':
@@ -123,7 +143,12 @@ class ListCourseForm(forms.Form):
         username = request.user.username
 
         if add_or_delete == 'add':
-            course_pk = createCourse(course, credit)
+            course_ckeck = getCourse(username, major, category, subcategory, requirement, course)
+            course_pk = 0
+            if course_check == null:
+                course_pk = createCourse(course, credit)
+            else:
+                course_pk = course_ckeck.pk
             requirement_pk = getRequirement(username, major, category, subcategory, requirement)
             linkRequirementAndCourseHelper(requirement_pk, course_pk)
         if add_or_delete == 'delete':
@@ -136,7 +161,11 @@ class ListPrereqForm(forms.Form):
     subcategory = forms.CharField(label='subcategory', required=True)
     requirement = forms.CharField(label='requirement', required=True)
     course = forms.CharField(label='course', required=True)
-    prereq = forms.CharField(label='prereq', required=True)
+    pmajor = forms.CharField(label='pmajor', required=True)  
+    pcategory = forms.CharField(label='pcategory', required=True)
+    psubcategory = forms.CharField(label='psubcategory', required=True)
+    prequirement = forms.CharField(label='prequirement', required=True)
+    pcourse = forms.CharField(label='pcourse', required=True)
 
     def process(self, request, add_or_delete='add'):
         major = self.cleaned_data.get('major')
@@ -144,11 +173,16 @@ class ListPrereqForm(forms.Form):
         subcategory = self.cleaned_data.get('subcategory')
         requirement = self.cleaned_data.get('requirement')
         course = self.cleaned_data.get('course')
-        prereq = self.cleaned_data.get('prereq')
+        prereq = self.cleaned_data.get('pcourse')
         username = request.user.username
 
         if add_or_delete == 'add':
-            prereq_pk = createPrereq(prereq)
+            prereq_ckeck = getPrereq(username, major, category, subcategory, requirement, course, prereq)
+            prereq_pk = 0
+            if prereq_check == null:
+                prereq_pk = createPrereq(prereq)
+            else:
+                prereq_pk = prereq_ckeck.pk
             course_pk = getCourse(username, major, category, subcategory, requirement, course)
             linkCourseAndPrereqHelper(course_pk, prereq_pk)
         if add_or_delete == 'delete':
@@ -176,7 +210,12 @@ class ListApForm(forms.Form):
         username = request.user.username
 
         if add_or_delete == 'add':
-            ap_pk = createAp(test, scoremin, scoremax)
+            ap_ckeck = getTest(username, major, category, subcategory, requirement, course, test, scoremin, scoremax)
+            ap_pk = 0
+            if ap_check == null:
+                ap_pk = createAp(test, scoremin, scoremax)
+            else:
+                ap_pk = ap_ckeck.pk
             course_pk = getCourse(username, major, category, subcategory, requirement, course)
             linkCourseAndApHelper(course_pk, ap_pk)
         if add_or_delete == 'delete':

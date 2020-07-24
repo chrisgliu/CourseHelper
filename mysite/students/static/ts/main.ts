@@ -3,6 +3,7 @@
 /// <reference path='helperData.ts' />
 /// <reference path='coursesButtons.ts' />
 /// <reference path='helperButtons.ts' />
+/// <reference path='betterDark.ts' />
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -40,7 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // helper buttons
   activateHelperButtons();
 
-  
+  document.getElementById("darkmode").onclick = ()=> {
+    darkmode();
+  }
 });
 
 

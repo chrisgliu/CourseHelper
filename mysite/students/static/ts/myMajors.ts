@@ -1,6 +1,8 @@
 /// <reference path="dataTree.ts" />
 /// <reference path="sessionData.ts" />
 /// <reference path="helperButtons.ts" />
+/// <reference path="betterDark.ts" />
+
 
 
 function createMajorTracker(workspace_id:string, major_name:string){
@@ -27,6 +29,14 @@ function createMajorTracker(workspace_id:string, major_name:string){
     tracker.appendChild(name);
     tracker.appendChild(progress);
     workspace.appendChild(tracker);
+    //dark
+    if (workspace.style.backgroundColor == "black") {
+        darkit(bar);
+        darkit(background);
+        darkit(progress);
+        darkit(name);
+        darkit(tracker);
+    }
 }
 function showTrackedMajors(){
     clearData("majorstracked");

@@ -62,14 +62,14 @@ function updateAPData(){
 function readMyYears(years:HTMLCollection) {
   return readMainTags(
     years,
-    ["year_name",],
-    ["semesters",],
+    ["year_name"],
+    ["semesters"],
   );
 }
 function readMySemesters(semesters:NodeList) {
   return readSubNodeList(
     semesters,
-    ["semester_name",],
+    ["semester_name"],
     null
   );
 }
@@ -117,14 +117,14 @@ function updatePlannerData(){
 function readMySchedules(schedules:HTMLCollection) {
   return readMainTags(
     schedules,
-    ["schedule_name",],
-    ["courses",]
+    ["schedule_name"],
+    ["courses"]
   );
 }
 function readMyCourses(courses:NodeList) {
   return readSubNodeList(
     courses,
-    ["course_name",],
+    ["course_name"],
     null
   );
 }

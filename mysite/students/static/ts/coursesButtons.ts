@@ -8,34 +8,49 @@ function activateCourseButtons(){
     let refresh = document.getElementById('refreshcoursesdata')
     // refresh button is shown only when user is signed in
     if (refresh != null) {
-      refresh.onclick = ()=>{ updateCoursesData();}  
+      refresh.onclick = ()=>{ 
+        updateCoursesData();
+      }  
       document.getElementById('majoroperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('majorforms');
+        activateMajorFormA();
+        activateMajorFormB();
       }
       document.getElementById('categoryoperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('categoryforms');
+        activateCategoryFormA();
+        activateCategoryFormB();
       }
       document.getElementById('subcategoryoperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('subcategoryforms');
+        activateSubcategoryFormA();
+        activateSubcategoryFormB();
       }
       document.getElementById('requirementoperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('requirementforms');
+        activateRequirementFormA();
+        activateRequirementFormB();
       }
       document.getElementById('courseoperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('courseforms');
+        activateCourseFormA();
+        activateCourseFormB();
       }
       document.getElementById('prereqoperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('prereqforms');
+        activatePrereqForms();
       }
       document.getElementById('apoperation').onclick = ()=>{
         for (const item of forms) { dontShowIt(item);}
         showIt('apforms');
+        activateAPFormA();
+        activateAPFormB();
       }
     }
     let operations = [
@@ -48,73 +63,116 @@ function activateCourseButtons(){
     ];
     if (document.getElementById('majorforms') != null) {
       document.getElementById('createmajoroperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("majorFormA");
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("majorFormA");
       }
       document.getElementById('deletemajoroperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("majorFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("majorFormB"); 
       }
     }
     if (document.getElementById('categoryforms') != null) {
       document.getElementById('createcategoryoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("categoryFormA");
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("categoryFormA");
       }
       document.getElementById('addcategoryoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("categoryFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("categoryFormB"); 
+        showIt("categoryaddbutton");
+        dontShowIt("categorydeletebutton");
       }
       document.getElementById('deletecategoryoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("categoryFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("categoryFormB"); 
+        showIt("categorydeletebutton");
+        dontShowIt("categoryaddbutton")
       }
     }
     if (document.getElementById('subcategoryforms') != null) {
       document.getElementById('createsubcategoryoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("subcategoryFormA");
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("subcategoryFormA");
       }
       document.getElementById('addsubcategoryoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("subcategoryFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("subcategoryFormB"); 
+        showIt("subcategoryaddbutton");
+        dontShowIt("subcategorydeletebutton"); 
       }
       document.getElementById('deletesubcategoryoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("subcategoryFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("subcategoryFormB");
+        showIt("subcategorydeletebutton");
+        dontShowIt("subcategoryaddbutton"); 
       }
     }
     if (document.getElementById('requirementforms') != null) {
       document.getElementById('createrequirementoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("requirementFormA");
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("requirementFormA");
       }
       document.getElementById('addrequirementoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("requirementFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("requirementFormB");
+        showIt("requirementdeletebutton");
+        dontShowIt("requirementaddbutton");  
       }
       document.getElementById('deleterequirementoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("requirementFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("requirementFormB"); 
+        showIt("requirementdeletebutton");
+        dontShowIt("requirementaddbutton"); 
       }
     }
     if (document.getElementById('courseforms') != null) {
       document.getElementById('createcourseoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("courseFormA");
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("courseFormA");
       }
       document.getElementById('addcourseoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("courseFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("courseFormB"); 
+        showIt("coursedeletebutton");
+        dontShowIt("coursetaddbutton"); 
       }
       document.getElementById('deletecourseoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("courseFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("courseFormB"); 
+        showIt("courseaddbutton"); 
+        dontShowIt("coursedeletebutton");
       }
     } 
     if (document.getElementById('prereqforms') != null) {
       document.getElementById('addprereqoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("prereqFormA"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("prereqFormA"); 
+        showIt("prereqaddbutton");
+        dontShowIt("prereqdeletebutton");
       }
       document.getElementById('deleteprereqoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("prereqFormA"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("prereqFormA");
+        showIt("prereqdeletebutton");
+        dontShowIt("prereqaddbutton");
       }
     } 
     if (document.getElementById('apforms') != null) {
       document.getElementById('createapoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("apFormA");
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("apFormA");
       }
       document.getElementById('addapoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("apFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("apFormB"); 
+        showIt("apaddbutton");
+        dontShowIt("apdeletebutton");
       }
       document.getElementById('deleteapoperation').onclick = () => {
-        for (const operation of operations) { dontShowIt(operation); } showIt("apFormB"); 
+        for (const operation of operations) { dontShowIt(operation); } 
+        showIt("apFormB"); 
+        showIt("apdeletebutton");
+        dontShowIt("apaddbutton");
       }
     } 
 }
