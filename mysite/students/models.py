@@ -14,7 +14,7 @@ class Student(models.Model):
         return f"{self.firstname} {self.lastname}"
 
     class Meta:
-        verbose_name_plural = "1. Course Students"
+        verbose_name_plural = "1. Helper Students"
 
 
 # --- ENROLLED ---
@@ -30,7 +30,7 @@ class Enrolled(models.Model):
         return str(the_student)
 
     class Meta:
-        verbose_name_plural = "2. Course Enrolled"
+        verbose_name_plural = "2. Helper Enrolled"
 
 
 # --- MAJOR ---
@@ -44,7 +44,7 @@ class Major(models.Model):
         return f"{self.major}"
 
     class Meta:
-        verbose_name_plural = "3. Course Majors"
+        verbose_name_plural = "3. Helper Majors"
 
 
 # --- YEAR ---
@@ -58,7 +58,7 @@ class Year(models.Model):
         return f"{self.year}"
 
     class Meta:
-        verbose_name_plural = "4. Course Years"
+        verbose_name_plural = "4. Helper Years"
 
 # -- AP ---
 # holds test name and score number
@@ -70,7 +70,7 @@ class AP(models.Model):
         return f"{self.test}/{self.score}"
 
     class Meta:
-        verbose_name_plural = "7. Course AP"
+        verbose_name_plural = "7. Helper AP"
 
 
 # --- SEMESTER ---
@@ -84,7 +84,7 @@ class Semester(models.Model):
         return f"{the_year.year}/{self.semester}"
 
     class Meta:
-        verbose_name_plural = "5. Course Semesters"
+        verbose_name_plural = "5. Helper Semesters"
 
 
 # --- COURSE ---
@@ -98,4 +98,4 @@ class Course(models.Model):
         return f"{self.course}"
 
     class Meta:
-        verbose_name_plural = "6. Course Courses"
+        verbose_name_plural = "6. Helper Courses"

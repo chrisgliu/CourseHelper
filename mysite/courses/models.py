@@ -15,7 +15,7 @@ class Student(models.Model):
         return f"{self.firstname} {self.lastname}"
 
     class Meta:
-        verbose_name_plural = "1. Helper Students"
+        verbose_name_plural = "1. Course Students"
 
 
 # --- ENROLLED ---
@@ -30,7 +30,7 @@ class Enrolled(models.Model):
     )
 
     class Meta:
-        verbose_name_plural = "2. Helper Enrolled"
+        verbose_name_plural = "2. Course Enrolled"
 
 
 # --- MAJOR ---
@@ -44,7 +44,7 @@ class Major(models.Model):
         return f"{self.major}"
 
     class Meta:
-        verbose_name_plural = "3. Helper Majors"
+        verbose_name_plural = "3. Course Majors"
 
 
 
@@ -59,7 +59,7 @@ class Category(models.Model):
         return f"{self.category}"
 
     class Meta:
-        verbose_name_plural = "4. Helper Categories"
+        verbose_name_plural = "4. Course Categories"
 
 
 # --- SUBCATEGORY ---
@@ -74,7 +74,7 @@ class SubCategory(models.Model):
         return f"{self.subcategory}"
 
     class Meta:
-        verbose_name_plural = "5. Helper Sub Categories"
+        verbose_name_plural = "5. Course Sub Categories"
 
 
 # --- REQUIREMENT ---
@@ -89,7 +89,7 @@ class Requirement(models.Model):
         return f"{self.requirement}"
 
     class Meta:
-        verbose_name_plural = "6. Helper Requirements"
+        verbose_name_plural = "6. Course Requirements"
 
 
 # --- COURSE ---
@@ -104,7 +104,7 @@ class Course(models.Model):
         return f"{self.course}"
 
     class Meta:
-        verbose_name_plural = "7. Helper Courses"
+        verbose_name_plural = "7. Course Courses"
 
 
 # --- PREREQ ---
@@ -118,7 +118,7 @@ class Prereq(models.Model):
         return f"{self.prereq}"
 
     class Meta:
-        verbose_name_plural = "8. Helper Prereqs"
+        verbose_name_plural = "8. Course Prereqs"
 
 
 # --- AP CREDIT ---
@@ -134,4 +134,4 @@ class ApCredit(models.Model):
         return f"{self.test}/{self.scoremin}/{self.scoremax}"
 
     class Meta:
-        verbose_name_plural = "9. Helper ApCredit"
+        verbose_name_plural = "9. Course ApCredit"

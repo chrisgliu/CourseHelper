@@ -1,67 +1,72 @@
-from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .dataforms.coursesforms import *
+from django.http import HttpResponse
 
 # --- COURSES FORMS ---
+# post redirect get 
 def processForm(request, model_form, command):
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = model_form(request.POST)
             if form.is_valid():
                 form.process(request, command)
-    return HttpResponseRedirect(reverse('mainCourses'))
+                return HttpResponse("hello")
+            else:
+                return HttpResponse("invalid form"+str(form))
+        else: return HttpResponse("invalid user")
+    return HttpResponse("other")
 
-def listStudentFormAdd(request):
+def CourseStudentFormAdd(request):
     return processForm(request, ListStudentForm, 'add')
 
-def listStudentFormDelete(request):
+def CourseStudentFormDelete(request):
     return processForm(request, ListStudentForm, 'delete')
 
-def listEnrollFormAdd(request):
+def CourseEnrollFormAdd(request):
     return processForm(request, ListEnrollForm, 'add')
 
-def listEnrollFormDelete(request):
+def CourseEnrollFormDelete(request):
     return processForm(request, ListEnrollForm, 'delete')
 
-def listMajorFormAdd(request):
+def CourseMajorFormAdd(request):
     return processForm(request, ListMajorForm, 'add')
 
-def listMajorFormDelete(request):
+def CourseMajorFormDelete(request):
     return processForm(request, ListMajorForm, 'delete')
 
-def listCategoryFormAdd(request):
+def CourseCategoryFormAdd(request):
     return processForm(request, ListCategoryForm, 'add')
 
-def listCategoryFormDelete(request):
+def CourseCategoryFormDelete(request):
     return processForm(request, ListCategoryForm, 'delete')
 
-def listSubCategoryFormAdd(request):
+def CourseSubCategoryFormAdd(request):
     return processForm(request, ListSubCategoryForm, 'add')
 
-def listSubCategoryFormDelete(request):
+def CourseSubCategoryFormDelete(request):
     return processForm(request, ListSubCategoryForm, 'delete')
 
-def listRequirementFormAdd(request):
+def CourseRequirementFormAdd(request):
     return processForm(request, ListRequirementForm, 'add')
 
-def listRequirementFormDelete(request):
+def CourseRequirementFormDelete(request):
     return processForm(request, ListRequirementForm, 'delete')
 
-def listCourseFormAdd(request):
+def CourseCourseFormAdd(request):
     return processForm(request, ListCourseForm, 'add')
 
-def listCourseFormDelete(request):
+def CourseCourseFormDelete(request):
     return processForm(request, ListCourseForm, 'delete')
 
-def listPrereqFormAdd(request):
+def CoursePrereqFormAdd(request):
     return processForm(request, ListPrereqForm, 'add')
 
-def listPrereqFormDelete(request):
+def CoursePrereqFormDelete(request):
     return processForm(request, ListPrereqForm, 'delete')
 
-def listApFormAdd(request):
+def CourseApFormAdd(request):
     return processForm(request, ListApForm, 'add')
 
-def listApFormDelete(request):
+def CourseApFormDelete(request):
     return processForm(request, ListApForm, 'delete')
 

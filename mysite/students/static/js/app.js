@@ -34,6 +34,76 @@ function substituteURLSpace(message) {
     }
     return edited_message;
 }
+function readMyDataInput(inputs, input_breakdown, options, option_breakdown) {
+    let data = {};
+    if (options != null) {
+        for (let index = 0; index < options.length; index++) {
+            const selector = options[index];
+            const selector_breakdown = option_breakdown[index];
+            let values = getSelectionValue(selector);
+            let value_list = readMySessionString(values);
+            for (let v_index = 0; v_index < value_list.length; v_index++) {
+                const value = value_list[v_index];
+                const tag = selector_breakdown[v_index];
+                data[tag] = value;
+            }
+        }
+    }
+    if (inputs != null) {
+        for (let index = 0; index < inputs.length; index++) {
+            const input = inputs[index];
+            let value = getInputValue(input);
+            let tag = input_breakdown[index];
+            data[tag] = value;
+        }
+    }
+    return data;
+}
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+/// django - ajax
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function activateTHISForm(submit_button_id, url_request, inputs, input_breakdown, options, option_breakdown, onclick_update_function) {
+    document.getElementById(submit_button_id).onclick = () => {
+        let json_data = readMyDataInput(inputs, input_breakdown, options, option_breakdown);
+        $.ajax({
+            url: url_request,
+            type: "POST",
+            data: json_data,
+            dataType: "json",
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            },
+            success: function () {
+                //alert("ok");
+            },
+            error: function () {
+                //alert("no");
+            }
+        });
+        if (onclick_update_function != null) {
+            onclick_update_function();
+        }
+    };
+}
 function darkit(thing) {
     thing.style.background = "black";
     thing.style.color = "white";
@@ -760,8 +830,157 @@ function updateCoursesData() {
     let url_source = '/requestcoursesdata';
     requestAJAX(url_source, workspace_id, addCoursesData);
 }
+/// <reference path="dataTree.ts" />
+/// <reference path="sessionData.ts" />
+/// <reference path="ajaxForm.ts" />
+function activateMajorFormA() {
+    activateTHISForm("majorcreatebutton", "/courses/createmajor", ["majorFormAmajor"], ["major"], null, null, null);
+}
+function updatemajorFormBoptionsmajors() {
+    let majors = getSessionData("major");
+    addSelectionOptions("majorFormBoptionsmajors", majors);
+}
+function activateMajorFormB() {
+    updatemajorFormBoptionsmajors();
+    activateTHISForm("majordeletebutton", "/courses/deletemajor", null, null, ["majorFormBoptionsmajors"], [["major"]], updatemajorFormBoptionsmajors);
+}
+function updatecategoryFormAoptionsmajors() {
+    let majors = getSessionData("major");
+    addSelectionOptions("categoryFormAoptionsmajors", majors);
+}
+function activateCategoryFormA() {
+    updatecategoryFormAoptionsmajors();
+    activateTHISForm("categorycreatebutton", "/courses/createcategory", ["categoryFormAcategory"], ["category"], ["categoryFormAoptionsmajors"], [["major"]], updatecategoryFormAoptionsmajors);
+}
+function updatecategoryFormBoptionscategories() {
+    let categories = getSessionData("category");
+    addSelectionOptions("categoryFormBoptionscategories", categories);
+}
+function activateCategoryFormB() {
+    updatecategoryFormBoptionscategories();
+    activateTHISForm("categoryaddbutton", "/courses/createcategory", null, null, ["categoryFormBoptionscategories"], [["major", "category"]], updatecategoryFormBoptionscategories);
+    activateTHISForm("categorydeletebutton", "/courses/deletecategory", null, null, ["categoryFormBoptionscategories"], [["major", "category"]], updatecategoryFormBoptionscategories);
+}
+function updatesubcategoryFormAoptionscategories() {
+    let categories = getSessionData("category");
+    addSelectionOptions("subcategoryFormAoptionscategories", categories);
+}
+function activateSubcategoryFormA() {
+    updatesubcategoryFormAoptionscategories();
+    activateTHISForm("subcategorycreatebutton", "/courses/createsubcategory", ["subcategoryFormAsubcategory", "subcategoryFormAnote"], ["subcategory", "note"], ["subcategoryFormAoptionscategories"], [["major", "category"]], updatesubcategoryFormAoptionscategories);
+}
+function updatesubcategoryFormBoptionssubcategories() {
+    let subcategories_data = getSessionData("subcategory");
+    let subcategories = [];
+    for (const subcategory of subcategories_data) {
+        subcategories.push(subcategory[0]);
+    }
+    addSelectionOptions("subcategoryFormBoptionssubcategories", subcategories);
+}
+function activateSubcategoryFormB() {
+    updatesubcategoryFormBoptionssubcategories();
+    activateTHISForm("subcategoryaddbutton", "/courses/createsubcategory", null, null, ["subcategoryFormBoptionssubcategories"], [["major", "category", "subcategory"]], updatesubcategoryFormBoptionssubcategories);
+    activateTHISForm("subcategorydeletebutton", "/courses/deletesubcategory", null, null, ["subcategoryFormBoptionssubcategories"], [["major", "category", "subcategory"]], updatesubcategoryFormBoptionssubcategories);
+}
+function updaterequirementFormAoptionssubcategories() {
+    let subcategories_data = getSessionData("subcategory");
+    let subcategories = [];
+    for (const subcategory of subcategories_data) {
+        subcategories.push(subcategory[0]);
+    }
+    addSelectionOptions("requirementFormAoptionssubcategories", subcategories);
+}
+function activateRequirementFormA() {
+    activateTHISForm("requirementaddbutton", "/courses/createrequirement", ["requirementFormArequirement", "requirementFormAcredit"], ["requirement", "credit"], ["requirementFormAoptionssubcategories"], [["major", "category", "subcategory"]], updaterequirementFormAoptionssubcategories);
+}
+function updaterequirementFormBoptionsrequirements() {
+    let requirements_data = getSessionData("requirement");
+    let requirements = [];
+    for (const requirement of requirements_data) {
+        requirements.push(requirement[0]);
+    }
+    addSelectionOptions("requirementFormBoptionsrequirements", requirements);
+}
+function activateRequirementFormB() {
+    updaterequirementFormBoptionsrequirements();
+    activateTHISForm("requirementaddbutton", "/courses/createrequirement", null, null, ["requirementFormBoptionsrequirements"], [["major", "category", "subcategory", "requirement"]], updaterequirementFormBoptionsrequirements);
+    activateTHISForm("requirementdeletebutton", "/courses/deleterequirement", null, null, ["requirementFormBoptionsrequirements"], [["major", "category", "subcategory", "requirement"]], updaterequirementFormBoptionsrequirements);
+}
+function updatecourseFormAoptionsrequirements() {
+    let requirements_data = getSessionData("requirement");
+    let requirements = [];
+    for (const requirement of requirements_data) {
+        requirements.push(requirement[0]);
+    }
+    addSelectionOptions("courseFormAoptionsrequirements", requirements);
+}
+function activateCourseFormA() {
+    updatecourseFormAoptionsrequirements();
+    activateTHISForm("coursecreatebutton", "/courses/createcourse", ["courseFormAcourse", "courseFormAcredit"], ["course", "credit"], ["courseFormAoptionsrequirements"], [["major", "category", "subcategory", "requirement"]], updatecourseFormAoptionsrequirements);
+}
+function updatecourseFormBoptionscourses() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    addSelectionOptions("courseFormBoptionscourses", courses);
+}
+function activateCourseFormB() {
+    updatecourseFormBoptionscourses();
+    activateTHISForm("courseaddbutton", "/courses/createcourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]], updatecourseFormBoptionscourses);
+    activateTHISForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]], updatecourseFormBoptionscourses);
+}
+function updateprereqFormAoptions() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    addSelectionOptions("prereqFormAoptionscourses", courses);
+    addSelectionOptions("prereqFormAoptionsprereqs", courses);
+}
+function activatePrereqForms() {
+    updateprereqFormAoptions();
+    // cant be the same course
+    activateTHISForm("prereqaddbutton", "/courses/createprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
+        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]], updateprereqFormAoptions);
+    activateTHISForm("prereqdeletebutton", "/courses/deleteprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
+        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]], updateprereqFormAoptions);
+}
+function updateapFormAoptionscourses() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    ;
+    addSelectionOptions("apFormAoptionscourses", courses);
+}
+function activateAPFormA() {
+    updateapFormAoptionscourses();
+    activateTHISForm("apcreatebutton", "/courses/createap", ["apFormAtest", "apFormAmin", "apFormAmax"], ["test", "scoremin", "scoremax"], ["apFormAoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]], updateapFormAoptionscourses);
+}
+function updateapFormBoptions() {
+    let courses_data = getSessionData("course");
+    let courses = [];
+    for (const course of courses_data) {
+        courses.push(course[0]);
+    }
+    addSelectionOptions("apFormBoptionscourses", courses);
+    let tests = getSessionData("test");
+    addSelectionOptions("apFormBoptionstests", tests);
+}
+function activateAPFormB() {
+    updateapFormBoptions();
+    activateTHISForm("apaddbutton", "/courses/createap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"],
+        ["major", "category", "subcategory", "requirement", "course"]], updateapFormBoptions);
+    activateTHISForm("apdeletebutton", "/courses/deleteap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"],
+        ["major", "category", "subcategory", "requirement", "course"]], updateapFormBoptions);
+}
 /// <reference path='toggle.ts'/>
 /// <reference path='coursesData.ts' />
+/// <reference path="coursesForms.ts" />
 let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
     'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
 //some button functions for toggling
@@ -842,12 +1061,14 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("majorFormA");
+            activateMajorFormA();
         };
         document.getElementById('deletemajoroperation').onclick = () => {
             for (const operation of operations) {
                 dontShowIt(operation);
             }
             showIt("majorFormB");
+            activateMajorFormB();
         };
     }
     if (document.getElementById('categoryforms') != null) {
@@ -856,6 +1077,7 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("categoryFormA");
+            activateCategoryFormA();
         };
         document.getElementById('addcategoryoperation').onclick = () => {
             for (const operation of operations) {
@@ -864,6 +1086,7 @@ function activateCourseButtons() {
             showIt("categoryFormB");
             showIt("categoryaddbutton");
             dontShowIt("categorydeletebutton");
+            activateCategoryFormB();
         };
         document.getElementById('deletecategoryoperation').onclick = () => {
             for (const operation of operations) {
@@ -872,6 +1095,7 @@ function activateCourseButtons() {
             showIt("categoryFormB");
             showIt("categorydeletebutton");
             dontShowIt("categoryaddbutton");
+            activateCategoryFormB();
         };
     }
     if (document.getElementById('subcategoryforms') != null) {
@@ -880,6 +1104,7 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("subcategoryFormA");
+            activateSubcategoryFormA();
         };
         document.getElementById('addsubcategoryoperation').onclick = () => {
             for (const operation of operations) {
@@ -888,6 +1113,7 @@ function activateCourseButtons() {
             showIt("subcategoryFormB");
             showIt("subcategoryaddbutton");
             dontShowIt("subcategorydeletebutton");
+            activateSubcategoryFormB();
         };
         document.getElementById('deletesubcategoryoperation').onclick = () => {
             for (const operation of operations) {
@@ -896,6 +1122,7 @@ function activateCourseButtons() {
             showIt("subcategoryFormB");
             showIt("subcategorydeletebutton");
             dontShowIt("subcategoryaddbutton");
+            activateSubcategoryFormB();
         };
     }
     if (document.getElementById('requirementforms') != null) {
@@ -904,6 +1131,7 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("requirementFormA");
+            activateRequirementFormA();
         };
         document.getElementById('addrequirementoperation').onclick = () => {
             for (const operation of operations) {
@@ -912,6 +1140,7 @@ function activateCourseButtons() {
             showIt("requirementFormB");
             showIt("requirementdeletebutton");
             dontShowIt("requirementaddbutton");
+            activateRequirementFormB();
         };
         document.getElementById('deleterequirementoperation').onclick = () => {
             for (const operation of operations) {
@@ -920,6 +1149,7 @@ function activateCourseButtons() {
             showIt("requirementFormB");
             showIt("requirementdeletebutton");
             dontShowIt("requirementaddbutton");
+            activateRequirementFormB();
         };
     }
     if (document.getElementById('courseforms') != null) {
@@ -928,6 +1158,7 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("courseFormA");
+            activateCourseFormA();
         };
         document.getElementById('addcourseoperation').onclick = () => {
             for (const operation of operations) {
@@ -936,6 +1167,7 @@ function activateCourseButtons() {
             showIt("courseFormB");
             showIt("coursedeletebutton");
             dontShowIt("coursetaddbutton");
+            activateCourseFormB();
         };
         document.getElementById('deletecourseoperation').onclick = () => {
             for (const operation of operations) {
@@ -944,6 +1176,7 @@ function activateCourseButtons() {
             showIt("courseFormB");
             showIt("courseaddbutton");
             dontShowIt("coursedeletebutton");
+            activateCourseFormB();
         };
     }
     if (document.getElementById('prereqforms') != null) {
@@ -954,6 +1187,7 @@ function activateCourseButtons() {
             showIt("prereqFormA");
             showIt("prereqaddbutton");
             dontShowIt("prereqdeletebutton");
+            activatePrereqForms();
         };
         document.getElementById('deleteprereqoperation').onclick = () => {
             for (const operation of operations) {
@@ -962,6 +1196,7 @@ function activateCourseButtons() {
             showIt("prereqFormA");
             showIt("prereqdeletebutton");
             dontShowIt("prereqaddbutton");
+            activatePrereqForms();
         };
     }
     if (document.getElementById('apforms') != null) {
@@ -970,6 +1205,7 @@ function activateCourseButtons() {
                 dontShowIt(operation);
             }
             showIt("apFormA");
+            activateAPFormA();
         };
         document.getElementById('addapoperation').onclick = () => {
             for (const operation of operations) {
@@ -978,6 +1214,7 @@ function activateCourseButtons() {
             showIt("apFormB");
             showIt("apaddbutton");
             dontShowIt("apdeletebutton");
+            activateAPFormB();
         };
         document.getElementById('deleteapoperation').onclick = () => {
             for (const operation of operations) {
@@ -986,160 +1223,9 @@ function activateCourseButtons() {
             showIt("apFormB");
             showIt("apdeletebutton");
             dontShowIt("apaddbutton");
+            activateAPFormB();
         };
     }
-}
-/// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
-function performForm(hidden_form_id, data) {
-    let form = document.getElementById(hidden_form_id);
-    if (form == null) {
-        return;
-    }
-    for (const key in data) {
-        const value = data[key];
-        let id = `${hidden_form_id}${key}`;
-        document.getElementById(id).value = value;
-    }
-    let id = `${hidden_form_id}${"submit"}`;
-    document.getElementById(id).click;
-}
-function activateForm(submit_button_id, hidden_form_id, inputs, input_breakdown, options, option_breakdown) {
-    document.getElementById(submit_button_id).onclick = () => {
-        let data = {};
-        if (options != null) {
-            for (let index = 0; index < options.length; index++) {
-                const selector = options[index];
-                const selector_breakdown = option_breakdown[index];
-                let values = getSelectionValue(selector);
-                let value_list = readMySessionString(values);
-                for (let v_index = 0; v_index < value_list.length; v_index++) {
-                    const value = value_list[v_index];
-                    const tag = selector_breakdown[v_index];
-                    data[tag] = value;
-                }
-            }
-        }
-        if (inputs != null) {
-            for (let index = 0; index < inputs.length; index++) {
-                const input = inputs[index];
-                let value = getInputValue(input);
-                let tag = input_breakdown[index];
-                data[tag] = value;
-            }
-        }
-        performForm(hidden_form_id, data);
-    };
-}
-function activateMajorFormA() {
-    activateForm("majorcreatebutton", "hiddenmajorcreate", ["majorFormAmajor"], ["major"], null, null);
-}
-function activateMajorFormB() {
-    let majors = getSessionData("major");
-    addSelectionOptions("majorFormBoptionsmajors", majors);
-    activateForm("majordeletebutton", "hiddenmajordelete", null, null, ["majorFormBoptionsmajors"], [["major"]]);
-}
-function activateCategoryFormA() {
-    let majors = getSessionData("major");
-    addSelectionOptions("categoryFormAoptionsmajors", majors);
-    activateForm("categorycreatebutton", "/courses/createcategory", ["categoryFormAcategory"], ["category"], ["categoryFormAoptionsmajors"], [["major"]]);
-}
-function activateCategoryFormB() {
-    let categories = getSessionData("category");
-    addSelectionOptions("categoryFormBoptionscategories", categories);
-    activateForm("categoryaddbutton", "/courses/createcategory", null, null, ["categoryFormBoptionscategories"], [["major", "category"]]);
-    activateForm("categorydeletebutton", "/courses/deletecategory", null, null, ["categoryFormBoptionscategories"], [["major", "category"]]);
-}
-function activateSubcategoryFormA() {
-    let categories = getSessionData("category");
-    addSelectionOptions("subcategoryFormAoptionscategories", categories);
-    activateForm("subcategorycreatebutton", "/courses/createsubcategory", ["subcategoryFormAsubcategory", "subcategoryFormAnote"], ["subcategory", "note"], ["subcategoryFormAoptionscategories"], [["major", "category"]]);
-}
-function activateSubcategoryFormB() {
-    let subcategories_data = getSessionData("subcategory");
-    let subcategories = [];
-    for (const subcategory of subcategories_data) {
-        subcategories.push(subcategory[0]);
-    }
-    addSelectionOptions("subcategoryFormBoptionssubcategories", subcategories);
-    activateForm("subcategoryaddbutton", "/courses/createsubcategory", null, null, ["subcategoryFormBoptionssubcategories"], [["major", "category", "subcategory"]]);
-    activateForm("subcategorydeletebutton", "/courses/deletesubcategory", null, null, ["subcategoryFormBoptionssubcategories"], [["major", "category", "subcategory"]]);
-}
-function activateRequirementFormA() {
-    let subcategories_data = getSessionData("subcategory");
-    let subcategories = [];
-    for (const subcategory of subcategories_data) {
-        subcategories.push(subcategory[0]);
-    }
-    addSelectionOptions("requirementFormAoptionssubcategories", subcategories);
-    activateForm("requirementaddbutton", "/courses/createrequirement", ["requirementFormArequirement", "requirementFormAcredit"], ["requirement", "credit"], ["requirementFormAoptionssubcategories"], [["major", "category", "subcategory"]]);
-}
-function activateRequirementFormB() {
-    let requirements_data = getSessionData("requirement");
-    let requirements = [];
-    for (const requirement of requirements_data) {
-        requirements.push(requirement[0]);
-    }
-    addSelectionOptions("requirementFormBoptionsrequirements", requirements);
-    activateForm("requirementaddbutton", "/courses/createrequirement", null, null, ["requirementFormBoptionsrequirements"], [["major", "category", "subcategory", "requirement"]]);
-    activateForm("requirementdeletebutton", "/courses/deleterequirement", null, null, ["requirementFormBoptionsrequirements"], [["major", "category", "subcategory", "requirement"]]);
-}
-function activateCourseFormA() {
-    let requirements_data = getSessionData("requirement");
-    let requirements = [];
-    for (const requirement of requirements_data) {
-        requirements.push(requirement[0]);
-    }
-    addSelectionOptions("courseFormAoptionsrequirements", requirements);
-    activateForm("coursecreatebutton", "/courses/createcourse", ["courseFormAcourse", "courseFormAcredit"], ["course", "credit"], ["courseFormAoptionsrequirements"], [["major", "category", "subcategory", "requirement"]]);
-}
-function activateCourseFormB() {
-    let courses_data = getSessionData("course");
-    let courses = [];
-    for (const course of courses_data) {
-        courses.push(course[0]);
-    }
-    addSelectionOptions("courseFormBoptionscourses", courses);
-    activateForm("courseaddbutton", "/courses/createcourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]]);
-    activateForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]]);
-}
-function activatePrereqForms() {
-    let courses_data = getSessionData("course");
-    let courses = [];
-    for (const course of courses_data) {
-        courses.push(course[0]);
-    }
-    addSelectionOptions("prereqFormAoptionscourses", courses);
-    addSelectionOptions("prereqFormAoptionsprereqs", courses);
-    // cant be the same course
-    activateForm("prereqaddbutton", "/courses/createprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
-        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]]);
-    activateForm("prereqdeletebutton", "/courses/deleteprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
-        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]]);
-}
-function activateAPFormA() {
-    let courses_data = getSessionData("course");
-    let courses = [];
-    for (const course of courses_data) {
-        courses.push(course[0]);
-    }
-    ;
-    addSelectionOptions("apFormAoptionscourses", courses);
-    activateForm("apcreatebutton", "/courses/createap", ["apFormAtest", "apFormAmin", "apFormAmax"], ["test", "scoremin", "scoremax"], ["apFormAoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]]);
-}
-function activateAPFormB() {
-    let courses_data = getSessionData("course");
-    let courses = [];
-    for (const course of courses_data) {
-        courses.push(course[0]);
-    }
-    addSelectionOptions("apFormBoptionscourses", courses);
-    let tests = getSessionData("test");
-    addSelectionOptions("apFormBoptionstests", tests);
-    activateForm("apaddbutton", "/courses/createap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"],
-        ["major", "category", "subcategory", "requirement", "course"]]);
-    activateForm("apdeletebutton", "/courses/deleteap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"],
-        ["major", "category", "subcategory", "requirement", "course"]]);
 }
 function activateHelperForms() {
 }
