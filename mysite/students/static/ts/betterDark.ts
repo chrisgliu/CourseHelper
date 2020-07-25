@@ -57,6 +57,7 @@ function toggledark(tag:string) {
     toggledark("li");
     toggledark("h1");
     toggledark("h2");
+    toggledark("span")
     toggledark("b"); 
     toggledark("form");
     toggledark("div")

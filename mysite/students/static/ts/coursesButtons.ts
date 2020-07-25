@@ -57,10 +57,10 @@ function activateCourseButtons(){
     }
     let operations = [
       "majorFormA", "majorFormB",
-      "categoryFormA", "categoryFormB",
-      "subcategoryFormA", "subcategoryFormB",
-      "requirementFormA", "requirementFormB",
-      "courseFormA", "courseFormB",
+      "categoryFormA", "categoryFormB", "categoryFormC",
+      "subcategoryFormA", "subcategoryFormB", "subcategoryFormC", 
+      "requirementFormA", "requirementFormB", "requirementFormC",
+      "courseFormA", "courseFormB", "courseFormC",
       "prereqFormA", "apFormA", "apFormB"
     ];
     if (document.getElementById('majorforms') != null) {

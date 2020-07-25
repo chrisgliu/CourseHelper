@@ -161,6 +161,7 @@ function darkmode() {
     toggledark("li");
     toggledark("h1");
     toggledark("h2");
+    toggledark("span");
     toggledark("b");
     toggledark("form");
     toggledark("div");
@@ -642,6 +643,7 @@ function showAPTransfer() {
 }
 /// <reference path='toggle.ts'/>
 /// <reference path="myAP.ts" />
+/// <reference path="betterDark.ts" />
 function clearData(ul_id) {
     let list = document.getElementById(ul_id);
     if (list == null) {
@@ -681,6 +683,13 @@ function addDataList(parent_ul_id, name, symbol_type, toggle_function) {
     toggle.appendChild(symbol);
     toggle.appendChild(nested);
     parent.appendChild(toggle);
+    // dark
+    if (parent.style.background == "black") {
+        darkit(parent);
+        darkit(nested);
+        darkit(toggle);
+        darkit(symbol);
+    }
 }
 function addCaretList(parent_ul_id, name, is_special, special_id) {
     let toggle_function = function click(symbol) {
@@ -982,7 +991,8 @@ function updatecourseFormCoptionscourses() {
     addSelectionOptions("courseFormCoptionsrequirements", getSubSessionData("requirement"));
 }
 function activateCourseFormC() {
-    activateTHISForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormCoptionscourses", "courseFormCoptionsrequirements"], [["major", "category", "subcategory", "requirement", "course"], ["major", "category", "subcategory", "requirement"]], updatecourseFormBoptionscourses);
+    updatecourseFormCoptionscourses();
+    activateTHISForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormCoptionscourses", "courseFormCoptionsrequirements"], [["major", "category", "subcategory", "requirement", "course"], ["major", "category", "subcategory", "requirement"]], updatecourseFormCoptionscourses);
 }
 //------------------------------
 // prereq add and delete
@@ -1085,10 +1095,10 @@ function activateCourseButtons() {
     }
     let operations = [
         "majorFormA", "majorFormB",
-        "categoryFormA", "categoryFormB",
-        "subcategoryFormA", "subcategoryFormB",
-        "requirementFormA", "requirementFormB",
-        "courseFormA", "courseFormB",
+        "categoryFormA", "categoryFormB", "categoryFormC",
+        "subcategoryFormA", "subcategoryFormB", "subcategoryFormC",
+        "requirementFormA", "requirementFormB", "requirementFormC",
+        "courseFormA", "courseFormB", "courseFormC",
         "prereqFormA", "apFormA", "apFormB"
     ];
     if (document.getElementById('majorforms') != null) {

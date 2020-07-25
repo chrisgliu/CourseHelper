@@ -179,11 +179,12 @@ function updatecourseFormCoptionscourses() {
    addSelectionOptions("courseFormCoptionsrequirements", getSubSessionData("requirement"));
 }
 function activateCourseFormC(){
+   updatecourseFormCoptionscourses();
    activateTHISForm("coursedeletebutton", "/courses/deletecourse",
       null, null,
       ["courseFormCoptionscourses","courseFormCoptionsrequirements"], 
       [["major", "category", "subcategory", "requirement", "course" ],["major", "category", "subcategory", "requirement"]],
-      updatecourseFormBoptionscourses
+      updatecourseFormCoptionscourses
       );
 }
 //------------------------------
