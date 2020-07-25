@@ -38,7 +38,6 @@ function addDataList(parent_ul_id:string, name:string, symbol_type:string, toggl
   parent.appendChild(toggle);
   // dark
   if (parent.style.background == "black"){
-    darkit(parent);
     darkit(nested);
     darkit(toggle);
     darkit(symbol);

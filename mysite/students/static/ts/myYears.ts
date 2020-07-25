@@ -14,6 +14,12 @@ function createCourseBlock(workspace_id:string, course_name:string, credit:strin
     course.appendChild(name);
     course.appendChild(value);
     workspace.appendChild(course);
+    // dark
+    if (workspace.style.background == "black"){
+        darkit(course);
+        darkit(value);
+        darkit(name);   
+    }
 }
 
 function getCourseCredit(course_name:string){

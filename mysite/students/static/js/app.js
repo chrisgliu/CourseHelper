@@ -488,6 +488,12 @@ function createCourseBlock(workspace_id, course_name, credit) {
     course.appendChild(name);
     course.appendChild(value);
     workspace.appendChild(course);
+    // dark
+    if (workspace.style.background == "black") {
+        darkit(course);
+        darkit(value);
+        darkit(name);
+    }
 }
 function getCourseCredit(course_name) {
     let courses = getSessionData("course");
@@ -685,7 +691,6 @@ function addDataList(parent_ul_id, name, symbol_type, toggle_function) {
     parent.appendChild(toggle);
     // dark
     if (parent.style.background == "black") {
-        darkit(parent);
         darkit(nested);
         darkit(toggle);
         darkit(symbol);
