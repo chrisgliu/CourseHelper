@@ -35,7 +35,7 @@ def getCategory(username, major_name, category_name):
     if the_category.exists():
         return the_category.first()
     else:
-        return -1; 
+        return -1 
 
 def getSubCategories(category):
     subcategories = SubCategory.objects.filter(categories__in=[category.pk])

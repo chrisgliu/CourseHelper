@@ -1,5 +1,5 @@
 /// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
+/// <reference path="sessionDataStuff.ts" />
 /// <reference path="helperButtons.ts" />
 
 function createCourseBlock(workspace_id:string, course_name:string, credit:string){
@@ -73,7 +73,7 @@ function showTranferCourses(test_name:string){
             }
         }
     }
-    let ap_data = getSessionData("test");
+    let ap_data = getSessionData("ap");
     if (ap_data == null){ return}
     let coursesap:string[] = [];
     for (const ap_test of ap_data) {

@@ -1,3 +1,4 @@
+/// <reference path="coursesDataTree.ts" />
 
 function darkit(thing:HTMLElement) {
     thing.style.background = "black";
@@ -62,4 +63,6 @@ function toggledark(tag:string) {
     toggledark("form");
     toggledark("div")
     togglemodal();
+    cleanUpDataTree();  
+
   }

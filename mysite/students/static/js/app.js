@@ -104,69 +104,6 @@ function activateTHISForm(submit_button_id, url_request, inputs, input_breakdown
         }
     };
 }
-function darkit(thing) {
-    thing.style.background = "black";
-    thing.style.color = "white";
-    thing.style.borderColor = "white";
-}
-function undarkit(thing) {
-    thing.style.background = "transparent";
-    thing.style.color = "black";
-    thing.style.borderColor = "black";
-}
-function toggledark(tag) {
-    let things = document.getElementsByTagName(tag);
-    for (let thing of things) {
-        let thingy = thing;
-        if (thingy.style.background != "black") {
-            if (thingy.className != "modal") {
-                darkit(thingy);
-            }
-        }
-        else {
-            undarkit(thingy);
-        }
-    }
-}
-function thisNeedsToBeWhite(thing) {
-    if (thing.hasChildNodes) {
-        for (const child of thing.children) {
-            let working_child = child;
-            working_child.style.background = "white";
-            thisNeedsToBeWhite(working_child);
-        }
-    }
-    else {
-        return;
-    }
-}
-function togglemodal() {
-    let things = document.getElementsByClassName("modal");
-    let darkmode = document.getElementById("darkmode");
-    for (const thing of things) {
-        if (darkmode.style.background != "black") {
-            let working_thing = thing;
-            thisNeedsToBeWhite(working_thing);
-        }
-    }
-}
-function darkmode() {
-    toggledark("body");
-    toggledark("input");
-    toggledark("select");
-    toggledark("label");
-    toggledark("button");
-    toggledark("section");
-    toggledark("ul");
-    toggledark("li");
-    toggledark("h1");
-    toggledark("h2");
-    toggledark("span");
-    toggledark("b");
-    toggledark("form");
-    toggledark("div");
-    togglemodal();
-}
 // show and don't show operations
 function showIt(id) {
     let element = document.getElementById(id);
@@ -210,7 +147,7 @@ function addSessionCourses(majors, categories, subcategories, requirements, cour
     addSessionDataList(requirements, "requirement");
     addSessionDataList(courses, "course");
     addSessionDataList(prereqs, "prereq");
-    addSessionDataList(ap, "test");
+    addSessionDataList(ap, "ap");
 }
 function addSessionMajors(majors) {
     addSessionDataList(majors, "mymajor");
@@ -291,7 +228,7 @@ function readSubNodeList(list, subdatatags, subparenttags) {
 }
 ///<reference path='ajax.ts'/>
 ///<reference path='dataTree.ts'/>
-/// <reference path='sessionData.ts' />
+/// <reference path='sessionDataStuff.ts' />
 /// <reference path='readXML.ts' />
 //helperdata
 // my majors
@@ -419,7 +356,7 @@ function updateScheduleData() {
     requestAJAX(url_source, workspace_id, addScheduleData);
 }
 /// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
+/// <reference path="sessionDataStuff.ts" />
 /// <reference path="helperButtons.ts" />
 /// <reference path="betterDark.ts" />
 function createMajorTracker(workspace_id, major_name) {
@@ -472,7 +409,7 @@ function showTrackedMajors() {
     }
 }
 /// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
+/// <reference path="sessionDataStuff.ts" />
 /// <reference path="helperButtons.ts" />
 function createCourseBlock(workspace_id, course_name, credit) {
     let workspace = document.getElementById(workspace_id);
@@ -550,7 +487,7 @@ function showTranferCourses(test_name) {
             }
         }
     }
-    let ap_data = getSessionData("test");
+    let ap_data = getSessionData("ap");
     if (ap_data == null) {
         return;
     }
@@ -610,7 +547,7 @@ function activateHelperButtons() {
     };
 }
 /// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
+/// <reference path="sessionDataStuff.ts" />
 /// <reference path="helperButtons.ts" />
 /// <reference path="myYears.ts" />
 function createAPTracker(workspace_id, test_name, score) {
@@ -650,6 +587,7 @@ function showAPTransfer() {
 /// <reference path='toggle.ts'/>
 /// <reference path="myAP.ts" />
 /// <reference path="betterDark.ts" />
+/// <reference path="coursesDataTree.ts" />
 function clearData(ul_id) {
     let list = document.getElementById(ul_id);
     if (list == null) {
@@ -679,9 +617,13 @@ function addDataList(parent_ul_id, name, symbol_type, toggle_function) {
     let toggle = document.createElement('li');
     let symbol = document.createElement('span');
     symbol.innerHTML = name;
+    symbol.id = `symbol-${name}`;
     symbol.className = symbol_type;
     symbol.onclick = () => {
         toggle_function(symbol);
+        if (name.indexOf("MAJOR") != -1) {
+            cleanUpDataTree();
+        }
     };
     let nested = document.createElement('ul');
     nested.className = 'nested';
@@ -755,7 +697,7 @@ function getInputValue(input_id) {
 }
 ///<reference path='ajax.ts'/>
 ///<reference path='dataTree.ts'/>
-///<reference path='sessionData.ts'/>
+///<reference path='sessionDataStuff.ts'/>
 ///<reference path="readXML.ts" />
 // courses tree data
 // --- courses data helper functions ---
@@ -796,7 +738,7 @@ function addCoursesData(workspace_id, response) {
     let major_data = readMajors(majors);
     for (const major of major_data) {
         // data tree
-        addCaretList(workspace_id, `Major:${major.major_name}`, false, null);
+        addCaretList(workspace_id, `MAJOR:${major.major_name}`, false, null);
         // session
         session_majors.push(major.major_name);
         if (major.categories != null) {
@@ -804,7 +746,7 @@ function addCoursesData(workspace_id, response) {
             let category_data = readCategories(categories);
             for (const category of category_data) {
                 // data tree
-                addCaretList(`Major:${major.major_name}`, `Category:${category.category_name}`, false, null);
+                addCaretList(`MAJOR:${major.major_name}`, `${major.major_name}CATEGORY:${category.category_name}`, false, null);
                 // session
                 session_categories.push(`${major.major_name}/${category.category_name}`);
                 if (category.subcategories != null) {
@@ -812,7 +754,7 @@ function addCoursesData(workspace_id, response) {
                     let subcategory_data = readSubcategories(subcategories);
                     for (const subcategory of subcategory_data) {
                         // data tree
-                        addCaretList(`Category:${category.category_name}`, `Subcategory:${subcategory.subcategory_name}`, false, null);
+                        addCaretList(`${major.major_name}CATEGORY:${category.category_name}`, `${major.major_name}${category.category_name}SUBCATEGORY:${subcategory.subcategory_name}`, false, null);
                         // session
                         let session_subcategories_data = [];
                         session_subcategories_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}`);
@@ -823,7 +765,7 @@ function addCoursesData(workspace_id, response) {
                             let requirement_data = readRequirements(requirements);
                             for (const requirement of requirement_data) {
                                 // data tree
-                                addCaretList(`Subcategory:${subcategory.subcategory_name}`, `Requirement:${requirement.requirement_name}`, false, null);
+                                addCaretList(`${major.major_name}${category.category_name}SUBCATEGORY:${subcategory.subcategory_name}`, `${major.major_name}${category.category_name}${subcategory.subcategory_name}REQUIREMENT:${requirement.requirement_name}`, false, null);
                                 // session
                                 let session_requirements_data = [];
                                 session_requirements_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}`);
@@ -834,7 +776,7 @@ function addCoursesData(workspace_id, response) {
                                     let course_data = readCourses(courses);
                                     for (const course of course_data) {
                                         // data tree
-                                        addCaretList(`Requirement:${requirement.requirement_name}`, `Course:${course.course_name}`, false, null);
+                                        addCaretList(`${major.major_name}${category.category_name}${subcategory.subcategory_name}REQUIREMENT:${requirement.requirement_name}`, `${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}COURSE:${course.course_name}`, false, null);
                                         // session
                                         let session_courses_data = [];
                                         session_courses_data.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}`);
@@ -842,22 +784,22 @@ function addCoursesData(workspace_id, response) {
                                         session_courses.push(session_courses_data);
                                         if (course.prereqs != null) {
                                             // data tree
-                                            addCaretList(`Course:${course.course_name}`, `Prereq:${course.course_name}`, false, null);
+                                            addCaretList(`${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}COURSE:${course.course_name}`, `${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}PREREQ:${course.course_name}`, false, null);
                                             let prereqs = course.prereqs.childNodes;
                                             let prereq_data = readPrereqs(prereqs);
                                             for (const prereq of prereq_data) {
-                                                addSpecificData(`Prereq:${course.course_name}`, prereq.prereq_name);
+                                                addSpecificData(`${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}PREREQ:${course.course_name}`, prereq.prereq_name);
                                                 // session
                                                 session_prereqs.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/prereq/${prereq.prereq_name}`);
                                             }
                                         }
                                         if (course.ap != null) {
                                             // data tree
-                                            addCaretList(`Course:${course.course_name}`, `Ap:${course.course_name}`, false, null);
+                                            addCaretList(`${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}COURSE:${course.course_name}`, `${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}AP:${course.course_name}`, false, null);
                                             let ap = course.ap.childNodes;
                                             let ap_data = readAp(ap);
                                             for (const ap_test of ap_data) {
-                                                addSpecificData(`Ap:${course.course_name}`, ap_test.test_name);
+                                                addSpecificData(`${major.major_name}${category.category_name}${subcategory.subcategory_name}${requirement.requirement_name}AP:${course.course_name}`, ap_test.test_name);
                                                 // session
                                                 session_ap.push(`${major.major_name}/${category.category_name}/${subcategory.subcategory_name}/${requirement.requirement_name}/${course.course_name}/test/${ap_test.test_name}`);
                                             }
@@ -873,6 +815,42 @@ function addCoursesData(workspace_id, response) {
     }
     addSessionCourses(session_majors, session_categories, session_subcategories, session_requirements, session_courses, session_prereqs, session_ap);
 }
+function cleanUpDataTree() {
+    let tags = ["major", "category", "subcategory", "requirement", "course"];
+    for (const tag of tags) {
+        let data = [];
+        if (tag == "subcategory" || tag == "requirement" || tag == "course") {
+            data = getSubSessionData(tag);
+        }
+        else {
+            data = getSessionData(tag);
+        }
+        for (const instance of data) {
+            let separated_sections = readMySessionString(instance);
+            let tree_name = "";
+            let important = "";
+            for (let index = 0; index < separated_sections.length; index++) {
+                let section = separated_sections[index];
+                tree_name = tree_name;
+                if (index == separated_sections.length - 1) {
+                    if (tag == "course") {
+                        let prereq = `symbol-${tree_name}PREREQ:${section}`;
+                        let ap = `symbol-${tree_name}AP:${section}`;
+                        document.getElementById(prereq).innerHTML = `PREREQ:${section}`;
+                        document.getElementById(ap).innerHTML = `AP:${section}`;
+                    }
+                    tree_name = `${tree_name}${tag.toUpperCase()}:${section}`;
+                    important = `${tag.toUpperCase()}:${section}`;
+                }
+                else {
+                    tree_name = `${tree_name}${section}`;
+                }
+            }
+            let id = `symbol-${tree_name}`;
+            document.getElementById(id).innerHTML = important;
+        }
+    }
+}
 // resulting ajax function
 function updateCoursesData() {
     let workspace_id = 'coursesdata';
@@ -880,8 +858,73 @@ function updateCoursesData() {
     let url_source = '/requestcoursesdata';
     requestAJAX(url_source, workspace_id, addCoursesData);
 }
+/// <reference path="coursesDataTree.ts" />
+function darkit(thing) {
+    thing.style.background = "black";
+    thing.style.color = "white";
+    thing.style.borderColor = "white";
+}
+function undarkit(thing) {
+    thing.style.background = "transparent";
+    thing.style.color = "black";
+    thing.style.borderColor = "black";
+}
+function toggledark(tag) {
+    let things = document.getElementsByTagName(tag);
+    for (let thing of things) {
+        let thingy = thing;
+        if (thingy.style.background != "black") {
+            if (thingy.className != "modal") {
+                darkit(thingy);
+            }
+        }
+        else {
+            undarkit(thingy);
+        }
+    }
+}
+function thisNeedsToBeWhite(thing) {
+    if (thing.hasChildNodes) {
+        for (const child of thing.children) {
+            let working_child = child;
+            working_child.style.background = "white";
+            thisNeedsToBeWhite(working_child);
+        }
+    }
+    else {
+        return;
+    }
+}
+function togglemodal() {
+    let things = document.getElementsByClassName("modal");
+    let darkmode = document.getElementById("darkmode");
+    for (const thing of things) {
+        if (darkmode.style.background != "black") {
+            let working_thing = thing;
+            thisNeedsToBeWhite(working_thing);
+        }
+    }
+}
+function darkmode() {
+    toggledark("body");
+    toggledark("input");
+    toggledark("select");
+    toggledark("label");
+    toggledark("button");
+    toggledark("section");
+    toggledark("ul");
+    toggledark("li");
+    toggledark("h1");
+    toggledark("h2");
+    toggledark("span");
+    toggledark("b");
+    toggledark("form");
+    toggledark("div");
+    togglemodal();
+    cleanUpDataTree();
+}
 /// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
+/// <reference path="sessionDataStuff.ts" />
 /// <reference path="ajaxForm.ts" />
 // major create
 function activateMajorFormA() {
@@ -919,7 +962,7 @@ function updatecategoryFormCoptionscategories() {
 }
 function activateCategoryFormC() {
     updatecategoryFormCoptionscategories();
-    activateTHISForm("categoryaddbutton", "/courses/createcategory", null, null, ["categoryFormCoptionscategories", "categoryFormCoptionsmajors"], [["major", "category"], ["major"]], updatecategoryFormCoptionscategories);
+    activateTHISForm("categoryaddbutton", "/courses/addcategory", null, null, ["categoryFormCoptionscategories", "categoryFormCoptionsmajors"], [["major", "category"], ["oldmajor"]], updatecategoryFormCoptionscategories);
 }
 //------------------------------
 // subcategory create
@@ -945,7 +988,7 @@ function updatesubcategoryFormCoptionssubcategories() {
 }
 function activateSubcategoryFormC() {
     updatesubcategoryFormCoptionssubcategories();
-    activateTHISForm("subcategoryaddbutton", "/courses/createsubcategory", null, null, ["subcategoryFormCoptionssubcategories", "subcategoryFormCoptionscategories"], [["major", "category", "subcategory"], ["major", "category"]], updatesubcategoryFormCoptionssubcategories);
+    activateTHISForm("subcategoryaddbutton", "/courses/addsubcategory", null, null, ["subcategoryFormCoptionssubcategories", "subcategoryFormCoptionscategories"], [["major", "category", "subcategory"], ["oldmajor", "oldcategory"]], updatesubcategoryFormCoptionssubcategories);
 }
 //------------------------------
 // requirement create
@@ -954,7 +997,7 @@ function updaterequirementFormAoptionssubcategories() {
 }
 function activateRequirementFormA() {
     updaterequirementFormAoptionssubcategories();
-    activateTHISForm("requirementaddbutton", "/courses/createrequirement", ["requirementFormArequirement", "requirementFormAcredit"], ["requirement", "credit"], ["requirementFormAoptionssubcategories"], [["major", "category", "subcategory"]], updaterequirementFormAoptionssubcategories);
+    activateTHISForm("requirementcreatebutton", "/courses/createrequirement", ["requirementFormArequirement", "requirementFormAcredit"], ["requirement", "credit"], ["requirementFormAoptionssubcategories"], [["major", "category", "subcategory"]], updaterequirementFormAoptionssubcategories);
 }
 // requirement delete
 function updaterequirementFormBoptionsrequirements() {
@@ -971,7 +1014,7 @@ function updaterequirementFormCoptionsrequirements() {
 }
 function activateRequirementFormC() {
     updaterequirementFormCoptionsrequirements();
-    activateTHISForm("requirementaddbutton", "/courses/createrequirement", null, null, ["requirementFormBoptionsrequirements", "requirementFormCoptionssubcategories"], [["major", "category", "subcategory", "requirement"], ["major", "category", "subcategory"]], updaterequirementFormCoptionsrequirements);
+    activateTHISForm("requirementaddbutton", "/courses/addrequirement", null, null, ["requirementFormBoptionsrequirements", "requirementFormCoptionssubcategories"], [["major", "category", "subcategory", "requirement"], ["oldmajor", "oldcategory", "oldsubcategory"]], updaterequirementFormCoptionsrequirements);
 }
 //------------------------------
 // course create
@@ -988,7 +1031,7 @@ function updatecourseFormBoptionscourses() {
 }
 function activateCourseFormB() {
     updatecourseFormBoptionscourses();
-    activateTHISForm("courseaddbutton", "/courses/createcourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]], updatecourseFormBoptionscourses);
+    activateTHISForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course"]], updatecourseFormBoptionscourses);
 }
 // course add
 function updatecourseFormCoptionscourses() {
@@ -997,7 +1040,7 @@ function updatecourseFormCoptionscourses() {
 }
 function activateCourseFormC() {
     updatecourseFormCoptionscourses();
-    activateTHISForm("coursedeletebutton", "/courses/deletecourse", null, null, ["courseFormCoptionscourses", "courseFormCoptionsrequirements"], [["major", "category", "subcategory", "requirement", "course"], ["major", "category", "subcategory", "requirement"]], updatecourseFormCoptionscourses);
+    activateTHISForm("courseaddbutton", "/courses/addcourse", null, null, ["courseFormCoptionscourses", "courseFormCoptionsrequirements"], [["major", "category", "subcategory", "requirement", "course"], ["oldmajor", "oldcategory", "oldsubcategory", "oldrequirement"]], updatecourseFormCoptionscourses);
 }
 //------------------------------
 // prereq add and delete
@@ -1007,9 +1050,10 @@ function updateprereqForms() {
 }
 function activatePrereqForms() {
     updateprereqForms();
-    // cant be the same course
-    activateTHISForm("prereqaddbutton", "/courses/createprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"], ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]], updateprereqForms);
-    activateTHISForm("prereqdeletebutton", "/courses/createprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"], ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]], updateprereqForms);
+    activateTHISForm("prereqaddbutton", "/courses/addprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
+        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]], updateprereqForms);
+    activateTHISForm("prereqdeletebutton", "/courses/deleteprereq", null, null, ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], [["major", "category", "subcategory", "requirement", "course"],
+        ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]], updateprereqForms);
 }
 //------------------------------
 // ap create
@@ -1026,11 +1070,13 @@ function updateapFormBoptions() {
 }
 function activateAPFormB() {
     updateapFormBoptions();
-    activateTHISForm("apaddbutton", "/courses/createap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"], ["major", "category", "subcategory", "requirement", "course"]], updateapFormBoptions);
-    activateTHISForm("apdeletebutton", "/courses/deleteap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["test", "scoremin", "scoremax"], ["major", "category", "subcategory", "requirement", "course"]], updateapFormBoptions);
+    activateTHISForm("apaddbutton", "/courses/addap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"],
+        ["oldmajor", "oldcategory", "oldsubcategory", "oldrequirement", "oldcourse"]], updateapFormBoptions);
+    activateTHISForm("apdeletebutton", "/courses/deleteap", null, null, ["apFormBoptionstests", "apFormBoptionscourses"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"],
+        ["oldmajor", "oldcategory", "oldsubcategory", "oldrequirement", "oldcourse"]], updateapFormBoptions);
 }
 /// <reference path='toggle.ts'/>
-/// <reference path='coursesData.ts' />
+/// <reference path='coursesDataTree.ts' />
 /// <reference path="coursesForms.ts" />
 let forms = ['majorforms', 'categoryforms', 'subcategoryforms',
     'requirementforms', 'courseforms', 'prereqforms', 'apforms'];
@@ -1262,10 +1308,75 @@ function activateCourseButtons() {
         };
     }
 }
+/// <reference path="ajaxForm.ts" />
+function activateYearManager() {
+    document.getElementById("addbuttonyearmanager").onclick = () => {
+        let termsperyear = document.getElementById("termsperyear").value;
+        let startingyear = document.getElementById("startingyear").value;
+        let yearnum = document.getElementById("plannerdata").children.length;
+        if (yearnum == 0) {
+            //create before and starting year
+        }
+        if (yearnum > 2) {
+            let time = yearnum - 2;
+            let year = startingyear + time;
+        }
+    };
+    document.getElementById("deletebuttonyearmanager").onclick = () => {
+        let termsperyear = document.getElementById("termsperyear").value;
+        let startingyear = document.getElementById("startingyear").value;
+        let yearnum = document.getElementById("plannerdata").children.length;
+        if (yearnum == 0) {
+            return;
+        }
+        if (yearnum == 2) {
+            //delete before and starting year
+        }
+        if (yearnum > 2) {
+            let time = yearnum - 2;
+            let year = startingyear + time;
+        }
+    };
+}
+function updatemajormanageroptionsmajors() {
+    addSelectionOptions("majormanageroptionsmajors", getSessionData("major"));
+}
+function activateMajorManagerAdd() {
+    updatemajormanageroptionsmajors();
+    activateTHISForm("majormanageraddbutton", "/", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
+}
+function activateMajorManagerDelete() {
+    updatemajormanageroptionsmajors();
+    activateTHISForm("majormanagerdeletebutton", "/", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
+}
+function updatecoursemanageroptionscourses() {
+    addSelectionOptions("coursemanageroptionscourse", getSubSessionData("course"));
+}
+function activateCourseManagerAdd() {
+    updatecoursemanageroptionscourses();
+    activateTHISForm("coursemanageraddbutton", "/", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
+}
+function activateCourseManagerDelete() {
+    updatecoursemanageroptionscourses();
+    activateTHISForm("coursemanagerdeletebutton", "/", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
+}
+function updatetestmanageroptionstests() {
+    addSelectionOptions("testmanageroptionstests", getSessionData("ap"));
+}
+function activateTestManagerAdd() {
+    updatetestmanageroptionstests();
+    activateTHISForm("testmanageraddbutton", "/", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
+}
+function activateTestManagerDelete() {
+    updatetestmanageroptionstests();
+    activateTHISForm("testmanagerdeletebutton", "/", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
+}
+function activateAPTransferManager() {
+}
 function activateHelperForms() {
 }
 /// <reference path='toggle.ts'/>
-/// <reference path='coursesData.ts' />
+/// <reference path='coursesDataTree.ts' />
 /// <reference path='helperData.ts' />
 /// <reference path='coursesButtons.ts' />
 /// <reference path='helperButtons.ts' />

@@ -51,7 +51,7 @@ class Major(models.Model):
 # holds the year ex: 2020
 # enables accessing the students of a Year and accessing the Year of a student
 class Year(models.Model):
-    year = models.CharField(max_length=6)
+    year = models.CharField(max_length=64)
     enrolled = models.ManyToManyField(Enrolled, blank=False, related_name="years")
 
     def __str__(self):

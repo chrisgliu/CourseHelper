@@ -1,6 +1,8 @@
 /// <reference path='toggle.ts'/>
 /// <reference path="myAP.ts" />
 /// <reference path="betterDark.ts" />
+/// <reference path="coursesDataTree.ts" />
+
 
 
 function clearData(ul_id:string){
@@ -26,9 +28,13 @@ function addDataList(parent_ul_id:string, name:string, symbol_type:string, toggl
   let toggle = document.createElement('li');
   let symbol = document.createElement('span');
   symbol.innerHTML = name;
+  symbol.id=`symbol-${name}`;
   symbol.className = symbol_type;
   symbol.onclick = ()=> {
     toggle_function(symbol);
+    if (name.indexOf("MAJOR")!=-1){
+      cleanUpDataTree();
+    }
   }
   let nested = document.createElement('ul');
   nested.className = 'nested';

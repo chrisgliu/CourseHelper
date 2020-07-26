@@ -17,6 +17,8 @@ class YearForm(forms.Form):
     year = forms.CharField(label='year', required=True) 
     def process(self, request, add_or_delete='add'):
         year = self.cleaned_data.get('year')
+        if (year == "before"):
+            year = request.user.username + "-before"
         if add_or_delete == 'add':
             addYear(request, year)
         if add_or_delete == 'delete':

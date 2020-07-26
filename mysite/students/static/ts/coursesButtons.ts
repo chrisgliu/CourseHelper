@@ -1,5 +1,5 @@
 /// <reference path='toggle.ts'/>
-/// <reference path='coursesData.ts' />
+/// <reference path='coursesDataTree.ts' />
 /// <reference path="coursesForms.ts" />
 
 

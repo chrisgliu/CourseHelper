@@ -32,22 +32,33 @@ urlpatterns = [
     path("specificrequirement/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/", requestRequirementCredit),
     path("specificcourse/<username>/<major_name>/<category_name>/<subcategory_name>/<requirement_name>/<course_name>/", requestCoursesCredit),
     # form operation create/delete
-    path("createstudent", createStudent, name='addStudent'),
+    path("createstudent", addStudent, name='addStudent'),
     path("deletestudent", deleteStudent, name='deleteStudent'),
-    path("createenrollkey", createEnroll, name='addEnrollment'),
+    path("createenrollkey", addEnroll, name='addEnrollment'),
     path("deleteenrollkey", deleteEnroll, name='deleteEnrollment'),
-    path("createmajor", createMajor, name='addMajor'),
+    path("createmajor", addMajor, name='addMajor'),
     path("deletemajor", deleteMajor, name='deleteMajor'),
-    path("createcategory", createCategory, name='addCategory'),
+
+    path("createcategory", createCategory, name='createCategory'),
+    path("addcategory", addCategory, name='addCategory'),
     path("deletecategory", deleteCategory, name='deleteCategory'),
-    path("createsubcategory", createSubCategory, name='addSubcategory'),
+
+    path("createsubcategory", createSubCategory, name='createSubcategory'),
+    path("addsubcategory", addSubCategory, name='addSubcategory'),
     path("deletesubcategory", deleteSubCategory, name='deleteSubcategory'),
-    path("createrequirement", createRequirement, name='addRequirement'),
+    
+    path("createrequirement", createRequirement, name='createRequirement'),
+    path("addrequirement", addRequirement, name='addRequirement'),
     path("deleterequirement", deleteRequirement, name='deleteRequirement'),
-    path("createcourse", createCourse, name='addCourse'),
+
+    path("createcourse", createCourse, name='createCourse'),
+    path("addcourse", addCourse, name='addCourse'),
     path("deletecourse", deleteCourse, name='deleteCourse'),
-    path("createprereq", createPrereq, name='addPrereq'),
+
+    path("addprereq", addPrereq, name='addPrereq'),
     path("deleteprereq", deletePrereq, name='deletePrereq'),
-    path("createap", createAp, name='addAp'),
+
+    path("createap", createAp, name='createAp'),
+    path("addap", addAp, name='addAp'),
     path("deleteap", deleteAp, name='deleteAp'),
 ]

@@ -49,55 +49,77 @@ class ApCreditViewSet(viewsets.ModelViewSet):
 
 # --- create and delete data ---
 @csrf_protect
-def createStudent(request):
+def addStudent(request):
     return CourseStudentFormAdd(request)
 @csrf_protect
 def deleteStudent(request):
     return CourseStudentFormDelete(request)
 @csrf_protect
-def createEnroll(request):
+def addEnroll(request):
     return CourseEnrollFormAdd(request);
 @csrf_protect
 def deleteEnroll(request):
     return CourseEnrollFormDelete(request)
+
 @csrf_protect
-def createMajor(request):
+def addMajor(request):
     return CourseMajorFormAdd(request)
 @csrf_protect
 def deleteMajor(request):
     return CourseMajorFormDelete(request)
+
 @csrf_protect
 def createCategory(request):
+    return CourseCategoryFormCreate(request)
+@csrf_protect
+def addCategory(request):
     return CourseCategoryFormAdd(request)
 @csrf_protect
 def deleteCategory(request):
     return CourseCategoryFormDelete(request)
+
 @csrf_protect
 def createSubCategory(request):
+    return CourseSubCategoryFormCreate(request)
+@csrf_protect
+def addSubCategory(request):
     return CourseSubCategoryFormAdd(request)
 @csrf_protect
 def deleteSubCategory(request):
     return CourseSubCategoryFormDelete(request)
+
 @csrf_protect
 def createRequirement(request):
+    return CourseRequirementFormCreate(request)
+@csrf_protect
+def addRequirement(request):
     return CourseRequirementFormAdd(request)
 @csrf_protect
 def deleteRequirement(request):
     return CourseRequirementFormDelete(request)
+
 @csrf_protect
 def createCourse(request):
+    return CourseCourseFormCreate(request)
+@csrf_protect
+def addCourse(request):
     return CourseCourseFormAdd(request)
 @csrf_protect
 def deleteCourse(request):
     return CourseCourseFormDelete(request)
+
 @csrf_protect
-def createPrereq(request):
+def addPrereq(request):
     return CoursePrereqFormAdd(request)
 @csrf_protect
 def deletePrereq(request):
     return CoursePrereqFormDelete(request)
+
 @csrf_protect
 def createAp(request):
+    return CourseApFormCreate(request)
+@csrf_protect
+def addAp(request):
     return CourseApFormAdd(request)
 @csrf_protect
 def deleteAp(request):

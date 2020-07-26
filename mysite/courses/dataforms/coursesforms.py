@@ -9,35 +9,36 @@ class ListStudentForm(forms.Form):
     lastname = forms.CharField(label='lastname', required=True)
     username = forms.CharField(label='username', required=True)
 
-    def process(self, request, add_or_delete='add'):
+    def process(self, request, command='add'):
         firtsname = self.cleaned_data.get('firtsname')
         lastname = self.cleaned_data.get('lastname')
         username = self.cleaned_data.get('username')
-        if add_or_delete == 'add':
+        if command == 'add':
             createStudent(firtsname, lastname, username)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteStudent(username)
 
 class ListEnrollForm(forms.Form):
     username = forms.CharField(label='username', required=True)
 
-    def process(self, request, add_or_delete='add'):
+    def process(self, request, command='add'):
         username = self.cleaned_data.get('username')
-        if add_or_delete == 'add':
+        if command == 'add':
             enroll_pk = createEnrollKey(username)
             student_pk = getStudent(username).pk
             linkStudentAndEnrollmentHelper(student_pk, enroll_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteEnrollKey(username)  
+
+# commands create, add, delete
 
 class ListMajorForm(forms.Form):
     major = forms.CharField(label='major', required=True) 
    
-    def process(self, request, add_or_delete='add'):
+    def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         username = request.user.username
-
-        if add_or_delete == 'add':
+        if command == 'create':
             major_check = getMajor(username, major)
             major_pk = 0
             if major_check == -1:
@@ -46,20 +47,20 @@ class ListMajorForm(forms.Form):
                 major_pk = major_check.pk
             enroll_pk = getEnrollKey(username).pk
             linkEnrollmentAndMajorHelper(enroll_pk, major_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteMajor(username, major) 
 
 
 class ListCategoryForm(forms.Form):
     major = forms.CharField(label='major', required=True)  
     category = forms.CharField(label='category', required=True) 
-    
-    def process(self, request, add_or_delete='add'):
+    oldmajor = forms.CharField(label='oldmajor', required=False)  
+    def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
+        oldmajor = self.cleaned_data.get('oldmajor') 
         username = request.user.username
-
-        if add_or_delete == 'add':
+        if command == 'create':
             category_check = getCategory(username, major, category)
             category_pk = 0
             if category_check == -1:
@@ -68,8 +69,12 @@ class ListCategoryForm(forms.Form):
                 category_pk = category_check.pk
             major_pk = getMajor(username, major).pk 
             linkMajorAndCategoryHelper(major_pk, category_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteCategory(username, major, category)
+        if command == 'add':
+            category_pk = getCategory(username, major, category).pk
+            major_pk = getMajor(username, oldmajor).pk 
+            linkMajorAndCategoryHelper(major_pk, category_pk)
 
 
 class ListSubCategoryForm(forms.Form):
@@ -77,15 +82,17 @@ class ListSubCategoryForm(forms.Form):
     category = forms.CharField(label='category', required=True)
     subcategory = forms.CharField(label='subcategory', required=True)
     note = forms.CharField(label='note', required=False)
-
-    def process(self, request, add_or_delete='add'):
+    oldmajor = forms.CharField(label='oldmajor', required=False)  
+    oldcategory = forms.CharField(label='oldcategory', required=False)
+    def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
         subcategory = self.cleaned_data.get('subcategory')
         note = self.cleaned_data.get('note')
+        oldmajor = self.cleaned_data.get('oldmajor')
+        oldcategory = self.cleaned_data.get('oldcategory')  
         username = request.user.username
-
-        if add_or_delete == 'add':
+        if command == 'create':
             subcategory_check = getSubCategory(username, major, category, subcategory)
             subcategory_pk = 0
             if subcategory_check == -1:
@@ -94,8 +101,12 @@ class ListSubCategoryForm(forms.Form):
                 subcategory_pk = subcategory_check.pk
             category_pk = getCategory(username, major, category).pk
             linkCategoryAndSubcategoryHelper(category_pk, subcategory_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteSubcategory(username, major, category, subcategory)
+        if command == 'add':
+            subcategory_pk = getSubCategory(username, major, category, subcategory).pk
+            category_pk = getCategory(username, oldmajor, oldcategory).pk
+            linkCategoryAndSubcategoryHelper(category_pk, subcategory_pk)
 
 
 class ListRequirementForm(forms.Form):
@@ -104,16 +115,20 @@ class ListRequirementForm(forms.Form):
     subcategory = forms.CharField(label='subcategory', required=True)
     requirement = forms.CharField(label='requirement', required=True)
     credit = forms.IntegerField(label='credit', required=False)
-
-    def process(self, request, add_or_delete='add'):
+    oldmajor = forms.CharField(label='oldmajor', required=False)  
+    oldcategory = forms.CharField(label='oldcategory', required=False)
+    oldsubcategory = forms.CharField(label='oldsubcategory', required=False)
+    def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
         subcategory = self.cleaned_data.get('subcategory')
         requirement = self.cleaned_data.get('requirement')
         credit = self.cleaned_data.get('credit')
         username = request.user.username
-
-        if add_or_delete == 'add':
+        oldmajor = self.cleaned_data.get('oldmajor')
+        oldcategory = self.cleaned_data.get('oldcategory')  
+        oldsubcategory = self.cleaned_data.get('oldsubcategory')  
+        if command == 'create':
             requirement_check = getRequirement(username, major, category, subcategory, requirement)
             requirement_pk = 0
             if requirement_check == -1:
@@ -122,8 +137,13 @@ class ListRequirementForm(forms.Form):
                 requirement_pk = requirement_check.pk
             subcategory_pk = getSubCategory(username, major, category, subcategory).pk
             linkSubcategoryAndRequirementHelper(subcategory_pk, requirement_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteRequirement(username, major, category, subcategory, requirement) 
+        if command == 'add': 
+            requirement_pk = getRequirement(username, major, category, subcategory, requirement).pk
+            subcategory_pk = getSubCategory(username, oldmajor, oldcategory, oldsubcategory).pk
+            linkSubcategoryAndRequirementHelper(subcategory_pk, requirement_pk)
+
 
 class ListCourseForm(forms.Form):
     major = forms.CharField(label='major', required=True)  
@@ -132,8 +152,12 @@ class ListCourseForm(forms.Form):
     requirement = forms.CharField(label='requirement', required=True)
     course = forms.CharField(label='course', required=True)
     credit = forms.IntegerField(label='credit', required=False)
+    oldmajor = forms.CharField(label='major', required=False)  
+    oldcategory = forms.CharField(label='category', required=False)
+    oldsubcategory = forms.CharField(label='subcategory', required=False)
+    oldrequirement = forms.CharField(label='requirement', required=False)
 
-    def process(self, request, add_or_delete='add'):
+    def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
         subcategory = self.cleaned_data.get('subcategory')
@@ -142,7 +166,7 @@ class ListCourseForm(forms.Form):
         credit = self.cleaned_data.get('credit')
         username = request.user.username
 
-        if add_or_delete == 'add':
+        if command == 'create':
             course_check = getCourse(username, major, category, subcategory, requirement, course)
             course_pk = 0
             if course_check == -1:
@@ -151,8 +175,12 @@ class ListCourseForm(forms.Form):
                 course_pk = course_check.pk
             requirement_pk = getRequirement(username, major, category, subcategory, requirement)
             linkRequirementAndCourseHelper(requirement_pk, course_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteCourse(username, major, category, subcategory, requirement, course) 
+        if command == 'add': 
+            course_pk = getCourse(username, major, category, subcategory, requirement, course).pk
+            requirement_pk = getRequirement(username, oldmajor, oldcategory, oldsubcategory, oldrequirement).pk
+            linkRequirementAndCourseHelper(requirement_pk, course_pk)
 
 
 class ListPrereqForm(forms.Form):
@@ -166,27 +194,30 @@ class ListPrereqForm(forms.Form):
     psubcategory = forms.CharField(label='psubcategory', required=True)
     prequirement = forms.CharField(label='prequirement', required=True)
     pcourse = forms.CharField(label='pcourse', required=True)
-
-    def process(self, request, add_or_delete='add'):
+    def process(self, request, command='add'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
         subcategory = self.cleaned_data.get('subcategory')
         requirement = self.cleaned_data.get('requirement')
         course = self.cleaned_data.get('course')
-        prereq = self.cleaned_data.get('pcourse')
+        pmajor = self.cleaned_data.get('pmajor')
+        pcategory = self.cleaned_data.get('pcategory')
+        psubcategory = self.cleaned_data.get('psubcategory')
+        prequirement = self.cleaned_data.get('prequirement')
+        pcourse = self.cleaned_data.get('pcourse')
         username = request.user.username
-
-        if add_or_delete == 'add':
-            prereq_check = getPrereq(username, major, category, subcategory, requirement, course, prereq)
+        if command == 'add':
+            prereq_check = getPrereq(username, major, category, subcategory, requirement, course, pcourse)
             prereq_pk = 0
             if prereq_check == -1:
-                prereq_pk = createPrereq(prereq)
+                prereq_pk = createPrereq(pcourse)
             else:
                 prereq_pk = prereq_check.pk
             course_pk = getCourse(username, major, category, subcategory, requirement, course)
             linkCourseAndPrereqHelper(course_pk, prereq_pk)
-        if add_or_delete == 'delete':
-            deletePrereq(username, major, category, subcategory, requirement, course, prereq)
+        if command == 'delete':
+            deletePrereq(username, major, category, subcategory, requirement, course, pcourse)
+
 
 class ListApForm(forms.Form):
     major = forms.CharField(label='major', required=True)  
@@ -194,11 +225,17 @@ class ListApForm(forms.Form):
     subcategory = forms.CharField(label='subcategory', required=True)
     requirement = forms.CharField(label='requirement', required=True)
     course = forms.CharField(label='course', required=True)
+    skip = forms.CharField(label='skip', required=True)
     test = forms.CharField(label='test', required=True)
     scoremin = forms.IntegerField(label='scoremin', required=True)
     scoremax = forms.IntegerField(label='scoremax', required=True)
+    oldmajor = forms.CharField(label='oldmajor', required=False)  
+    oldcategory = forms.CharField(label='oldcategory', required=False)
+    oldsubcategory = forms.CharField(label='oldsubcategory', required=False)
+    oldrequirement = forms.CharField(label='oldrequirement', required=False)
+    oldcourse = forms.CharField(label='oldcourse', required=False)
 
-    def process(self, request, add_or_delete='add'):
+    def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
         subcategory = self.cleaned_data.get('subcategory')
@@ -208,16 +245,23 @@ class ListApForm(forms.Form):
         scoremin = self.cleaned_data.get('scoremin')
         scoremax = self.cleaned_data.get('scoremax')
         username = request.user.username
-
-        if add_or_delete == 'add':
+        oldmajor = self.cleaned_data.get('oldmajor')
+        oldcategory = self.cleaned_data.get('oldcategory')  
+        oldsubcategory = self.cleaned_data.get('oldsubcategory')
+        oldrequirement = self.cleaned_data.get('oldrequirement') 
+        oldcourse = self.cleaned_data.get('oldcourse') 
+        if command == 'create':
             ap_check = getTest(username, major, category, subcategory, requirement, course, test, scoremin, scoremax)
             ap_pk = 0
             if ap_check == -1:
                 ap_pk = createAp(test, scoremin, scoremax)
             else:
                 ap_pk = ap_check.pk
-            course_pk = getCourse(username, major, category, subcategory, requirement, course)
+            course_pk = getCourse(username, oldmajor, oldcategory, oldsubcategory, oldrequirement, oldcourse).pk
             linkCourseAndApHelper(course_pk, ap_pk)
-        if add_or_delete == 'delete':
+        if command == 'delete':
             deleteTest(username, major, category, subcategory, requirement, course, test, scoremin, scoremax)
-
+        if command == 'add':
+            ap_pk = getTest(username, major, category, subcategory, requirement, course, test, scoremin, scoremax).pk
+            course_pk = getCourse(username, oldmajor, oldcategory, oldsubcategory, oldrequirement, oldcourse).pk
+            linkCourseAndApHelper(course_pk, ap_pk)

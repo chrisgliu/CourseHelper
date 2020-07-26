@@ -29,10 +29,13 @@ def CourseEnrollFormDelete(request):
     return processForm(request, ListEnrollForm, 'delete')
 
 def CourseMajorFormAdd(request):
-    return processForm(request, ListMajorForm, 'add')
+    return processForm(request, ListMajorForm, 'create')
 
 def CourseMajorFormDelete(request):
     return processForm(request, ListMajorForm, 'delete')
+
+def CourseCategoryFormCreate(request):
+    return processForm(request, ListCategoryForm, 'create')
 
 def CourseCategoryFormAdd(request):
     return processForm(request, ListCategoryForm, 'add')
@@ -40,17 +43,26 @@ def CourseCategoryFormAdd(request):
 def CourseCategoryFormDelete(request):
     return processForm(request, ListCategoryForm, 'delete')
 
+def CourseSubCategoryFormCreate(request):
+    return processForm(request, ListSubCategoryForm, 'create')
+
 def CourseSubCategoryFormAdd(request):
     return processForm(request, ListSubCategoryForm, 'add')
 
 def CourseSubCategoryFormDelete(request):
     return processForm(request, ListSubCategoryForm, 'delete')
 
+def CourseRequirementFormCreate(request):
+    return processForm(request, ListRequirementForm, 'create')
+
 def CourseRequirementFormAdd(request):
     return processForm(request, ListRequirementForm, 'add')
 
 def CourseRequirementFormDelete(request):
     return processForm(request, ListRequirementForm, 'delete')
+
+def CourseCourseFormCreate(request):
+    return processForm(request, ListCourseForm, 'create')
 
 def CourseCourseFormAdd(request):
     return processForm(request, ListCourseForm, 'add')
@@ -63,6 +75,9 @@ def CoursePrereqFormAdd(request):
 
 def CoursePrereqFormDelete(request):
     return processForm(request, ListPrereqForm, 'delete')
+
+def CourseApFormCreate(request):
+    return processForm(request, ListApForm, 'create')
 
 def CourseApFormAdd(request):
     return processForm(request, ListApForm, 'add')

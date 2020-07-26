@@ -1,5 +1,5 @@
 /// <reference path="dataTree.ts" />
-/// <reference path="sessionData.ts" />
+/// <reference path="sessionDataStuff.ts" />
 /// <reference path="ajaxForm.ts" />
 
 // major create
@@ -57,10 +57,10 @@ function updatecategoryFormCoptionscategories(){
 }
 function activateCategoryFormC(){
    updatecategoryFormCoptionscategories(); 
-   activateTHISForm("categoryaddbutton", "/courses/createcategory",
+   activateTHISForm("categoryaddbutton", "/courses/addcategory",
       null, null,
       ["categoryFormCoptionscategories", "categoryFormCoptionsmajors"], 
-      [["major", "category"], ["major"]],
+      [["major", "category"], ["oldmajor"]],
       updatecategoryFormCoptionscategories
    );
 }
@@ -98,10 +98,10 @@ function updatesubcategoryFormCoptionssubcategories(){
 }
 function activateSubcategoryFormC(){
    updatesubcategoryFormCoptionssubcategories();
-   activateTHISForm("subcategoryaddbutton", "/courses/createsubcategory",
+   activateTHISForm("subcategoryaddbutton", "/courses/addsubcategory",
       null, null,
       ["subcategoryFormCoptionssubcategories", "subcategoryFormCoptionscategories"], 
-      [["major", "category", "subcategory"], ["major", "category"]],
+      [["major", "category", "subcategory"], ["oldmajor", "oldcategory"]],
       updatesubcategoryFormCoptionssubcategories
       );
 }
@@ -112,7 +112,7 @@ function updaterequirementFormAoptionssubcategories(){
 } 
 function activateRequirementFormA(){
    updaterequirementFormAoptionssubcategories(); 
-   activateTHISForm("requirementaddbutton",  "/courses/createrequirement",
+   activateTHISForm("requirementcreatebutton",  "/courses/createrequirement",
       ["requirementFormArequirement", "requirementFormAcredit"], ["requirement", "credit"],
       ["requirementFormAoptionssubcategories"], 
       [["major", "category", "subcategory"]],
@@ -139,10 +139,10 @@ function updaterequirementFormCoptionsrequirements() {
 }
 function activateRequirementFormC(){ 
    updaterequirementFormCoptionsrequirements();
-   activateTHISForm("requirementaddbutton",  "/courses/createrequirement",
+   activateTHISForm("requirementaddbutton",  "/courses/addrequirement",
       null, null,
       ["requirementFormBoptionsrequirements","requirementFormCoptionssubcategories"], 
-      [["major", "category", "subcategory", "requirement"], ["major", "category", "subcategory"]],
+      [["major", "category", "subcategory", "requirement"], ["oldmajor", "oldcategory", "oldsubcategory"]],
       updaterequirementFormCoptionsrequirements
       );
 }
@@ -166,7 +166,7 @@ function updatecourseFormBoptionscourses() {
 }
 function activateCourseFormB(){
    updatecourseFormBoptionscourses();
-   activateTHISForm("courseaddbutton", "/courses/createcourse",
+   activateTHISForm("coursedeletebutton", "/courses/deletecourse",
       null, null,
       ["courseFormBoptionscourses"],
       [["major", "category", "subcategory", "requirement", "course" ]],
@@ -180,10 +180,10 @@ function updatecourseFormCoptionscourses() {
 }
 function activateCourseFormC(){
    updatecourseFormCoptionscourses();
-   activateTHISForm("coursedeletebutton", "/courses/deletecourse",
+   activateTHISForm("courseaddbutton", "/courses/addcourse",
       null, null,
       ["courseFormCoptionscourses","courseFormCoptionsrequirements"], 
-      [["major", "category", "subcategory", "requirement", "course" ],["major", "category", "subcategory", "requirement"]],
+      [["major", "category", "subcategory", "requirement", "course" ],["oldmajor", "oldcategory", "oldsubcategory", "oldrequirement"]],
       updatecourseFormCoptionscourses
       );
 }
@@ -195,17 +195,18 @@ function updateprereqForms(){
 }
 function activatePrereqForms() {
    updateprereqForms();
-   // cant be the same course
-   activateTHISForm("prereqaddbutton", "/courses/createprereq",
+   activateTHISForm("prereqaddbutton", "/courses/addprereq",
       null, null,
       ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], 
-      [["major", "category", "subcategory", "requirement", "course"],["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]],
+      [["major", "category", "subcategory", "requirement", "course"],
+      ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]],
       updateprereqForms
       );
-   activateTHISForm("prereqdeletebutton", "/courses/createprereq",
+   activateTHISForm("prereqdeletebutton", "/courses/deleteprereq",
       null, null,
       ["prereqFormAoptionscourses", "prereqFormAoptionsprereqs"], 
-      [["major", "category", "subcategory", "requirement", "course"], ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]],
+      [["major", "category", "subcategory", "requirement", "course"], 
+      ["pmajor", "pcategory", "psubcategory", "prequirement", "pcourse"]],
       updateprereqForms
       );
 }
@@ -229,16 +230,18 @@ function updateapFormBoptions() {
 }
 function activateAPFormB(){
    updateapFormBoptions();
-   activateTHISForm("apaddbutton", "/courses/createap",
+   activateTHISForm("apaddbutton", "/courses/addap",
       null, null,
       ["apFormBoptionstests", "apFormBoptionscourses"], 
-      [["test", "scoremin", "scoremax"], ["major", "category", "subcategory", "requirement", "course"]],
+      [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"], 
+      ["oldmajor", "oldcategory", "oldsubcategory", "oldrequirement", "oldcourse"]],
       updateapFormBoptions
    );
    activateTHISForm("apdeletebutton", "/courses/deleteap",
       null, null,
       ["apFormBoptionstests", "apFormBoptionscourses"],
-      [["test", "scoremin", "scoremax"], ["major", "category", "subcategory", "requirement", "course"]],
+      [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"],
+      ["oldmajor", "oldcategory", "oldsubcategory", "oldrequirement", "oldcourse"]],
       updateapFormBoptions
       );
 }

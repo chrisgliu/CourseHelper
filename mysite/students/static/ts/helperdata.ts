@@ -1,6 +1,6 @@
 ///<reference path='ajax.ts'/>
 ///<reference path='dataTree.ts'/>
-/// <reference path='sessionData.ts' />
+/// <reference path='sessionDataStuff.ts' />
 /// <reference path='readXML.ts' />
 //helperdata
 

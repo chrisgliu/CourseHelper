@@ -19,7 +19,7 @@ function addSessionCourses(
     addSessionDataList(requirements, "requirement");
     addSessionDataList(courses, "course");
     addSessionDataList(prereqs, "prereq");
-    addSessionDataList(ap, "test");
+    addSessionDataList(ap, "ap");
 }
 function addSessionMajors(majors:string[]){
     addSessionDataList(majors, "mymajor");
