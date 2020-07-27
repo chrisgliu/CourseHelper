@@ -152,11 +152,10 @@ class ListCourseForm(forms.Form):
     requirement = forms.CharField(label='requirement', required=True)
     course = forms.CharField(label='course', required=True)
     credit = forms.IntegerField(label='credit', required=False)
-    oldmajor = forms.CharField(label='major', required=False)  
-    oldcategory = forms.CharField(label='category', required=False)
-    oldsubcategory = forms.CharField(label='subcategory', required=False)
-    oldrequirement = forms.CharField(label='requirement', required=False)
-
+    oldmajor = forms.CharField(label='oldmajor', required=False)  
+    oldcategory = forms.CharField(label='oldcategory', required=False)
+    oldsubcategory = forms.CharField(label='oldsubcategory', required=False)
+    oldrequirement = forms.CharField(label='oldrequirement', required=False)
     def process(self, request, command='create'):
         major = self.cleaned_data.get('major')
         category = self.cleaned_data.get('category')
@@ -165,6 +164,10 @@ class ListCourseForm(forms.Form):
         course = self.cleaned_data.get('course')
         credit = self.cleaned_data.get('credit')
         username = request.user.username
+        oldmajor = self.cleaned_data.get('oldmajor')
+        oldcategory = self.cleaned_data.get('oldcategory')  
+        oldsubcategory = self.cleaned_data.get('oldsubcategory') 
+        oldrequirement = self.cleaned_data.get('oldrequirement') 
 
         if command == 'create':
             course_check = getCourse(username, major, category, subcategory, requirement, course)
@@ -173,7 +176,7 @@ class ListCourseForm(forms.Form):
                 course_pk = createCourse(course, credit)
             else:
                 course_pk = course_check.pk
-            requirement_pk = getRequirement(username, major, category, subcategory, requirement)
+            requirement_pk = getRequirement(username, major, category, subcategory, requirement).pk
             linkRequirementAndCourseHelper(requirement_pk, course_pk)
         if command == 'delete':
             deleteCourse(username, major, category, subcategory, requirement, course) 
@@ -213,7 +216,7 @@ class ListPrereqForm(forms.Form):
                 prereq_pk = createPrereq(pcourse)
             else:
                 prereq_pk = prereq_check.pk
-            course_pk = getCourse(username, major, category, subcategory, requirement, course)
+            course_pk = getCourse(username, major, category, subcategory, requirement, course).pk
             linkCourseAndPrereqHelper(course_pk, prereq_pk)
         if command == 'delete':
             deletePrereq(username, major, category, subcategory, requirement, course, pcourse)
@@ -225,7 +228,7 @@ class ListApForm(forms.Form):
     subcategory = forms.CharField(label='subcategory', required=True)
     requirement = forms.CharField(label='requirement', required=True)
     course = forms.CharField(label='course', required=True)
-    skip = forms.CharField(label='skip', required=True)
+    skip = forms.CharField(label='skip', required=False)
     test = forms.CharField(label='test', required=True)
     scoremin = forms.IntegerField(label='scoremin', required=True)
     scoremax = forms.IntegerField(label='scoremax', required=True)
@@ -257,7 +260,7 @@ class ListApForm(forms.Form):
                 ap_pk = createAp(test, scoremin, scoremax)
             else:
                 ap_pk = ap_check.pk
-            course_pk = getCourse(username, oldmajor, oldcategory, oldsubcategory, oldrequirement, oldcourse).pk
+            course_pk = getCourse(username, major, category, subcategory, requirement, course).pk
             linkCourseAndApHelper(course_pk, ap_pk)
         if command == 'delete':
             deleteTest(username, major, category, subcategory, requirement, course, test, scoremin, scoremax)

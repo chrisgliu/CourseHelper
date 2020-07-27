@@ -190,6 +190,9 @@ function readMySessionString(data_string) {
 }
 function getSubSessionData(data_id) {
     let data = getSessionData(data_id);
+    if (data == null) {
+        return;
+    }
     let subdata = [];
     for (const info of data) {
         subdata.push(info[0]);
@@ -294,10 +297,10 @@ function addPlannerData(workspace_id, response) {
     for (const year of year_data) {
         // data tree
         if (year.year_name == "before") {
-            addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
+            addCaretList(workspace_id, `YEAR:${year.year_name}`, true, "myapactions");
         }
         else {
-            addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+            addCaretList(workspace_id, `YEAR:${year.year_name}`, false, null);
         }
         // session
         session_years.push(year.year_name);
@@ -306,7 +309,7 @@ function addPlannerData(workspace_id, response) {
             let semester_data = readMySemesters(semesters);
             for (const semester of semester_data) {
                 // data tree
-                addCaretList(`Year:${year.year_name}`, semester.semester_name, true, "mytermactions");
+                addCaretList(`YEAR:${year.year_name}`, semester.semester_name, true, "mytermactions");
                 // session
                 session_semesters.push(`${year.year_name}/${semester.semester_name}`);
             }
@@ -339,11 +342,13 @@ function addScheduleData(workspace_id, response) {
     for (const schedule of schedule_data) {
         // session
         session_schedules.push(schedule.schedule_name);
-        let courses = schedule.courses.childNodes;
-        let course_data = readMyCourses(courses);
-        for (const course of course_data) {
-            // session
-            session_courses.push(`${schedule.schedule_name}/${course.course_name}`);
+        if (schedule.courses != null) {
+            let courses = schedule.courses.childNodes;
+            let course_data = readMyCourses(courses);
+            for (const course of course_data) {
+                // session
+                session_courses.push(`${schedule.schedule_name}/${course.course_name}`);
+            }
         }
     }
     addSessionSchedule(session_schedules, session_courses);
@@ -533,17 +538,24 @@ function activateHelperButtons() {
             showTrackedMajors();
             showAPTransfer();
             showTranferCourses("test");
+            activateHelperForms();
         };
     }
     document.getElementById('mymajorbutton').onclick = () => {
         toggleShow('mymajoractions');
         showTrackedMajors();
+        activateMajorManagerAdd();
+        activateMajorManagerDelete();
     };
     document.getElementById('mycoursesbutton').onclick = () => {
         toggleShow('mycourseoperation');
+        activateCourseManagerAdd();
+        activateCourseManagerDelete();
     };
     document.getElementById('myapbutton').onclick = () => {
         toggleShow('mytestoperation');
+        activateTestManagerAdd();
+        activateTestManagerDelete();
     };
 }
 /// <reference path="dataTree.ts" />
@@ -677,6 +689,9 @@ function addSelectionOptions(selection_id, values) {
     clearData(selection_id);
     let selector = document.getElementById(selection_id);
     if (selector == null) {
+        return;
+    }
+    if (values == null) {
         return;
     }
     for (const value of values) {
@@ -824,6 +839,9 @@ function cleanUpDataTree() {
         }
         else {
             data = getSessionData(tag);
+        }
+        if (data == null) {
+            return;
         }
         for (const instance of data) {
             let separated_sections = readMySessionString(instance);
@@ -1066,7 +1084,7 @@ function activateAPFormA() {
 }
 function updateapFormBoptions() {
     addSelectionOptions("apFormBoptionscourses", getSubSessionData("course"));
-    addSelectionOptions("apFormBoptionstests", getSessionData("test"));
+    addSelectionOptions("apFormBoptionstests", getSessionData("ap"));
 }
 function activateAPFormB() {
     updateapFormBoptions();
@@ -1309,32 +1327,123 @@ function activateCourseButtons() {
     }
 }
 /// <reference path="ajaxForm.ts" />
+function semesterAJAX(sub_url_request, semesters, year) {
+    for (const semester of semesters) {
+        $.ajax({
+            url: sub_url_request,
+            type: "POST",
+            data: { "year": `${year}`, "semester": semester },
+            dataType: "json",
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            },
+            success: function () { },
+            error: function () { }
+        });
+    }
+}
+function yearAJAX(url_request, year) {
+    $.ajax({
+        url: url_request,
+        type: "POST",
+        data: { "year": `${year}` },
+        dataType: "json",
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        },
+        success: function () { },
+        error: function () { }
+    });
+}
+function yearAJAXa(url_request, startingyear) {
+    yearAJAX(url_request, "before");
+    yearAJAX(url_request, startingyear);
+}
+function yearAJAXb(url_request, year) {
+    yearAJAX(url_request, year);
+}
+function makeSemesters(year, terms, startingindex = 1, add_or_delete) {
+    let semesters = [];
+    if (add_or_delete == "add") {
+        for (let index = startingindex; index < startingindex + parseInt(terms); index++) {
+            let semester = `${year}:Term-${index}`;
+            semesters.push(semester);
+        }
+    }
+    if (add_or_delete == "delete") {
+        for (let index = startingindex; index > startingindex - parseInt(terms); index--) {
+            let semester = `${year}:Term-${index}`;
+            semesters.push(semester);
+        }
+    }
+    return semesters;
+}
+function getLatestYearID() {
+    let list = document.getElementById("plannerdata");
+    let header = list.getElementsByTagName("span");
+    let years = [];
+    let year_in_question = "";
+    for (const element of header) {
+        let id = element.id;
+        if (id.indexOf("YEAR") != -1) {
+            years.push(id);
+        }
+    }
+    year_in_question = years[years.length - 1];
+    for (const year_id of years) {
+        let symbol = document.getElementById(year_id);
+        if (symbol.className == "caret caret-down") {
+            year_in_question = year_id;
+        }
+    }
+    let year_value = year_in_question.substring(year_in_question.indexOf("-") + 1);
+    return year_value;
+}
 function activateYearManager() {
     document.getElementById("addbuttonyearmanager").onclick = () => {
-        let termsperyear = document.getElementById("termsperyear").value;
         let startingyear = document.getElementById("startingyear").value;
         let yearnum = document.getElementById("plannerdata").children.length;
         if (yearnum == 0) {
             //create before and starting year
+            yearAJAXa("/addMyYear", startingyear);
         }
-        if (yearnum > 2) {
-            let time = yearnum - 2;
-            let year = startingyear + time;
+        if (yearnum == 1) {
+            yearAJAXb("/addMyYear", startingyear);
+        }
+        if (yearnum >= 2) {
+            let year = `${parseInt(startingyear) + (yearnum - 2) + 1}`;
+            yearAJAXb("/addMyYear", year);
         }
     };
     document.getElementById("deletebuttonyearmanager").onclick = () => {
-        let termsperyear = document.getElementById("termsperyear").value;
-        let startingyear = document.getElementById("startingyear").value;
-        let yearnum = document.getElementById("plannerdata").children.length;
-        if (yearnum == 0) {
-            return;
+        let year_id = getLatestYearID();
+        let year = year_id.substring(year_id.indexOf(":") + 1);
+        if (year != null) {
+            yearAJAXa("/deleteMyYear", year);
         }
-        if (yearnum == 2) {
-            //delete before and starting year
+    };
+    document.getElementById("addbuttonsemestermanager").onclick = () => {
+        let terms = document.getElementById("termsperyear").value;
+        let year = getLatestYearID();
+        let index = document.getElementById(year).children.length + 1;
+        if (year != null) {
+            let year_val = year.substring(year.indexOf(":") + 1);
+            let semesters = makeSemesters(year_val, terms, index, "add");
+            semesterAJAX("/addMySemester", semesters, year_val);
         }
-        if (yearnum > 2) {
-            let time = yearnum - 2;
-            let year = startingyear + time;
+    };
+    document.getElementById("deletebuttonsemestermanager").onclick = () => {
+        let terms = document.getElementById("termsperyear").value;
+        let year = getLatestYearID();
+        let index = document.getElementById(year).children.length;
+        if (year != null) {
+            let year_val = year.substring(year.indexOf(":") + 1);
+            let semesters = makeSemesters(year_val, terms, index, "delete");
+            semesterAJAX("/deleteMySemester", semesters, year_val);
         }
     };
 }
@@ -1343,37 +1452,42 @@ function updatemajormanageroptionsmajors() {
 }
 function activateMajorManagerAdd() {
     updatemajormanageroptionsmajors();
-    activateTHISForm("majormanageraddbutton", "/", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
+    activateTHISForm("majormanageraddbutton", "/addMyMajor", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
 }
 function activateMajorManagerDelete() {
     updatemajormanageroptionsmajors();
-    activateTHISForm("majormanagerdeletebutton", "/", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
+    activateTHISForm("majormanagerdeletebutton", "/deleteMajor", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
 }
 function updatecoursemanageroptionscourses() {
     addSelectionOptions("coursemanageroptionscourse", getSubSessionData("course"));
 }
 function activateCourseManagerAdd() {
     updatecoursemanageroptionscourses();
-    activateTHISForm("coursemanageraddbutton", "/", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
+    activateTHISForm("coursemanageraddbutton", "/addMyCourse", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
 }
 function activateCourseManagerDelete() {
     updatecoursemanageroptionscourses();
-    activateTHISForm("coursemanagerdeletebutton", "/", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
+    activateTHISForm("coursemanagerdeletebutton", "/deleteMyCourse", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
 }
 function updatetestmanageroptionstests() {
     addSelectionOptions("testmanageroptionstests", getSessionData("ap"));
 }
 function activateTestManagerAdd() {
     updatetestmanageroptionstests();
-    activateTHISForm("testmanageraddbutton", "/", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
+    activateTHISForm("testmanageraddbutton", "/addMyAP", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
 }
 function activateTestManagerDelete() {
     updatetestmanageroptionstests();
-    activateTHISForm("testmanagerdeletebutton", "/", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
-}
-function activateAPTransferManager() {
+    activateTHISForm("testmanagerdeletebutton", "/deleteMyAP", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
 }
 function activateHelperForms() {
+    activateYearManager();
+    activateMajorManagerAdd();
+    activateMajorManagerDelete();
+    activateCourseManagerAdd();
+    activateCourseManagerDelete();
+    activateTestManagerAdd();
+    activateTestManagerDelete();
 }
 /// <reference path='toggle.ts'/>
 /// <reference path='coursesDataTree.ts' />
@@ -1415,6 +1529,7 @@ document.addEventListener("DOMContentLoaded", () => {
     activateCourseButtons();
     // helper buttons
     activateHelperButtons();
+    activateHelperForms();
     document.getElementById("darkmode").onclick = () => {
         darkmode();
     };

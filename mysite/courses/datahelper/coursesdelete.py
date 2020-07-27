@@ -25,7 +25,7 @@ def deleteRequirement(username, major, category, subcategory, requirement):
     requirement.delete()
 
 def deleteCourse(username, major, category, subcategory, requirement, course):
-    coursse = getCourse(username, major, category, subcategory, requirement, course)
+    course = getCourse(username, major, category, subcategory, requirement, course)
     course.delete()
 
 def deletePrereq(username, major, category, subcategory, requirement, course, prereq):

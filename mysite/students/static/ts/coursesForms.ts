@@ -226,7 +226,7 @@ function activateAPFormA(){
 }
 function updateapFormBoptions() {
    addSelectionOptions("apFormBoptionscourses", getSubSessionData("course"));
-   addSelectionOptions("apFormBoptionstests", getSessionData("test")); 
+   addSelectionOptions("apFormBoptionstests", getSessionData("ap")); 
 }
 function activateAPFormB(){
    updateapFormBoptions();

@@ -170,6 +170,7 @@ function cleanUpDataTree(){
     let data:string[] = [];
     if(tag=="subcategory"||tag=="requirement"||tag=="course"){ data = getSubSessionData(tag);
     } else { data = getSessionData(tag);}
+    if(data == null){return}
     for (const instance of data) {
       let separated_sections = readMySessionString(instance);
       let tree_name = "";

@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   activateCourseButtons();
   // helper buttons
   activateHelperButtons();
+  activateHelperForms();
 
   document.getElementById("darkmode").onclick = ()=> {
     darkmode();

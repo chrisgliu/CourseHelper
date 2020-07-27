@@ -24,7 +24,10 @@ def getYears(request):
 
 def getAP(request):
     user_years = getYears(request) 
-    year_object = user_years.filter(year="before").first() 
+    year_before = request.user.username + "-before"
+    if(user_years.filter(year=year_before).exists()==False):
+        return [];
+    year_object = user_years.filter(year=year_before).first() 
     ap = []
     tests = AP.objects.filter(years__in=[year_object.pk])
     for test in tests:
@@ -58,19 +61,30 @@ def getCourses(request, year, semester):
 def getSpecificMajor(request, major_name):
     key = getEnrollmentKey(request)
     return Major.objects.get(enrolled=key, major=major_name)
-
+    
 
 def getSpecificYear(request, year_name):
     key = getEnrollmentKey(request)
-    return Year.objects.get(enrolled=key, year=year_name)
+    year = Year.objects.filter(enrolled=key).filter(year=year_name)
+    if year.exists():
+        return year.first()
+    else:
+        return -1;
 
 
 def getSpecificSemester(request, year_name, semester_name):
     year = getSpecificYear(request, year_name)
-    return Semester.objects.get(years=year, semester=semester_name)
-
+    semester = Semester.objects.filter(years=year).filter(semester=semester_name)
+    if semester.exists():
+        return semester.first()
+    else:
+        return -1;
 
 def getSpecificCourse(request, year_name, semester_name, course_name):
     semester = getSpecificSemester(request, year_name, semester_name)
-    return Course.objects.get(semesters=semester, course=course_name)
+    course = Course.objects.filter(semesters=semester).filter(course=course_name)
+    if course.exists():
+        return course.first()
+    else:
+        return -1;
 

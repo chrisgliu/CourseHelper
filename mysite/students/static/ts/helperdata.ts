@@ -83,9 +83,9 @@ function addPlannerData(workspace_id:string, response:Document) {
   for (const year of year_data) {
     // data tree
     if (year.year_name == "before") {
-      addCaretList(workspace_id, `Year:${year.year_name}`, true, "myapactions");
+      addCaretList(workspace_id, `YEAR:${year.year_name}`, true, "myapactions");
     } else {
-      addCaretList(workspace_id, `Year:${year.year_name}`, false, null);
+      addCaretList(workspace_id, `YEAR:${year.year_name}`, false, null);
     }
     // session
     session_years.push(year.year_name)
@@ -94,7 +94,7 @@ function addPlannerData(workspace_id:string, response:Document) {
       let semester_data = readMySemesters(semesters)
       for (const semester of semester_data) {
         // data tree
-        addCaretList(`Year:${year.year_name}`,semester.semester_name, true, "mytermactions");
+        addCaretList(`YEAR:${year.year_name}`,semester.semester_name, true, "mytermactions");
         // session
         session_semesters.push(`${year.year_name}/${semester.semester_name}`)
       }
@@ -138,11 +138,13 @@ function addScheduleData(workspace_id:string, response:Document) {
   for (const schedule of schedule_data) {
     // session
     session_schedules.push(schedule.schedule_name)
-    let courses = schedule.courses.childNodes;
-    let course_data = readMyCourses(courses)
-    for (const course of course_data) {
-      // session
-      session_courses.push(`${schedule.schedule_name}/${course.course_name}`)
+    if (schedule.courses != null){
+      let courses = schedule.courses.childNodes;
+      let course_data = readMyCourses(courses)
+      for (const course of course_data) {
+        // session
+        session_courses.push(`${schedule.schedule_name}/${course.course_name}`)
+      }
     }
   }
   addSessionSchedule(

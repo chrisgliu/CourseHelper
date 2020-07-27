@@ -35,13 +35,18 @@ def addYear(request, year_name):
 
 def addSemester(request, year_name, semester_name):
     year = getSpecificYear(request, year_name)
+    if year is None:
+        return
     new_semester = Semester(semester=semester_name)
+    new_semester.save()
     new_semester.years.add(year)
     new_semester.save()
 
 
 def addCourse(request, year_name, semester_name, course_name):
     semester = getSpecificSemester(request, year_name, semester_name)
+    if semester is None:
+        return
     new_course = Course(course=course_name)
     new_course.save()
     new_course.semesters.add(semester)

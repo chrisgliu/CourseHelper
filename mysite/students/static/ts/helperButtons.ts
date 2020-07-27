@@ -23,19 +23,26 @@ function activateHelperButtons() {
         showTrackedMajors();
         showAPTransfer();
         showTranferCourses("test");
+        activateHelperForms();
       }
     }
      
     document.getElementById('mymajorbutton').onclick = ()=>{
       toggleShow('mymajoractions');
       showTrackedMajors();
+      activateMajorManagerAdd();
+      activateMajorManagerDelete();
     }
     
     document.getElementById('mycoursesbutton').onclick = ()=>{
       toggleShow('mycourseoperation');
+      activateCourseManagerAdd();
+      activateCourseManagerDelete();
     }
     document.getElementById('myapbutton').onclick = ()=>{
       toggleShow('mytestoperation');
+      activateTestManagerAdd();
+      activateTestManagerDelete();
     } 
 }
  

@@ -89,6 +89,7 @@ function addSelectionOptions(selection_id:string, values:string[]){
   clearData(selection_id);
   let selector = document.getElementById(selection_id);
   if (selector == null) { return}
+  if (values == null){return}
   for (const value of values) {
     let option = document.createElement('option');
     option.value = value;

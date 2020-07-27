@@ -69,6 +69,7 @@ function readMySessionString(data_string:string) {
 
 function getSubSessionData(data_id:string){
    let data = getSessionData(data_id);
+   if (data == null){ return}
    let subdata:string[] = [];
    for (const info of data) { subdata.push(info[0]); }
    return subdata;

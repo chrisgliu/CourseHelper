@@ -65,7 +65,7 @@ def requestMyScheduleHelper(request):
                 courses.append(course_item)
             if len(courses):
                 schedule_item.append(courses)
-        root.append(schedule_item)
+            root.append(schedule_item)
     xml_response = etree.tostring(root, xml_declaration=True)
     return HttpResponse(xml_response, content_type='text/xml')
 
@@ -91,10 +91,11 @@ def processForm(request, model_form, command):
             form = model_form(request.POST)
             if form.is_valid():
                 form.process(request, command)
-                return HttpResponseRedirect(reverse("main"))
-    message = 'Sign in first'
-    return renderHome(request, 'students/main.html', {"messages": [message]}) 
-
+                return HttpResponse("hello") 
+            else:
+                return HttpResponse("invalid form"+str(form)) 
+        else: return HttpResponse("invalid user")
+    return HttpResponse("other")
 
 def MajorFormAdd(request):
     return processForm(request, MajorForm, 'add')

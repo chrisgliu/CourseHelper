@@ -80,8 +80,7 @@ class Semester(models.Model):
     semester = models.CharField(max_length=64)
     years = models.ManyToManyField(Year, blank=False, related_name="semesters")
     def __str__(self):
-        the_year = Year.objects.get(pk=self.years.first().pk)
-        return f"{the_year.year}/{self.semester}"
+        return f"{self.semester}"
 
     class Meta:
         verbose_name_plural = "5. Helper Semesters"
