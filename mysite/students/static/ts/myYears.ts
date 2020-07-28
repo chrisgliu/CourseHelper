@@ -9,6 +9,9 @@ function createCourseBlock(workspace_id:string, course_name:string, credit:strin
     course.className = "hstack";
     let name = document.createElement("label");
     name.innerHTML = course_name;
+    if (course_name.length > 10) {
+        name.className = "bigfield";
+    }
     let value = document.createElement("button");
     value.innerHTML = credit;
     course.appendChild(name);
@@ -41,7 +44,7 @@ function showTermCourses(term_name:string){
     clearData("coursesinaterm");
     let mycourses = getSessionData("mycourse");
     if (mycourses == null){ return}
-    let term_courses = [];
+    let term_courses:string[] = [];
     for (const course of mycourses) {
         if ( course != null) {
             if (course.indexOf(term_name)!=-1) {
@@ -51,10 +54,8 @@ function showTermCourses(term_name:string){
     }
     for (const term_course of term_courses) {
         if (term_course != null) {
-            let term_course_content = readMySessionString(term_course);
-            let course_name = term_course_content[2];
-            let credit_num = getCourseCredit(course_name);
-            let credit = `${credit_num}`;
+            let course_name = term_course.substring(term_course.indexOf("/")+1);;
+            let credit = getCourseCredit(course_name)
             createCourseBlock("coursesinaterm", course_name, credit);
         } 
     }
@@ -79,6 +80,10 @@ function showTranferCourses(test_name:string){
     for (const ap_test of ap_data) {
         if (ap_test != null) {
             let ap_content = readMySessionString(ap_test);
+            let course_relation = "";
+            for (let index = 0; index < ap_content.length-3; index++) {
+                course_relation = `${course_relation}/${ap_content[index]}`;
+            }
             let ap_name = ap_content[ap_content.length - 3];
             if (ap_name == test_name) {
                 let score_min = parseInt(ap_content[ap_content.length - 2]);
@@ -89,7 +94,7 @@ function showTranferCourses(test_name:string){
                     let credit_num = getCourseCredit(course_name);
                     let credit = `${credit_num}`;
                     coursesap.push(course_name);
-                    createCourseBlock("coursesinaptranfer", course_name, credit); 
+                    createCourseBlock("coursesinaptranfer", course_relation, credit); 
                 }
             }
         }

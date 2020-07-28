@@ -28,25 +28,18 @@ function yearAJAX(url_request:string, year:string){
         error: function (){}
     });
 }
-function yearAJAXa(url_request:string, startingyear:string){
-    yearAJAX(url_request, "before");
-    yearAJAX(url_request, startingyear);
-}
-function yearAJAXb(url_request:string, year:string){
-    yearAJAX(url_request, year);
-}
 
 function makeSemesters(year:string, terms:string, startingindex:number=1, add_or_delete:string){
     let semesters:string[] = [];
     if(add_or_delete == "add"){
         for (let index = startingindex; index < startingindex+parseInt(terms); index++) {
-            let semester = `${year}:Term-${index}`;
+            let semester = `${year}:TERM-${index}`;
             semesters.push(semester);
         }
     }
     if(add_or_delete == "delete"){
         for (let index = startingindex; index > startingindex-parseInt(terms); index--) {
-            let semester = `${year}:Term-${index}`;
+            let semester = `${year}:TERM-${index}`;
             semesters.push(semester);
         }
     }
@@ -78,23 +71,18 @@ function activateYearManager(){
         let startingyear = (<HTMLInputElement>document.getElementById("startingyear")).value;
         let yearnum = document.getElementById("plannerdata").children.length;
         if (yearnum == 0){
-            //create before and starting year
-            yearAJAXa("/addMyYear", startingyear);
+            yearAJAX("/addMyYear", startingyear);
         }
-        if (yearnum == 1){
-            yearAJAXb("/addMyYear", startingyear); 
-        }
-        if (yearnum >= 2){
-
-            let year = `${parseInt(startingyear) + (yearnum-2) + 1}`;
-            yearAJAXb("/addMyYear", year);
+        if (yearnum >= 1){
+            let year = `${parseInt(startingyear) + (yearnum)}`;
+            yearAJAX("/addMyYear", year);
         }
     }
     document.getElementById("deletebuttonyearmanager").onclick = ()=> {
         let year_id = getLatestYearID()
         let year = year_id.substring(year_id.indexOf(":")+1);
         if (year != null){
-            yearAJAXa("/deleteMyYear", year); 
+            yearAJAX("/deleteMyYear", year); 
         }
     }
     document.getElementById("addbuttonsemestermanager").onclick = ()=> {
@@ -141,46 +129,66 @@ function activateMajorManagerDelete(){
     );
 }
 
-function updatecoursemanageroptionscourses() {
+function updatecoursemanageroptions() {
     addSelectionOptions("coursemanageroptionscourse", getSubSessionData("course"));
+    addSelectionOptions("coursemanageroptionsterms", getSessionData("mysemester"))
 }
 function activateCourseManagerAdd(){
-    updatecoursemanageroptionscourses();
+    updatecoursemanageroptions();
     activateTHISForm("coursemanageraddbutton", "/addMyCourse",
        null, null,
-       ["coursemanageroptionscourse"], 
-       [["major", "category", "subcategory", "requirement", "course" ]],
-       updatecoursemanageroptionscourses
+       ["coursemanageroptionscourse", "coursemanageroptionsterms"], 
+       [[null, null, null, null, "course" ],
+        ["year", "semester"]],
+       updatecoursemanageroptions
     );
 }
 function activateCourseManagerDelete(){
-    updatecoursemanageroptionscourses();
+    updatecoursemanageroptions();
     activateTHISForm("coursemanagerdeletebutton", "/deleteMyCourse",
-       null, null,
-       ["coursemanageroptionscourse"], 
-       [["major", "category", "subcategory", "requirement", "course" ]],
-       updatecoursemanageroptionscourses
+        null, null,
+        ["coursemanageroptionscourse", "coursemanageroptionsterms"], 
+        [[null, null, null, null, "course" ],
+         ["year", "semester"]],
+        updatecoursemanageroptions
     );
 }
 
+function inarray(list:any[], value:any){
+    if(list == null){return false; }
+    for (const item of list) {
+        if(item == value){ return true;}
+    }
+    return false;
+}
 function updatetestmanageroptionstests() {
-    addSelectionOptions("testmanageroptionstests", getSessionData("ap"));
+    let ap_data = getSessionData("ap");
+    if (ap_data == null) {return}
+    let ap:string[] = [];
+    for (const instance of ap_data) {
+        let data = readMySessionString(instance);
+        let test_name:string = data[data.length - 3];
+        if (!inarray(ap, test_name)){ ap.push(test_name);}
+    }
+    addSelectionOptions("testmanageroptionstests", ap);
 }
 function activateTestManagerAdd(){
     updatetestmanageroptionstests();
     activateTHISForm("testmanageraddbutton", "/addMyAP",
-       null, null,
+       ["testmanagerscore"],
+       ["score"], 
        ["testmanageroptionstests"], 
-       [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]],
+       [["test_name"]],
        updatetestmanageroptionstests
     );
  }
 function activateTestManagerDelete(){
     updatetestmanageroptionstests();
     activateTHISForm("testmanagerdeletebutton", "/deleteMyAP",
-       null, null,
+       ["testmanagerscore"],
+       ["score"], 
        ["testmanageroptionstests"], 
-       [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]],
+       [["test_name"]],
        updatetestmanageroptionstests
     );
  }

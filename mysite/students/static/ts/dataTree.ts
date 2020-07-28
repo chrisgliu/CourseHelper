@@ -2,6 +2,8 @@
 /// <reference path="myAP.ts" />
 /// <reference path="betterDark.ts" />
 /// <reference path="coursesDataTree.ts" />
+/// <reference path="myStatus.ts" />
+
 
 
 
@@ -35,6 +37,13 @@ function addDataList(parent_ul_id:string, name:string, symbol_type:string, toggl
     if (name.indexOf("MAJOR")!=-1){
       cleanUpDataTree();
     }
+    if (name.indexOf("YEAR")!=-1 && name.lastIndexOf("before")!=-1 ){
+      showAPTransfer();
+      toggleShow('mytestoperation');
+    }
+    if (name.indexOf("TERM")!=-1 ){
+      showTermCourses(name);
+    }
   }
   let nested = document.createElement('ul');
   nested.className = 'nested';
@@ -63,7 +72,7 @@ function addCaretList(parent_ul_id:string, name:string, is_special:boolean, spec
       } else if (parent_ul_id.indexOf("Year:") != -1){
         showTermCourses(parent_ul_id.substring(parent_ul_id.indexOf(":")+1));
       }
-
+      cleanUPStatus();
       let element:HTMLElement = document.getElementById(special_id)
       toggleIt(element);
     }
@@ -77,6 +86,7 @@ function addStatusList(parent_ul_id:string, name:string, status:boolean){
   let toggle_function = function click(symbol:HTMLElement){
     let data: HTMLElement = symbol.parentElement.querySelector(".nested");
     toggleIt(data);
+
     if (status) {
       symbol.classList.toggle("checkmark_down")
     } else {

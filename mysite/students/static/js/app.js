@@ -39,13 +39,15 @@ function readMyDataInput(inputs, input_breakdown, options, option_breakdown) {
     if (options != null) {
         for (let index = 0; index < options.length; index++) {
             const selector = options[index];
-            const selector_breakdown = option_breakdown[index];
-            let values = getSelectionValue(selector);
-            let value_list = readMySessionString(values);
-            for (let v_index = 0; v_index < value_list.length; v_index++) {
-                const value = value_list[v_index];
-                const tag = selector_breakdown[v_index];
-                data[tag] = value;
+            if (selector != null) {
+                const selector_breakdown = option_breakdown[index];
+                let values = getSelectionValue(selector);
+                let value_list = readMySessionString(values);
+                for (let v_index = 0; v_index < value_list.length; v_index++) {
+                    const value = value_list[v_index];
+                    const tag = selector_breakdown[v_index];
+                    data[tag] = value;
+                }
             }
         }
     }
@@ -425,6 +427,9 @@ function createCourseBlock(workspace_id, course_name, credit) {
     course.className = "hstack";
     let name = document.createElement("label");
     name.innerHTML = course_name;
+    if (course_name.length > 10) {
+        name.className = "bigfield";
+    }
     let value = document.createElement("button");
     value.innerHTML = credit;
     course.appendChild(name);
@@ -469,10 +474,9 @@ function showTermCourses(term_name) {
     }
     for (const term_course of term_courses) {
         if (term_course != null) {
-            let term_course_content = readMySessionString(term_course);
-            let course_name = term_course_content[2];
-            let credit_num = getCourseCredit(course_name);
-            let credit = `${credit_num}`;
+            let course_name = term_course.substring(term_course.indexOf("/") + 1);
+            ;
+            let credit = getCourseCredit(course_name);
             createCourseBlock("coursesinaterm", course_name, credit);
         }
     }
@@ -500,6 +504,10 @@ function showTranferCourses(test_name) {
     for (const ap_test of ap_data) {
         if (ap_test != null) {
             let ap_content = readMySessionString(ap_test);
+            let course_relation = "";
+            for (let index = 0; index < ap_content.length - 3; index++) {
+                course_relation = `${course_relation}/${ap_content[index]}`;
+            }
             let ap_name = ap_content[ap_content.length - 3];
             if (ap_name == test_name) {
                 let score_min = parseInt(ap_content[ap_content.length - 2]);
@@ -510,12 +518,409 @@ function showTranferCourses(test_name) {
                     let credit_num = getCourseCredit(course_name);
                     let credit = `${credit_num}`;
                     coursesap.push(course_name);
-                    createCourseBlock("coursesinaptranfer", course_name, credit);
+                    createCourseBlock("coursesinaptranfer", course_relation, credit);
                 }
             }
         }
     }
     addAPTranferSessionData(coursesap, test_name);
+}
+/// <reference path="ajaxForm.ts" />
+function semesterAJAX(sub_url_request, semesters, year) {
+    for (const semester of semesters) {
+        $.ajax({
+            url: sub_url_request,
+            type: "POST",
+            data: { "year": `${year}`, "semester": semester },
+            dataType: "json",
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            },
+            success: function () { },
+            error: function () { }
+        });
+    }
+}
+function yearAJAX(url_request, year) {
+    $.ajax({
+        url: url_request,
+        type: "POST",
+        data: { "year": `${year}` },
+        dataType: "json",
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        },
+        success: function () { },
+        error: function () { }
+    });
+}
+function makeSemesters(year, terms, startingindex = 1, add_or_delete) {
+    let semesters = [];
+    if (add_or_delete == "add") {
+        for (let index = startingindex; index < startingindex + parseInt(terms); index++) {
+            let semester = `${year}:TERM-${index}`;
+            semesters.push(semester);
+        }
+    }
+    if (add_or_delete == "delete") {
+        for (let index = startingindex; index > startingindex - parseInt(terms); index--) {
+            let semester = `${year}:TERM-${index}`;
+            semesters.push(semester);
+        }
+    }
+    return semesters;
+}
+function getLatestYearID() {
+    let list = document.getElementById("plannerdata");
+    let header = list.getElementsByTagName("span");
+    let years = [];
+    let year_in_question = "";
+    for (const element of header) {
+        let id = element.id;
+        if (id.indexOf("YEAR") != -1) {
+            years.push(id);
+        }
+    }
+    year_in_question = years[years.length - 1];
+    for (const year_id of years) {
+        let symbol = document.getElementById(year_id);
+        if (symbol.className == "caret caret-down") {
+            year_in_question = year_id;
+        }
+    }
+    let year_value = year_in_question.substring(year_in_question.indexOf("-") + 1);
+    return year_value;
+}
+function activateYearManager() {
+    document.getElementById("addbuttonyearmanager").onclick = () => {
+        let startingyear = document.getElementById("startingyear").value;
+        let yearnum = document.getElementById("plannerdata").children.length;
+        if (yearnum == 0) {
+            yearAJAX("/addMyYear", startingyear);
+        }
+        if (yearnum >= 1) {
+            let year = `${parseInt(startingyear) + (yearnum)}`;
+            yearAJAX("/addMyYear", year);
+        }
+    };
+    document.getElementById("deletebuttonyearmanager").onclick = () => {
+        let year_id = getLatestYearID();
+        let year = year_id.substring(year_id.indexOf(":") + 1);
+        if (year != null) {
+            yearAJAX("/deleteMyYear", year);
+        }
+    };
+    document.getElementById("addbuttonsemestermanager").onclick = () => {
+        let terms = document.getElementById("termsperyear").value;
+        let year = getLatestYearID();
+        let index = document.getElementById(year).children.length + 1;
+        if (year != null) {
+            let year_val = year.substring(year.indexOf(":") + 1);
+            let semesters = makeSemesters(year_val, terms, index, "add");
+            semesterAJAX("/addMySemester", semesters, year_val);
+        }
+    };
+    document.getElementById("deletebuttonsemestermanager").onclick = () => {
+        let terms = document.getElementById("termsperyear").value;
+        let year = getLatestYearID();
+        let index = document.getElementById(year).children.length;
+        if (year != null) {
+            let year_val = year.substring(year.indexOf(":") + 1);
+            let semesters = makeSemesters(year_val, terms, index, "delete");
+            semesterAJAX("/deleteMySemester", semesters, year_val);
+        }
+    };
+}
+function updatemajormanageroptionsmajors() {
+    addSelectionOptions("majormanageroptionsmajors", getSessionData("major"));
+}
+function activateMajorManagerAdd() {
+    updatemajormanageroptionsmajors();
+    activateTHISForm("majormanageraddbutton", "/addMyMajor", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
+}
+function activateMajorManagerDelete() {
+    updatemajormanageroptionsmajors();
+    activateTHISForm("majormanagerdeletebutton", "/deleteMajor", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
+}
+function updatecoursemanageroptions() {
+    addSelectionOptions("coursemanageroptionscourse", getSubSessionData("course"));
+    addSelectionOptions("coursemanageroptionsterms", getSessionData("mysemester"));
+}
+function activateCourseManagerAdd() {
+    updatecoursemanageroptions();
+    activateTHISForm("coursemanageraddbutton", "/addMyCourse", null, null, ["coursemanageroptionscourse", "coursemanageroptionsterms"], [[null, null, null, null, "course"],
+        ["year", "semester"]], updatecoursemanageroptions);
+}
+function activateCourseManagerDelete() {
+    updatecoursemanageroptions();
+    activateTHISForm("coursemanagerdeletebutton", "/deleteMyCourse", null, null, ["coursemanageroptionscourse", "coursemanageroptionsterms"], [[null, null, null, null, "course"],
+        ["year", "semester"]], updatecoursemanageroptions);
+}
+function inarray(list, value) {
+    if (list == null) {
+        return false;
+    }
+    for (const item of list) {
+        if (item == value) {
+            return true;
+        }
+    }
+    return false;
+}
+function updatetestmanageroptionstests() {
+    let ap_data = getSessionData("ap");
+    if (ap_data == null) {
+        return;
+    }
+    let ap = [];
+    for (const instance of ap_data) {
+        let data = readMySessionString(instance);
+        let test_name = data[data.length - 3];
+        if (!inarray(ap, test_name)) {
+            ap.push(test_name);
+        }
+    }
+    addSelectionOptions("testmanageroptionstests", ap);
+}
+function activateTestManagerAdd() {
+    updatetestmanageroptionstests();
+    activateTHISForm("testmanageraddbutton", "/addMyAP", ["testmanagerscore"], ["score"], ["testmanageroptionstests"], [["test_name"]], updatetestmanageroptionstests);
+}
+function activateTestManagerDelete() {
+    updatetestmanageroptionstests();
+    activateTHISForm("testmanagerdeletebutton", "/deleteMyAP", ["testmanagerscore"], ["score"], ["testmanageroptionstests"], [["test_name"]], updatetestmanageroptionstests);
+}
+function activateHelperForms() {
+    activateYearManager();
+    activateMajorManagerAdd();
+    activateMajorManagerDelete();
+    activateCourseManagerAdd();
+    activateCourseManagerDelete();
+    activateTestManagerAdd();
+    activateTestManagerDelete();
+}
+/// <reference path="helperForms.ts" />
+/// <reference path="dataTree.ts" />
+function getMyCourses() {
+    let output = [];
+    let cd_courses = getSessionData("mycourse");
+    if (cd_courses == null) {
+        return output;
+    }
+    let tests = getSessionData("myap");
+    if (tests == null) {
+        return output;
+    }
+    for (const test of tests) {
+        let name = `mycourseap-${test.substring(0, test.indexOf("/"))}`;
+        let tranfer = getSessionData(name);
+        if (tranfer != null) {
+            for (const course of tranfer) {
+                output.push(`before/${course}`);
+            }
+        }
+    }
+    for (const course of cd_courses) {
+        output.push(course);
+    }
+    return output;
+}
+function recordCompletion(session_data_list, child_session_data_list, child_completion_list) {
+    let output_completed_list = [];
+    if (session_data_list == null) {
+        return output_completed_list;
+    }
+    for (const data_instance of session_data_list) {
+        let data_relation = data_instance;
+        let data_child_requirements = [];
+        if (child_session_data_list == null) {
+            return output_completed_list;
+        }
+        for (const child_instance of child_session_data_list) {
+            let child_relation = child_instance;
+            if (child_relation.indexOf(data_relation) != -1) {
+                data_child_requirements.push(child_relation);
+            } // gather requirements for this data instance
+        }
+        if (child_completion_list == null) {
+            return output_completed_list;
+        }
+        for (const child of child_completion_list) {
+            let name = child.substring(child.lastIndexOf("/") + 1);
+            let to_delete = [];
+            for (let index = data_child_requirements.length - 1; index >= 0; index--) {
+                const element = data_child_requirements[index];
+                let test = element.substring(element.lastIndexOf("/") + 1);
+                if (test == name) {
+                    to_delete.push(index);
+                }
+            }
+            let temp = [];
+            for (let index = 0; index < data_child_requirements.length; index++) {
+                if (!inarray(to_delete, index)) {
+                    temp.push(data_child_requirements[index]);
+                }
+            }
+            data_child_requirements = temp;
+        } // remove completed requirements from list
+        if (data_child_requirements.length == 0) {
+            output_completed_list.push(data_relation);
+        }
+    }
+    return output_completed_list;
+}
+function buildStatusTree() {
+    // list of completed courses
+    let cd_courses = getMyCourses();
+    let courses = getSubSessionData("course");
+    // console.log("----------cour")
+    // console.log(cd_courses)
+    // console.log(courses)
+    // list of completed requirements
+    let cd_requirements = [];
+    let requirements = getSubSessionData("requirement");
+    cd_requirements = recordCompletion(requirements, courses, cd_courses);
+    // console.log("----------req")
+    // console.log(cd_requirements)
+    // console.log(requirements)
+    // list of completed subcategories
+    let cd_subcategories = [];
+    let subcategories = getSubSessionData("subcategory");
+    cd_subcategories = recordCompletion(subcategories, requirements, cd_requirements);
+    // console.log("----------sub")
+    // console.log(cd_subcategories)
+    // console.log(subcategories)
+    // list of completed categories
+    let cd_categories = [];
+    let categories = getSessionData("category");
+    cd_categories = recordCompletion(categories, subcategories, cd_subcategories);
+    // console.log("----------cat")
+    // console.log(cd_categories)
+    // console.log(categories)
+    // list of completed majors
+    let cd_majors = [];
+    let majors = getSessionData("major");
+    cd_majors = recordCompletion(majors, categories, cd_categories);
+    // console.log("----------major")
+    // console.log(cd_majors)
+    // console.log((majors))
+    // build data tree with completion marks
+    let order = ["MAJ", "CAT", "SUB", "REQ", "COU"];
+    let workspace_id = "mystatusdata";
+    clearData(workspace_id);
+    function build(cd_list, data_list, iscourses) {
+        for (const data_instance of data_list) {
+            if (data_instance != null) {
+                let relation_list = readMySessionString(data_instance);
+                if (relation_list.length == 1) {
+                    if (inarray(cd_majors, data_instance)) {
+                        addStatusList(workspace_id, `MAJ:${data_instance}`, true);
+                    }
+                    else {
+                        addStatusList(workspace_id, `MAJ:${data_instance}`, false);
+                    }
+                }
+                else {
+                    let leparent = "";
+                    let lechild = "";
+                    let name = "";
+                    for (let index = 0; index < relation_list.length; index++) {
+                        name = `${name}${order[index]}:${relation_list[index]}`;
+                        if (index == relation_list.length - 2) {
+                            leparent = name;
+                        }
+                        if (index == relation_list.length - 1) {
+                            lechild = name;
+                        }
+                    }
+                    if (iscourses) {
+                        let lename = data_instance.substring(data_instance.lastIndexOf("/") + 1);
+                        if (inarray(cd_list, lename)) {
+                            addStatusList(leparent, lechild, true);
+                        }
+                        else {
+                            addStatusList(leparent, lechild, false);
+                        }
+                    }
+                    else {
+                        if (inarray(cd_list, data_instance)) {
+                            addStatusList(leparent, lechild, true);
+                        }
+                        else {
+                            addStatusList(leparent, lechild, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    build(cd_majors, majors, false);
+    build(cd_categories, categories, false);
+    build(cd_subcategories, subcategories, false);
+    build(cd_requirements, requirements, false);
+    let names = [];
+    for (const name of getMyCourses()) {
+        names.push(name.substring(name.indexOf("/") + 1));
+    }
+    build(names, courses, true);
+    cleanUPStatus();
+}
+function cleanUPStatus() {
+    let workspace_id = "mystatusdata";
+    let order = ["MAJ", "CAT", "SUB", "REQ", "COU"];
+    let tags = document.getElementById(workspace_id).getElementsByTagName("span");
+    for (const tag of tags) {
+        let id = tag.id;
+        let list_id = id.substring(id.indexOf("-") + 1);
+        let important = id.substring(indexoflasttag(id, order));
+        let list = document.getElementById(list_id);
+        if (list.children.length > 0) {
+            let check_list = [];
+            for (const child of list.children) {
+                for (const item of child.children) {
+                    if (item.id.indexOf("symbol") != -1) {
+                        if (item.className.indexOf("checkmark") != -1) {
+                            check_list.push(0);
+                        }
+                        else {
+                            check_list.push(1);
+                        }
+                    }
+                }
+            }
+            let check = 0;
+            for (const num of check_list) {
+                check = check + num;
+            }
+            if (check == 0) {
+                document.getElementById(id).className = "checkmark";
+            }
+            else {
+                document.getElementById(id).className = "xmark";
+            }
+        }
+        if (list.children.length == 0 && important.indexOf("COU") == -1) {
+            document.getElementById(id).className = "checkmark";
+        }
+        document.getElementById(id).innerHTML = important;
+    }
+}
+function indexoflasttag(input, tags) {
+    let data = {};
+    for (const tag of tags) {
+        data[tag] = input.lastIndexOf(tag);
+    }
+    let last = -1;
+    for (const tag of tags) {
+        if (data[tag] > last) {
+            last = data[tag];
+        }
+    }
+    return last;
 }
 /// <reference path='toggle.ts'/>
 /// <reference path='helperData.ts' />
@@ -523,6 +928,8 @@ function showTranferCourses(test_name) {
 /// <reference path="myAP.ts" />
 /// <reference path="myYears.ts" />
 /// <reference path="betterDark.ts" />
+/// <reference path="helperForms.ts" />
+/// <reference path="myStatus.ts" />
 let actions = ['mymajoractions', 'mytermactions', 'myapactions',
     'tranfercredit', 'status',
     'mycourseoperation'];
@@ -539,16 +946,50 @@ function activateHelperButtons() {
             showAPTransfer();
             showTranferCourses("test");
             activateHelperForms();
+            buildStatusTree();
         };
     }
+    document.getElementById("aptoggle").onclick = () => {
+        toggleShow("myapactions");
+        showAPTransfer();
+        document.getElementById("aptoggle").classList.toggle("caret-down");
+    };
+    document.getElementById("extratermbutton").onclick = () => {
+        toggleShow("mytermactions");
+    };
+    document.getElementById("extrayearbutton").onclick = () => {
+        toggleShow("tranfercredit");
+    };
     document.getElementById('mymajorbutton').onclick = () => {
-        toggleShow('mymajoractions');
-        showTrackedMajors();
-        activateMajorManagerAdd();
-        activateMajorManagerDelete();
+        toggleShow("status");
+        //      toggleShow('mymajoractions');
+        //      showTrackedMajors();
+        //      activateMajorManagerAdd();
+        //      activateMajorManagerDelete();
     };
     document.getElementById('mycoursesbutton').onclick = () => {
         toggleShow('mycourseoperation');
+        let year = getLatestYearID();
+        let termlist = document.getElementById(year);
+        let header = termlist.getElementsByTagName("span");
+        let terms = [];
+        let term_in_question = "";
+        for (const element of header) {
+            let id = element.id;
+            if (id.indexOf("TERM") != -1) {
+                terms.push(id);
+            }
+        }
+        term_in_question = terms[terms.length - 1];
+        for (const term_id of terms) {
+            let symbol = document.getElementById(term_id);
+            if (symbol.className == "caret caret-down") {
+                term_in_question = term_id;
+            }
+        }
+        let term_name = term_in_question.substring(term_in_question.indexOf("-") + 1);
+        showTermCourses(term_name);
+        document.getElementById("thistermname").innerHTML = term_name;
         activateCourseManagerAdd();
         activateCourseManagerDelete();
     };
@@ -600,6 +1041,7 @@ function showAPTransfer() {
 /// <reference path="myAP.ts" />
 /// <reference path="betterDark.ts" />
 /// <reference path="coursesDataTree.ts" />
+/// <reference path="myStatus.ts" />
 function clearData(ul_id) {
     let list = document.getElementById(ul_id);
     if (list == null) {
@@ -636,6 +1078,13 @@ function addDataList(parent_ul_id, name, symbol_type, toggle_function) {
         if (name.indexOf("MAJOR") != -1) {
             cleanUpDataTree();
         }
+        if (name.indexOf("YEAR") != -1 && name.lastIndexOf("before") != -1) {
+            showAPTransfer();
+            toggleShow('mytestoperation');
+        }
+        if (name.indexOf("TERM") != -1) {
+            showTermCourses(name);
+        }
     };
     let nested = document.createElement('ul');
     nested.className = 'nested';
@@ -662,6 +1111,7 @@ function addCaretList(parent_ul_id, name, is_special, special_id) {
             else if (parent_ul_id.indexOf("Year:") != -1) {
                 showTermCourses(parent_ul_id.substring(parent_ul_id.indexOf(":") + 1));
             }
+            cleanUPStatus();
             let element = document.getElementById(special_id);
             toggleIt(element);
         }
@@ -1325,169 +1775,6 @@ function activateCourseButtons() {
             activateAPFormB();
         };
     }
-}
-/// <reference path="ajaxForm.ts" />
-function semesterAJAX(sub_url_request, semesters, year) {
-    for (const semester of semesters) {
-        $.ajax({
-            url: sub_url_request,
-            type: "POST",
-            data: { "year": `${year}`, "semester": semester },
-            dataType: "json",
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type)) {
-                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            },
-            success: function () { },
-            error: function () { }
-        });
-    }
-}
-function yearAJAX(url_request, year) {
-    $.ajax({
-        url: url_request,
-        type: "POST",
-        data: { "year": `${year}` },
-        dataType: "json",
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type)) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            }
-        },
-        success: function () { },
-        error: function () { }
-    });
-}
-function yearAJAXa(url_request, startingyear) {
-    yearAJAX(url_request, "before");
-    yearAJAX(url_request, startingyear);
-}
-function yearAJAXb(url_request, year) {
-    yearAJAX(url_request, year);
-}
-function makeSemesters(year, terms, startingindex = 1, add_or_delete) {
-    let semesters = [];
-    if (add_or_delete == "add") {
-        for (let index = startingindex; index < startingindex + parseInt(terms); index++) {
-            let semester = `${year}:Term-${index}`;
-            semesters.push(semester);
-        }
-    }
-    if (add_or_delete == "delete") {
-        for (let index = startingindex; index > startingindex - parseInt(terms); index--) {
-            let semester = `${year}:Term-${index}`;
-            semesters.push(semester);
-        }
-    }
-    return semesters;
-}
-function getLatestYearID() {
-    let list = document.getElementById("plannerdata");
-    let header = list.getElementsByTagName("span");
-    let years = [];
-    let year_in_question = "";
-    for (const element of header) {
-        let id = element.id;
-        if (id.indexOf("YEAR") != -1) {
-            years.push(id);
-        }
-    }
-    year_in_question = years[years.length - 1];
-    for (const year_id of years) {
-        let symbol = document.getElementById(year_id);
-        if (symbol.className == "caret caret-down") {
-            year_in_question = year_id;
-        }
-    }
-    let year_value = year_in_question.substring(year_in_question.indexOf("-") + 1);
-    return year_value;
-}
-function activateYearManager() {
-    document.getElementById("addbuttonyearmanager").onclick = () => {
-        let startingyear = document.getElementById("startingyear").value;
-        let yearnum = document.getElementById("plannerdata").children.length;
-        if (yearnum == 0) {
-            //create before and starting year
-            yearAJAXa("/addMyYear", startingyear);
-        }
-        if (yearnum == 1) {
-            yearAJAXb("/addMyYear", startingyear);
-        }
-        if (yearnum >= 2) {
-            let year = `${parseInt(startingyear) + (yearnum - 2) + 1}`;
-            yearAJAXb("/addMyYear", year);
-        }
-    };
-    document.getElementById("deletebuttonyearmanager").onclick = () => {
-        let year_id = getLatestYearID();
-        let year = year_id.substring(year_id.indexOf(":") + 1);
-        if (year != null) {
-            yearAJAXa("/deleteMyYear", year);
-        }
-    };
-    document.getElementById("addbuttonsemestermanager").onclick = () => {
-        let terms = document.getElementById("termsperyear").value;
-        let year = getLatestYearID();
-        let index = document.getElementById(year).children.length + 1;
-        if (year != null) {
-            let year_val = year.substring(year.indexOf(":") + 1);
-            let semesters = makeSemesters(year_val, terms, index, "add");
-            semesterAJAX("/addMySemester", semesters, year_val);
-        }
-    };
-    document.getElementById("deletebuttonsemestermanager").onclick = () => {
-        let terms = document.getElementById("termsperyear").value;
-        let year = getLatestYearID();
-        let index = document.getElementById(year).children.length;
-        if (year != null) {
-            let year_val = year.substring(year.indexOf(":") + 1);
-            let semesters = makeSemesters(year_val, terms, index, "delete");
-            semesterAJAX("/deleteMySemester", semesters, year_val);
-        }
-    };
-}
-function updatemajormanageroptionsmajors() {
-    addSelectionOptions("majormanageroptionsmajors", getSessionData("major"));
-}
-function activateMajorManagerAdd() {
-    updatemajormanageroptionsmajors();
-    activateTHISForm("majormanageraddbutton", "/addMyMajor", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
-}
-function activateMajorManagerDelete() {
-    updatemajormanageroptionsmajors();
-    activateTHISForm("majormanagerdeletebutton", "/deleteMajor", null, null, ["majormanageroptionsmajors"], [["major"]], updatemajormanageroptionsmajors);
-}
-function updatecoursemanageroptionscourses() {
-    addSelectionOptions("coursemanageroptionscourse", getSubSessionData("course"));
-}
-function activateCourseManagerAdd() {
-    updatecoursemanageroptionscourses();
-    activateTHISForm("coursemanageraddbutton", "/addMyCourse", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
-}
-function activateCourseManagerDelete() {
-    updatecoursemanageroptionscourses();
-    activateTHISForm("coursemanagerdeletebutton", "/deleteMyCourse", null, null, ["coursemanageroptionscourse"], [["major", "category", "subcategory", "requirement", "course"]], updatecoursemanageroptionscourses);
-}
-function updatetestmanageroptionstests() {
-    addSelectionOptions("testmanageroptionstests", getSessionData("ap"));
-}
-function activateTestManagerAdd() {
-    updatetestmanageroptionstests();
-    activateTHISForm("testmanageraddbutton", "/addMyAP", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
-}
-function activateTestManagerDelete() {
-    updatetestmanageroptionstests();
-    activateTHISForm("testmanagerdeletebutton", "/deleteMyAP", null, null, ["testmanageroptionstests"], [["major", "category", "subcategory", "requirement", "course", "skip", "test", "scoremin", "scoremax"]], updatetestmanageroptionstests);
-}
-function activateHelperForms() {
-    activateYearManager();
-    activateMajorManagerAdd();
-    activateMajorManagerDelete();
-    activateCourseManagerAdd();
-    activateCourseManagerDelete();
-    activateTestManagerAdd();
-    activateTestManagerDelete();
 }
 /// <reference path='toggle.ts'/>
 /// <reference path='coursesDataTree.ts' />

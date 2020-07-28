@@ -53,10 +53,11 @@ def addCourse(request, year_name, semester_name, course_name):
     new_course.save()
 
 def addAP(request, test_name, score):
+    user = request.user.username
     years = getYears(request)
-    if years.filter(year="before").exists() == False:
-        addYear(request, "before")
-    before = getYears(request).filter(year="before")
+    if years.filter(year=f"{user}-before").exists() == False:
+        addYear(request,f"{user}-before")
+    before = getYears(request).filter(year=f"{user}-before").first()
     new_ap = AP(test=test_name, score=score)
     new_ap.save()
     new_ap.years.add(before)

@@ -5,14 +5,16 @@ function readMyDataInput(
     if (options != null) {
         for (let index = 0; index < options.length; index++) {
             const selector = options[index];
-            const selector_breakdown = option_breakdown[index];
-            let values = getSelectionValue(selector);
-            let value_list = readMySessionString(values);
-            for (let v_index = 0; v_index < value_list.length; v_index++) {
-                const value = value_list[v_index];
-                const tag = selector_breakdown[v_index];
-                data[tag] = value;
-            }  
+            if (selector != null){
+                const selector_breakdown = option_breakdown[index];
+                let values = getSelectionValue(selector);
+                let value_list = readMySessionString(values);
+                for (let v_index = 0; v_index < value_list.length; v_index++) {
+                    const value = value_list[v_index];
+                    const tag = selector_breakdown[v_index];
+                    data[tag] = value;
+                }  
+            }
         }       
     }
     if (inputs != null){
